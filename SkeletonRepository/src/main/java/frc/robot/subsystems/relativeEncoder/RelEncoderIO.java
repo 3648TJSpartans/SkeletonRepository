@@ -1,7 +1,5 @@
 package frc.robot.subsystems.relativeEncoder;
 
-import org.littletonrobotics.junction.AutoLog;
-
 public interface RelEncoderIO {
     // allows us to move to a certain point
     public default void setTo(double setpoint) {
