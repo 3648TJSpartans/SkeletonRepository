@@ -1,9 +1,6 @@
 package frc.robot.subsystems.absoluteEncoder;
 
-import org.littletonrobotics.junction.Logger;
-
 import com.revrobotics.AbsoluteEncoder;
-import com.revrobotics.RelativeEncoder;
 import com.revrobotics.spark.SparkMax;
 import com.revrobotics.spark.config.ClosedLoopConfig.FeedbackSensor;
 import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
@@ -13,7 +10,6 @@ import com.revrobotics.spark.SparkBase.ControlType;
 import com.revrobotics.spark.SparkBase.PersistMode;
 import com.revrobotics.spark.SparkBase.ResetMode;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
-import edu.wpi.first.wpilibj.DigitalInput;
 import frc.robot.util.TunableNumber;
 
 import com.revrobotics.spark.SparkClosedLoopController;
