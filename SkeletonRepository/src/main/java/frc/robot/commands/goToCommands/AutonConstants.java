@@ -1,11 +1,9 @@
 package frc.robot.commands.goToCommands;
 
-import org.littletonrobotics.junction.AutoLogOutput;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.util.Units;
-import frc.robot.Robot;
 import frc.robot.util.AllianceFlipUtil;
 
 public class AutonConstants {

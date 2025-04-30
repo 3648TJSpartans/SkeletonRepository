@@ -8,7 +8,7 @@ public interface AbsEncoderIO {
     public default void setTo(double setpoint) {
     }
 
-    public default void stopMotor() {
+    public default void stop() {
     }
 
     public default void updateValues() {

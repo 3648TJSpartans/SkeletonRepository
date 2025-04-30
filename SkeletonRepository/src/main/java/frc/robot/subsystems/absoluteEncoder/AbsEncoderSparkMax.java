@@ -51,7 +51,7 @@ public class AbsEncoderSparkMax implements AbsEncoderIO {
     }
 
     @Override
-    public void stopMotor() {
+    public void stop() {
         motor.set(0);
     }
 

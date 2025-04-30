@@ -15,7 +15,7 @@ public interface RelEncoderIO {
     public default void stop() {
     }
 
-    public default double getPos() {
+    public default double getPosition() {
         return 0;
     }
 

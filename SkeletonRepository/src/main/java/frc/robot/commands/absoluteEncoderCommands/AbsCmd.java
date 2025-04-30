@@ -29,7 +29,7 @@ public class AbsCmd extends Command {
 
     @Override
     public void end(boolean interrupted) {
-        m_absEncoder.stopMotor();
+        m_absEncoder.stop();
         Logger.recordOutput("absEncoder/CommandScheduled", false);
     }
 

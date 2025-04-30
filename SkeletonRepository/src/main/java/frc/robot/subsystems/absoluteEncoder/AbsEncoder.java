@@ -26,8 +26,8 @@ public class AbsEncoder extends SubsystemBase {
         io.setTo(setpoint);
     }
 
-    public void stopMotor() {
-        io.stopMotor();
+    public void stop() {
+        io.stop();
     }
 
     public void setSpeed(double speed) {

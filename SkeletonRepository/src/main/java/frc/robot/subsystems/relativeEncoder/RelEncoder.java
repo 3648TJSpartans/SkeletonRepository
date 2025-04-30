@@ -34,8 +34,8 @@ public class RelEncoder extends SubsystemBase {
     io.stop();
   }
 
-  public double getPos() {
-    return io.getPos();
+  public double getPosition() {
+    return io.getPosition();
   }
 
   // allows us to reset the encoder value

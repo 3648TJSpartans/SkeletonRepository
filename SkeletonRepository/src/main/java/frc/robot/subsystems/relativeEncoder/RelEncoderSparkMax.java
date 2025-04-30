@@ -80,7 +80,7 @@ public class RelEncoderSparkMax implements RelEncoderIO {
   }
 
   @Override
-  public double getPos() {
+  public double getPosition() {
     return encoder.getPosition();
   }
 
@@ -93,8 +93,8 @@ public class RelEncoderSparkMax implements RelEncoderIO {
       motor.set(0);
       return;
     }
-    if (getLimitSwitch() && setpoint - getPos() < 0) {
-      motorController.setReference(getPos(), ControlType.kPosition, ClosedLoopSlot.kSlot0);
+    if (getLimitSwitch() && setpoint - getPosition() < 0) {
+      motorController.setReference(getPosition(), ControlType.kPosition, ClosedLoopSlot.kSlot0);
       Logger.recordOutput("relEncoder/NotWorkingBecause", "TooLittle");
       return;
     }
