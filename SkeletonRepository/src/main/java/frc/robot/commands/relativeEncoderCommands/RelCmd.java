@@ -7,11 +7,11 @@ import frc.robot.subsystems.relativeEncoder.RelEncoder;
 
 public class RelCmd extends Command {
     private final RelEncoder m_relEncoder;
-    private final double angle;
+    private final double position;
 
-    public RelCmd(RelEncoder relEncoder, double angle) {
+    public RelCmd(RelEncoder relEncoder, double position) {
         m_relEncoder = relEncoder;
-        this.angle = angle;
+        this.position = position;
         addRequirements(m_relEncoder);
     }
 
@@ -22,15 +22,15 @@ public class RelCmd extends Command {
 
     @Override
     public void execute() {
-        Logger.recordOutput("relEncoder/setAngle", angle);
-        Logger.recordOutput("relEncoder/angle", m_relEncoder.getPos());
-        m_relEncoder.setTo(angle);
+        Logger.recordOutput("relEncoder/setPosition", position);
+        Logger.recordOutput("relEncoder/position", m_relEncoder.getPosition());
+        m_relEncoder.setTo(position);
     }
 
     @Override
     public void end(boolean interrupted) {
         m_relEncoder.stop();
-        Logger.recordOutput("relEncoder/CommandScheduled", false);
+        Logger.recordOutput("relEncoder/CommandScheduled", "Unscheduled");
     }
 
     @Override

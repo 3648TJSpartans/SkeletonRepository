@@ -37,10 +37,16 @@ import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
+import frc.robot.commands.DriveCommands;
 import frc.robot.commands.goToCommands.AutonConstants.PoseConstants;
 import frc.robot.commands.goToCommands.DriveToNearest;
 import frc.robot.commands.goToCommands.DriveToPose;
 import frc.robot.commands.goToCommands.AutonConstants.PoseConstants.AutonState;
+import frc.robot.commands.ledCommands.AutoLEDCommand;
+import frc.robot.commands.ledCommands.TeleopLEDCommand;
+import frc.robot.commands.relativeEncoderCommands.HomeRelCmd;
+import frc.robot.commands.relativeEncoderCommands.RelAnalogCmd;
+import frc.robot.commands.relativeEncoderCommands.RelCmd;
 import frc.robot.commands.goToCommands.DriveToNearest;
 import frc.robot.commands.goToCommands.DriveToPose;
 import frc.robot.subsystems.drive.Drive;
@@ -49,6 +55,14 @@ import frc.robot.subsystems.drive.GyroIONavX;
 import frc.robot.subsystems.drive.ModuleIO;
 import frc.robot.subsystems.drive.ModuleIOSim;
 import frc.robot.subsystems.drive.ModuleIOSpark;
+import frc.robot.subsystems.leds.LedSubsystem;
+import frc.robot.subsystems.relativeEncoder.RelEncoder;
+import frc.robot.subsystems.relativeEncoder.RelEncoderConstants;
+import frc.robot.subsystems.relativeEncoder.RelEncoderIO;
+import frc.robot.subsystems.relativeEncoder.RelEncoderSparkMax;
+import frc.robot.subsystems.vision.Vision;
+import frc.robot.subsystems.vision.VisionConstants;
+import frc.robot.subsystems.vision.VisionIOLimelight;
 import frc.robot.util.AllianceFlipUtil;
 import frc.robot.util.TunableNumber;
 import frc.robot.util.TunableNumber;
@@ -91,14 +105,17 @@ import org.littletonrobotics.junction.Logger;
 public class RobotContainer {
   // Subsystems
   private final Drive m_drive;
+  private final AbsEncoder m_absEncoder;
+  private final RelEncoder m_relEncoder;
+  private final LedSubsystem m_leds;
+  private final Vision m_vision;
   private boolean override;
   private boolean endgameClosed = true;
 
   // Controller
-  private final CommandXboxController m_driveController = new CommandXboxController(0);
-  private final CommandXboxController m_copilotController = new CommandXboxController(1);
-  private final CommandXboxController m_controllerTwo = new CommandXboxController(2);
-  private final CommandXboxController m_ledController = new CommandXboxController(3);
+  private final CommandXboxController m_driveController = new CommandXboxController(Constants.kDriverControllerPort);
+  private final CommandXboxController m_copilotController = new CommandXboxController(Constants.kCopilotControllerPort);
+  private final CommandXboxController m_testController = new CommandXboxController(Constants.kTestControllerPort);
   // Dashboard inputs
   private final LoggedDashboardChooser<Command> autoChooser;
 
@@ -115,7 +132,9 @@ public class RobotContainer {
    */
 
   public RobotContainer() {
-    // m_led = new LedSubsystem();
+    m_absEncoder = new AbsEncoder(new AbsEncoderSparkMax());
+    m_relEncoder = new RelEncoder(new RelEncoderSparkMax());
+    m_leds = new LedSubsystem();
     Logger.recordOutput("Poses/shouldFlip", AllianceFlipUtil.shouldFlip());
     Logger.recordOutput("Override", override);
     override = false;
@@ -128,10 +147,13 @@ public class RobotContainer {
             new ModuleIOSpark(1),
             new ModuleIOSpark(2),
             new ModuleIOSpark(3));
-        // m_vision = new Vision(
-        // m_drive::addVisionMeasurement,
-        // new VisionIOLimelight("limelight-three", m_drive::getRotation),
-        // new VisionIOLimelight("limelight-twoplus", m_drive::getRotation));
+
+        // To change number of limelights, just add or delete IOs in the parameters
+        // Make sure camera name match in the coprocessor!
+        m_vision = new Vision(
+            m_drive::addVisionMeasurement,
+            new VisionIOLimelight(VisionConstants.camera0Name, m_drive::getRotation),
+            new VisionIOLimelight(VisionConstants.camera1Name, m_drive::getRotation));
         break;
 
       case SIM:
@@ -144,14 +166,11 @@ public class RobotContainer {
             new ModuleIOSim(),
             new ModuleIOSim(),
             new ModuleIOSim());
-        // m_vision = new Vision(
-        // m_drive::addVisionMeasurement,
-        // // new VisionIOPhotonVisionSim(camera0Name, robotToCamera0,
-        // // m_drive::getPose),
-        // new VisionIOPhotonVisionSim(VisionConstants.camera1Name,
-        // VisionConstants.robotToCamera1,
-        // m_drive::getPose));
-        // To later be replaced with CoralIntakeIOSim
+
+        m_vision = new Vision(
+            m_drive::addVisionMeasurement,
+            new VisionIOLimelight(VisionConstants.camera0Name, m_drive::getRotation),
+            new VisionIOLimelight(VisionConstants.camera1Name, m_drive::getRotation));
         break;
 
       default:
@@ -167,9 +186,11 @@ public class RobotContainer {
             },
             new ModuleIO() {
             });
-        // m_vision = new Vision(m_drive::addVisionMeasurement, new VisionIO() {
-        // }, new VisionIO() {
-        // });
+
+        m_vision = new Vision(
+            m_drive::addVisionMeasurement,
+            new VisionIOLimelight(VisionConstants.camera0Name, m_drive::getRotation),
+            new VisionIOLimelight(VisionConstants.camera1Name, m_drive::getRotation));
         break;
     }
 
@@ -291,69 +312,80 @@ public class RobotContainer {
 
   public void configureAbsoluteEncoder() {
 
+    Command homeEncoder = new HomeRelCmd(m_relEncoder);
+    Command exampleRel1 = new RelCmd(m_relEncoder, RelEncoderConstants.relativeEncoderPosition1);
+    Command exampleRel2 = new RelCmd(m_relEncoder, RelEncoderConstants.relativeEncoderPosition2);
+    Command analogRelCommand = new RelAnalogCmd(m_relEncoder, () -> m_copilotController.getRightY());
+
+    m_relEncoder.setDefaultCommand(analogRelCommand);
+    m_copilotController.leftTrigger().whileTrue(homeEncoder);
+    m_copilotController.x().whileTrue(exampleRel1);
+    m_copilotController.y().whileTrue(exampleRel2);
+
   }
 
   public void configureLeds() {
+
+    // This code changes LED patterns when the robot is in auto or teleop.
+    // It can be manipulated for your desires
+
     // define commands
-    // Command ledAutnomousIndicator = new autonoumousIndicator(m_led);
-    // Command ledTeleopIndicator = new teleopStatesIndicators(m_led, m_coral);
+    Command AutoLED = new AutoLEDCommand(m_leds);
+    Command TeleopLED = new TeleopLEDCommand(m_leds);
     // create triggers
     Trigger autonomous = new Trigger(() -> DriverStation.isAutonomousEnabled());
     Trigger teleop = new Trigger(() -> DriverStation.isTeleopEnabled());
     // apply triggers
-    // autonomous.onTrue(ledAutnomousIndicator);
-    // teleop.onTrue(ledTeleopIndicator);
-    // teleleop >done
-    // autonomous >done
-    // algea intak running
-    // elevator level
-    // coral intake >done
-    // and placing running
+    autonomous.onTrue(AutoLED);
+    teleop.onTrue(TeleopLED);
 
   }
 
   public void configureDrive() {
     // Default command, normal field-relative drive
-    // m_drive.setDefaultCommand(
-    // DriveCommands.joystickDrive(
-    // m_drive,
+    m_drive.setDefaultCommand(
+        DriveCommands.joystickDrive(
+            m_drive,
 
-    // () -> -m_driveController.getLeftY(),
-    // () -> -m_driveController.getLeftX(),
-    // () -> -m_driveController.getRightX(),
-    // m_driveController.leftBumper(),
-    // () -> m_vision.getTx(),
-    // m_driveController.leftBumper(),
-    // m_driveController.rightBumper(),
-    // () -> !endgameClosed));
+            () -> -m_driveController.getLeftY(),
+            () -> -m_driveController.getLeftX(),
+            () -> -m_driveController.getRightX(),
+            m_driveController.leftBumper(),
+            () -> m_vision.getTx(),
+            m_driveController.leftBumper(),
+            m_driveController.rightBumper(),
+            () -> !endgameClosed));
 
-    // // Lock to 0° when A button is held
-    // // m_driveController
-    // // .b()
-    // // .whileTrue(
-    // // DriveCommands.joystickDriveAtAngle(
-    // // m_drive,
-    // // () -> m_driveController.getLeftY(),
-    // // () -> m_driveController.getLeftX(),
-    // // () -> new Rotation2d()));
-
-    // // Switch to X pattern when X button is pressed
-    // m_driveController.x().onTrue(Commands.runOnce(m_drive::stopWithX, m_drive));
-
-    // // Reset gyro to 0° when B button is pressed
+    // Lock to 0° when A button is held
     // m_driveController
-    // .a()
-    // .onTrue(
-    // Commands.runOnce(
-    // () -> m_drive.setPose(
-    // new Pose2d(m_drive.getPose()
-    // .getTranslation(),
-    // new Rotation2d())),
-    // m_drive)
-    // .ignoringDisable(true));
+    // .b()
+    // .whileTrue(
+    // DriveCommands.joystickDriveAtAngle(
+    // m_drive,
+    // () -> m_driveController.getLeftY(),
+    // () -> m_driveController.getLeftX(),
+    // () -> new Rotation2d()));
+
+    // Switch to X pattern when X button is pressed
+    m_driveController.x().onTrue(Commands.runOnce(m_drive::stopWithX, m_drive));
+
+    // Reset gyro to 0° when A button is pressed
+    m_driveController
+        .a()
+        .onTrue(
+            Commands.runOnce(
+                () -> m_drive.setPose(
+                    new Pose2d(m_drive.getPose()
+                        .getTranslation(),
+                        new Rotation2d())),
+                m_drive)
+                .ignoringDisable(true));
   }
 
   public void configureRelativeEncoder() {
+
+    m_copilotController.a().whileTrue(new InstantCommand(() -> m_relEncoder.setSpeed(.15)));
+    m_copilotController.b().whileTrue(new InstantCommand(() -> m_relEncoder.setSpeed(-.15)));
 
   }
 
@@ -364,17 +396,6 @@ public class RobotContainer {
   public void toggleOverride() {
     override = !override;
     Logger.recordOutput("Override", override);
-  }
-
-  private void setEndgamePoseState(boolean state) {
-
-    endgameClosed = state;
-    Logger.recordOutput("SFT/endgameClosed", endgameClosed);
-  }
-
-  @AutoLogOutput(key = "SFT/getEndgameClosed")
-  private boolean getEndgamePoseState() {
-    return endgameClosed;
   }
 
   // Creates controller rumble command
