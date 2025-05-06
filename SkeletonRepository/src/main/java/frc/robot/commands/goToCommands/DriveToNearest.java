@@ -45,18 +45,18 @@ public class DriveToNearest extends Command {
   private static final TunableNumber ffMaxRadius = new TunableNumber("DriveToPose/FFMinRadius");
 
   static {
-    drivekP.setDefault(AutonConstants.drivekP);
-    drivekD.setDefault(AutonConstants.drivekD);
-    thetakP.setDefault(AutonConstants.thetakP);
-    thetakD.setDefault(AutonConstants.thetakD);
-    driveMaxVelocity.setDefault(AutonConstants.driveMaxVelocity);
-    driveMaxAcceleration.setDefault(AutonConstants.driveMaxAcceleration);
-    thetaMaxVelocity.setDefault(AutonConstants.thetaMaxVelocity);
-    thetaMaxAcceleration.setDefault(AutonConstants.thetaMaxAcceleration);
-    driveTolerance.setDefault(AutonConstants.driveTolerance);
-    thetaTolerance.setDefault(AutonConstants.thetaTolerance);
-    ffMinRadius.setDefault(AutonConstants.ffMinRadius);
-    ffMaxRadius.setDefault(AutonConstants.ffMaxRadius);
+    drivekP.setDefault(goToConstants.drivekP);
+    drivekD.setDefault(goToConstants.drivekD);
+    thetakP.setDefault(goToConstants.thetakP);
+    thetakD.setDefault(goToConstants.thetakD);
+    driveMaxVelocity.setDefault(goToConstants.driveMaxVelocity);
+    driveMaxAcceleration.setDefault(goToConstants.driveMaxAcceleration);
+    thetaMaxVelocity.setDefault(goToConstants.thetaMaxVelocity);
+    thetaMaxAcceleration.setDefault(goToConstants.thetaMaxAcceleration);
+    driveTolerance.setDefault(goToConstants.driveTolerance);
+    thetaTolerance.setDefault(goToConstants.thetaTolerance);
+    ffMinRadius.setDefault(goToConstants.ffMinRadius);
+    ffMaxRadius.setDefault(goToConstants.ffMaxRadius);
   }
 
   private final Drive drive;

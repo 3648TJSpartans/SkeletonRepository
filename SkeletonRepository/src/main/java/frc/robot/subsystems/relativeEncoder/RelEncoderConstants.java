@@ -9,8 +9,8 @@ public class RelEncoderConstants {
 
     public static final int relEncoderMotorCan = 9;
 
-    public static final double relativeEncoderPosition1 = 0;
-    public static final double relativeEncoderPosition2 = 1;
+    public static final double setpoint1 = 0;
+    public static final double setpoint2 = 1;
     public static final double relativeEncoderLimit = 2;
     public static final double elevatorRange = 0.622;
     public static final double heightToEncoderRatio = elevatorRange / relativeEncoderLimit;

@@ -3,6 +3,7 @@ package frc.robot.commands.relativeEncoderCommands;
 import org.littletonrobotics.junction.Logger;
 
 import edu.wpi.first.wpilibj2.command.Command;
+import frc.robot.subsystems.absoluteEncoder.AbsEncoderConstants;
 import frc.robot.subsystems.relativeEncoder.RelEncoder;
 
 public class RelCmd extends Command {
@@ -35,7 +36,14 @@ public class RelCmd extends Command {
 
     @Override
     public boolean isFinished() {
-        return false;
+        /*
+         * A finish state is essential to commands that are used in command groups
+         * (see command group file for more details). The code below finishes the
+         * command if it's within a certain constant margin, the setpointTolerance.
+         */
+        return ((position - AbsEncoderConstants.setpointTolerance) < m_relEncoder.getPosition()
+                &&
+                m_relEncoder.getPosition() < (position + AbsEncoderConstants.setpointTolerance));
     }
 
 }

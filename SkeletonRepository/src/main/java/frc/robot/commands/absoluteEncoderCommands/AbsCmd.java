@@ -4,14 +4,15 @@ import org.littletonrobotics.junction.Logger;
 
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.absoluteEncoder.AbsEncoder;
+import frc.robot.subsystems.absoluteEncoder.AbsEncoderConstants;
 
 public class AbsCmd extends Command {
     private final AbsEncoder m_absEncoder;
-    private final double angle;
+    private final double position;
 
-    public AbsCmd(AbsEncoder absEncoder, double angle) {
+    public AbsCmd(AbsEncoder absEncoder, double position) {
         m_absEncoder = absEncoder;
-        this.angle = angle;
+        this.position = position;
         addRequirements(m_absEncoder);
     }
 
@@ -22,9 +23,9 @@ public class AbsCmd extends Command {
 
     @Override
     public void execute() {
-        Logger.recordOutput("absEncoder/setAngle", angle);
-        Logger.recordOutput("absEncoder/angle", m_absEncoder.getPosition());
-        m_absEncoder.setTo(angle);
+        Logger.recordOutput("absEncoder/setPosition", position);
+        Logger.recordOutput("absEncoder/position", m_absEncoder.getPosition());
+        m_absEncoder.setTo(position);
     }
 
     @Override
@@ -35,7 +36,14 @@ public class AbsCmd extends Command {
 
     @Override
     public boolean isFinished() {
-        return false;
+        /*
+         * A finish state is essential to commands that are used in command groups
+         * (see command group file for more details). The code below finishes the
+         * command if it's within a certain constant margin, the setpointTolerance.
+         */
+        return ((position - AbsEncoderConstants.setpointTolerance) < m_absEncoder.getPosition()
+                &&
+                m_absEncoder.getPosition() < (position + AbsEncoderConstants.setpointTolerance));
     }
 
 }

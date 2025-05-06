@@ -14,6 +14,8 @@ public class AbsEncoderConstants {
     public static final double setpoint1 = 0;
     public static final double setpoint2 = 1;
 
+    public static final double setpointTolerance = 0.05;
+
     public static double kAbsEncoderOdometryFrequency = 100;
     public static final boolean encoderInverted = false;
     public static final double encoderPositionFactor = 1;

@@ -16,7 +16,7 @@ import edu.wpi.first.wpilibj.DriverStation;
 //import org.littletonrobotics.frc2025.FieldConstants;
 //import org.littletonrobotics.vehicletrajectoryservice.VehicleTrajectoryServiceOuterClass.ModuleForce;
 //import org.littletonrobotics.vehicletrajectoryservice.VehicleTrajectoryServiceOuterClass.VehicleState;
-import frc.robot.commands.goToCommands.AutonConstants.PoseConstants;
+import frc.robot.commands.goToCommands.goToConstants.PoseConstants;
 import frc.robot.subsystems.drive.Drive;
 
 public class AllianceFlipUtil {

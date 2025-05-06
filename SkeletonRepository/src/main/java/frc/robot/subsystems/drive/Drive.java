@@ -44,7 +44,7 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.Constants;
 import frc.robot.Constants.Mode;
-import frc.robot.commands.goToCommands.AutonConstants;
+import frc.robot.commands.goToCommands.goToConstants;
 import frc.robot.util.LocalADStarAK;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
@@ -107,8 +107,8 @@ public class Drive extends SubsystemBase {
         new PPHolonomicDriveController(
             // new PIDConstants(5, 0.0, DriveConstants.driveKd),
             // new PIDConstants(1, 0.0, DriveConstants.turnKd)),
-            new PIDConstants(AutonConstants.drivekP, 0.0, AutonConstants.drivekD),
-            new PIDConstants(AutonConstants.thetakP, 0.0, AutonConstants.thetakD)),
+            new PIDConstants(goToConstants.drivekP, 0.0, goToConstants.drivekD),
+            new PIDConstants(goToConstants.thetakP, 0.0, goToConstants.thetakD)),
         ppConfig,
         () -> DriverStation.getAlliance().orElse(Alliance.Blue) == Alliance.Red,
         this);

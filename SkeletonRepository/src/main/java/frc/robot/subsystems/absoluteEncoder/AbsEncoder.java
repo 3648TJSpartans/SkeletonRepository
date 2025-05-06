@@ -14,7 +14,7 @@ public class AbsEncoder extends SubsystemBase {
     @Override
     public void periodic() {
         // io.updateValues();
-        Logger.recordOutput("absEncoder/angle", io.getPosition());
+        Logger.recordOutput("absEncoder/position", io.getPosition());
     }
 
     public double getPosition() {

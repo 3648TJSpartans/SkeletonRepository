@@ -1,12 +1,11 @@
 package frc.robot.commands.goToCommands;
 
-
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.util.Units;
 import frc.robot.util.AllianceFlipUtil;
 
-public class AutonConstants {
+public class goToConstants {
 
         public static final double drivekP = 0.0;
         public static final double drivekD = 0.0;
