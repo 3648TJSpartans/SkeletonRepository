@@ -40,6 +40,7 @@ import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.commands.DriveCommands;
 import frc.robot.commands.absoluteEncoderCommands.AbsAnalogCmd;
 import frc.robot.commands.absoluteEncoderCommands.AbsCmd;
+import frc.robot.commands.commandGroups.ExampleSequentialCmd;
 import frc.robot.commands.goToCommands.goToConstants.PoseConstants;
 import frc.robot.commands.goToCommands.DriveToNearest;
 import frc.robot.commands.goToCommands.DriveToPose;
@@ -204,6 +205,8 @@ public class RobotContainer {
                 break;
         }
 
+        configureAutos();
+
         // Set up auto routines
         autoChooser = new LoggedDashboardChooser<>("Auto Choices", AutoBuilder.buildAutoChooser());
         configureAutoChooser();
@@ -219,6 +222,21 @@ public class RobotContainer {
      * it to a {@link
      * edu.wpi.first.wpilibj2.command.button.JoystickButton}.
      */
+
+    private void configureAutos() {
+        Command homeAuto = new HomeRelCmd(m_relEncoder);
+        Command relOutAuto = new RelCmd(m_relEncoder, RelEncoderConstants.setpoint1);
+        Command absOutAuto = new AbsCmd(m_absEncoder, AbsEncoderConstants.setpoint1);
+        Command simpleMotorAuto = new SimpleMotorCmd(m_simpleMotor, SimpleMotorConstants.exampleSpeed1);
+        Command sequentialAuto = new ExampleSequentialCmd(m_drive, m_absEncoder, m_relEncoder);
+
+        NamedCommands.registerCommand("homeRel", homeAuto);
+        NamedCommands.registerCommand("relOut", relOutAuto);
+        NamedCommands.registerCommand("absOut", absOutAuto);
+        NamedCommands.registerCommand("motorSpin", simpleMotorAuto);
+        NamedCommands.registerCommand("sequental", sequentialAuto);
+    }
+
     private void configureButtonBindings() {
         // configureAutos();
 
