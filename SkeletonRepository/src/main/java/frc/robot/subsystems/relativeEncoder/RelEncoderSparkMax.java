@@ -1,7 +1,3 @@
-// Copyright (c) FIRST and other WPILib contributors.
-// Open Source Software; you can modify and/or share it under the terms of
-// the WPILib BSD license file in the root directory of this project.
-
 package frc.robot.subsystems.relativeEncoder;
 
 import com.revrobotics.spark.SparkMax;
@@ -23,6 +19,12 @@ import com.revrobotics.RelativeEncoder;
 
 import frc.robot.util.TunableNumber;
 
+/*
+ * This is the file where most of the logic is applied. It
+ * implements the IO, which means it must use the same methods
+ * that the IO gives it.
+ */
+
 public class RelEncoderSparkMax implements RelEncoderIO {
 
   private final SparkMax motor;
@@ -31,14 +33,16 @@ public class RelEncoderSparkMax implements RelEncoderIO {
   private boolean limitReset;
   private final DigitalInput limitSwitch = new DigitalInput(RelEncoderConstants.limitSwitchPin);
 
+  /* The constructor defines the motor and any necessary variables. */
   public RelEncoderSparkMax() {
     motor = new SparkMax(RelEncoderConstants.relEncoderMotorCan, MotorType.kBrushless);
     motorController = motor.getClosedLoopController();
     limitReset = false;
     Logger.recordOutput("relEncoder/EncoderReset", false);
     Logger.recordOutput("relEncoder/Setpoint", 0.0);
-    encoder = motor.getEncoder();
 
+    /* The blocks of code below define the encoder for the motor. */
+    encoder = motor.getEncoder();
     var motorConfig = new SparkMaxConfig();
     motorConfig.idleMode(IdleMode.kBrake);
     motorConfig.inverted(false)
@@ -88,6 +92,11 @@ public class RelEncoderSparkMax implements RelEncoderIO {
   public void setTo(double setpoint) {
     Logger.recordOutput("relEncoder/Setpoint", setpoint);
 
+    /*
+     * The if statement below make sure that the motor only spins if
+     * it is correctly reset and within safe bounds.
+     */
+
     if (!limitReset) {
       Logger.recordOutput("relEncoder/NotWorkingBecause", "NotHomed");
       motor.set(0);
@@ -107,10 +116,15 @@ public class RelEncoderSparkMax implements RelEncoderIO {
     motor.set(speed);
   }
 
-  @Override
-  public void updateValues() {
-    Logger.recordOutput("relEncoder/EncoderValue", encoder.getPosition());
+  public double getSpeed() {
+    return motor.get();
   }
+
+  /*
+   * A limit switch is often used with relative encoders to give
+   * the robot a physical point at which to define the encoder's
+   * zero position. The logic for this limit switch is below.
+   */
 
   @Override
   public void updateLimitSwitch() {

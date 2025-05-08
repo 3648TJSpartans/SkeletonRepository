@@ -1,11 +1,15 @@
 package frc.robot.subsystems.relativeEncoder;
 
-public interface RelEncoderIO {
-    // allows us to move to a certain point
-    public default void setTo(double setpoint) {
-    }
+/*
+ * The IO file creates a skeleton for the third file with
+ * most of the logic. If a subsystem could have two variants,
+ * such as one with one motor and one with two, both could
+ * run through the same IO structure.
+ */
 
-    public default void updateValues() {
+public interface RelEncoderIO {
+
+    public default void setTo(double setpoint) {
     }
 
     public default boolean getLimitSwitch() {
@@ -23,6 +27,10 @@ public interface RelEncoderIO {
     }
 
     public default void setSpeed(double speed) {
+    }
+
+    public default double getSpeed() {
+        return 0;
     }
 
     public default void updateLimitSwitch() {

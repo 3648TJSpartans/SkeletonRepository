@@ -1,7 +1,5 @@
 package frc.robot.subsystems.simpleMotor;
 
-import org.littletonrobotics.junction.Logger;
-
 import com.revrobotics.spark.SparkMax;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
 
@@ -19,11 +17,6 @@ public class SimpleMotorSparkMax implements SimpleMotorIO {
     public SimpleMotorSparkMax() {
         /* All of our motors are brushless. */
         motor = new SparkMax(SimpleMotorConstants.simpleMotorCan, MotorType.kBrushless);
-    }
-
-    /* Any necessary logging is performed here. */
-    public void updateValues() {
-        Logger.recordOutput("simpleMotor/speed", getSpeed());
     }
 
     public void stop() {

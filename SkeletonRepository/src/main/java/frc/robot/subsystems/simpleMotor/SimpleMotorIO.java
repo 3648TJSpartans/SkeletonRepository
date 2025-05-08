@@ -13,10 +13,6 @@ public interface SimpleMotorIO {
 
     }
 
-    public default void updateValues() {
-
-    }
-
     public default void setSpeed(double speed) {
 
     }

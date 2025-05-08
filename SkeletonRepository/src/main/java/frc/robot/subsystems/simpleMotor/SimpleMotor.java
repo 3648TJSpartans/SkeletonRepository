@@ -1,5 +1,7 @@
 package frc.robot.subsystems.simpleMotor;
 
+import org.littletonrobotics.junction.Logger;
+
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 /*
@@ -18,7 +20,6 @@ public class SimpleMotor extends SubsystemBase {
 
     private final SimpleMotorIO io;
 
-    /* Receive the IO */
     public SimpleMotor(SimpleMotorIO io) {
         this.io = io;
     }
@@ -26,7 +27,7 @@ public class SimpleMotor extends SubsystemBase {
     /* Periodic, which runs constantly, is used here to log important values. */
     @Override
     public void periodic() {
-        io.updateValues();
+        Logger.recordOutput("simpleMotor/speed", io.getSpeed());
     }
 
     /* The remaining methods are all taken from the IO. */
