@@ -227,7 +227,7 @@ public class RobotContainer {
         Command homeAuto = new HomeRelCmd(m_relEncoder);
         Command relOutAuto = new RelCmd(m_relEncoder, RelEncoderConstants.setpoint1);
         Command absOutAuto = new AbsCmd(m_absEncoder, AbsEncoderConstants.setpoint1);
-        Command simpleMotorAuto = new SimpleMotorCmd(m_simpleMotor, SimpleMotorConstants.exampleSpeed1);
+        Command simpleMotorAuto = new SimpleMotorCmd(m_simpleMotor, SimpleMotorConstants.speed1);
         Command sequentialAuto = new ExampleSequentialCmd(m_drive, m_absEncoder, m_relEncoder);
 
         NamedCommands.registerCommand("homeRel", homeAuto);
@@ -245,7 +245,6 @@ public class RobotContainer {
         configureAutoChooser();
         configureRelativeEncoder();
         configureSimpleMotor();
-        configureButtonBindings();
         configureDrive();
 
         m_copilotController.rightTrigger().onTrue(new InstantCommand(() -> toggleOverride()));
@@ -338,8 +337,8 @@ public class RobotContainer {
     }
 
     public void configureSimpleMotor() {
-        Command simpleForward = new SimpleMotorCmd(m_simpleMotor, SimpleMotorConstants.exampleSpeed1);
-        Command simpleBackward = new SimpleMotorCmd(m_simpleMotor, -SimpleMotorConstants.exampleSpeed1);
+        Command simpleForward = new SimpleMotorCmd(m_simpleMotor, SimpleMotorConstants.speed1);
+        Command simpleBackward = new SimpleMotorCmd(m_simpleMotor, -SimpleMotorConstants.speed1);
 
         m_copilotController.leftBumper().whileTrue(simpleBackward);
         m_copilotController.rightBumper().whileTrue(simpleForward);

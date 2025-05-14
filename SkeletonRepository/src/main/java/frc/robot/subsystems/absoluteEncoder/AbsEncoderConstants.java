@@ -1,7 +1,7 @@
 package frc.robot.subsystems.absoluteEncoder;
 
 public class AbsEncoderConstants {
-    public static final int absEncoderMotorCan = 9;
+    public static final int absEncoderMotorCan = 15;
 
     public static final double kP = 0;
     public static final double kI = 0;
