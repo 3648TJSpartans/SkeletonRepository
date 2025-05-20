@@ -25,7 +25,7 @@ public class VisionConstants {
     // Camera names, must match names configured on coprocessor
     public static String camera0Name = "limelght-three";
     public static String camera1Name = "limelight-twoplus";
-
+    public static  int defualtPipeline = 0;
     // Robot to camera transforms
     // (Not used by Limelight, configure in web UI instead)
     public static Transform3d robotToCamera0 = new Transform3d(0, 0.0, 0, new Rotation3d(0.0, 0, 0.0));
