@@ -21,7 +21,6 @@ public class AlignTxDy extends AlignTx{
         this.dySupplier = dySupplier;
         yController =  new ProfiledPIDController(
             kP, 0.0, kD, new TrapezoidProfile.Constraints(maxSpeed, maxAcceleration), 0.02);
-        yController.setGoal(0);
     }
     public AlignTxDy(Drive drive, Vision vision, int pipeline,int cameraIndex, Supplier<Double> dySupplier){
         this(drive,vision, cameraIndex, pipeline, ()->vision.getTargetX(cameraIndex), dySupplier);
@@ -33,6 +32,6 @@ public class AlignTxDy extends AlignTx{
     }
     @Override
     public boolean isFinished(){
-        return xFinsihed() && dySupplier.get()<goToConstants.driveTolerance();
+        return xFinsihed() && dySupplier.get()<goToConstants.driveTolerance;
     }
 }
