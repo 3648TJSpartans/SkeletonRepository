@@ -9,14 +9,13 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.wpilibj2.command.Command;
-import frc.robot.commands.goToCommands.goToConstants;
 import frc.robot.subsystems.drive.Drive;
 import frc.robot.subsystems.vision.Vision;
 
 public class AlignTx extends Command{
 
-    protected static double kP = 2;
-    protected  static double kD = 0;
+    protected static double kP;
+    protected  static double kD;
     protected  static double maxSpeed = 1.5;
     protected  static double maxAcceleration = 1.5;
     protected  final ProfiledPIDController xController; 
@@ -52,12 +51,5 @@ public class AlignTx extends Command{
     public void end(boolean interrupted){
         drive.stop();
         vision.resetPipeline(cameraIndex);
-    }
-    @Override
-    public boolean isFinished(){
-        return xFinsihed();
-    }
-    public boolean xFinsihed(){
-        return Math.abs(txSupplier.get()<goToConstants.driveTolerance());
     }
 }

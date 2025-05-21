@@ -9,6 +9,7 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.wpilibj2.command.Command;
+import frc.robot.commands.goToCommands.goToConstants;
 import frc.robot.subsystems.drive.Drive;
 import frc.robot.subsystems.vision.Vision;
 
@@ -29,5 +30,9 @@ public class AlignTxDy extends AlignTx{
     public void execute(){
         double ySpeed = yController.calculate(dySupplier.get());
         drive.runVelocity(ChassisSpeeds.fromFieldRelativeSpeeds(xSpeed(),ySpeed, 0.0, drive.getRotation()));
+    }
+    @Override
+    public boolean isFinished(){
+        return xFinsihed() && dySupplier.get()<goToConstants.driveTolerance();
     }
 }
