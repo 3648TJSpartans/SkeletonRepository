@@ -42,8 +42,10 @@ import frc.robot.commands.absoluteEncoderCommands.AbsAnalogCmd;
 import frc.robot.commands.absoluteEncoderCommands.AbsCmd;
 import frc.robot.commands.commandGroups.ExampleSequentialCmd;
 import frc.robot.commands.goToCommands.goToConstants.PoseConstants;
+import frc.robot.commands.goToCommands.DriveTo;
 import frc.robot.commands.goToCommands.DriveToNearest;
 import frc.robot.commands.goToCommands.DriveToPose;
+import frc.robot.commands.goToCommands.goToConstants;
 import frc.robot.commands.goToCommands.goToConstants.PoseConstants.AutonState;
 import frc.robot.commands.ledCommands.AutoLEDCommand;
 import frc.robot.commands.ledCommands.TeleopLEDCommand;
@@ -245,7 +247,6 @@ public class RobotContainer {
         configureAutoChooser();
         configureRelativeEncoder();
         configureSimpleMotor();
-        configureButtonBindings();
         configureDrive();
 
         m_copilotController.rightTrigger().onTrue(new InstantCommand(() -> toggleOverride()));
@@ -414,6 +415,9 @@ public class RobotContainer {
                                                 new Rotation2d())),
                                 m_drive)
                                 .ignoringDisable(true));
+        Command driveTest = new DriveTo(m_drive, () -> PoseConstants.examplePose);
+
+        m_driveController.rightTrigger().whileTrue(driveTest);
     }
 
     public void configureAbsoluteEncoder() {

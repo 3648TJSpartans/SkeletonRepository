@@ -7,7 +7,7 @@ package frc.robot.subsystems.relativeEncoder;
 /** constants for the coral subsystem */
 public class RelEncoderConstants {
 
-    public static final int relEncoderMotorCan = 9;
+    public static final int relEncoderMotorCan = 14;
 
     public static final double setpoint1 = 0;
     public static final double setpoint2 = 1;
