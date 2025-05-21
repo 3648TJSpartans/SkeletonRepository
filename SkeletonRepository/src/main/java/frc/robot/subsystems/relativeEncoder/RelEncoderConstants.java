@@ -10,7 +10,7 @@ import frc.robot.util.TunableNumber;
 
 public class RelEncoderConstants {
 
-    public static final int relEncoderMotorCan = 9;
+    public static final int relEncoderMotorCan = 14;
 
     public static final double setpoint1 = new TunableNumber("relEncoder/setpoint1", 0).get();
     public static final double setpoint2 = new TunableNumber("relEncoder/setpoint2", 1).get();
