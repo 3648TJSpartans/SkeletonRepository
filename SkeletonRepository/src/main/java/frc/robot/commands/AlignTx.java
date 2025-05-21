@@ -31,6 +31,7 @@ public class AlignTx extends Command{
         this.txSupplier = txSupplier;
         xController = new ProfiledPIDController(
             kP, 0.0, kD, new TrapezoidProfile.Constraints(maxSpeed, maxAcceleration), 0.02);
+        xController.setGoal(0);
     }
     public AlignTx(Drive drive, Vision vision, int pipeline,int cameraIndex){
         this(drive,vision, cameraIndex, pipeline, ()->vision.getTargetX(cameraIndex));
@@ -45,5 +46,10 @@ public class AlignTx extends Command{
     }
     public double xSpeed(){
         return xController.calculate(txSupplier.get().getRadians());
+    }
+    @Override
+    public void end(boolean interrupted){
+        drive.stop();
+        vision.resetPipeline(cameraIndex);
     }
 }

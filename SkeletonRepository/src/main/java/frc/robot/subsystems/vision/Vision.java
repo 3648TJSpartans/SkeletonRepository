@@ -186,7 +186,7 @@ public class Vision extends SubsystemBase {
   public void setPipeline(int pipeline, int cameraIndex){
     io[cameraIndex].setPipeline(pipeline);
   }
-  public void resetPipeline(int pipeline, int cameraIndex){
+  public void resetPipeline(int cameraIndex){
     io[cameraIndex].resetPipeline();
   }
 }
