@@ -386,7 +386,7 @@ public class RobotContainer {
                         () -> -m_driveController.getLeftX(),
                         () -> -m_driveController.getRightX(),
                         m_driveController.leftBumper(),
-                        () -> m_vision.getTx(),
+                        () -> m_vision.getTargetX(0).getDegrees(),
                         m_driveController.leftBumper(),
                         m_driveController.rightBumper(),
                         () -> !endgameClosed));

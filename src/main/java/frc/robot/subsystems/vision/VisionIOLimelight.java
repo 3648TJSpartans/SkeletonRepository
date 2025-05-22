@@ -22,6 +22,9 @@ import edu.wpi.first.networktables.DoubleArraySubscriber;
 import edu.wpi.first.networktables.DoubleSubscriber;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.RobotController;
+
+import static frc.robot.subsystems.vision.VisionConstants.defualtPipeline;
+
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
@@ -39,7 +42,6 @@ public class VisionIOLimelight implements VisionIO {
   private final DoubleArraySubscriber megatag1Subscriber;
   private final DoubleArraySubscriber megatag2Subscriber;
   private String name;
-
   /**
    * Creates a new VisionIOLimelight.
    *
@@ -162,5 +164,16 @@ public class VisionIOLimelight implements VisionIO {
             Units.degreesToRadians(rawLLArray[3]),
             Units.degreesToRadians(rawLLArray[4]),
             Units.degreesToRadians(rawLLArray[5])));
+  }
+
+  @Override
+  public void setPipeline(int pipeline){
+    var table = NetworkTableInstance.getDefault().getTable(name);
+    table.getEntry("pipeline").setNumber(pipeline);
+  }
+
+  @Override
+  public void resetPipeline(){
+    setPipeline(defualtPipeline);
   }
 }
