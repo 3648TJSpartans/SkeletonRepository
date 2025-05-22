@@ -3,6 +3,7 @@ package frc.robot.commands.goToCommands;
 import java.util.function.Supplier;
 
 import org.littletonrobotics.junction.AutoLogOutput;
+import org.littletonrobotics.junction.Logger;
 
 import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -41,22 +42,24 @@ public class AlignTx extends Command {
 
     @Override
     public void initialize() {
-        vision.setPipeline(pipeline, cameraIndex);
+        // vision.setPipeline(pipeline, cameraIndex);
     }
 
     @Override
     public void execute() {
-        drive.runVelocity(ChassisSpeeds.fromFieldRelativeSpeeds(xSpeed(), 0.0, 0.0, drive.getRotation()));
+        drive.runVelocity(new ChassisSpeeds(0.0, xSpeed(), 0.0));
     }
 
+    @AutoLogOutput(key = "AlignTx/xSpeed")
     public double xSpeed() {
+        Logger.recordOutput("AlignTx/tx", txSupplier.get().getRadians());
         return xController.calculate(txSupplier.get().getRadians());
     }
 
     @Override
     public void end(boolean interrupted) {
         drive.stop();
-        vision.resetPipeline(cameraIndex);
+        // vision.resetPipeline(cameraIndex);
     }
 
     @Override
@@ -65,6 +68,6 @@ public class AlignTx extends Command {
     }
 
     public boolean xFinsihed() {
-        return Math.abs(txSupplier.get().getRadians()) < goToConstants.driveTolerance;
+        return Math.abs(txSupplier.get().getRadians()) < goToConstants.thetaTolerance;
     }
 }

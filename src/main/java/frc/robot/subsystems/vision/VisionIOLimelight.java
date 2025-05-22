@@ -42,6 +42,7 @@ public class VisionIOLimelight implements VisionIO {
   private final DoubleArraySubscriber megatag1Subscriber;
   private final DoubleArraySubscriber megatag2Subscriber;
   private String name;
+
   /**
    * Creates a new VisionIOLimelight.
    *
@@ -167,13 +168,13 @@ public class VisionIOLimelight implements VisionIO {
   }
 
   @Override
-  public void setPipeline(int pipeline){
+  public void setPipeline(int pipeline) {
     var table = NetworkTableInstance.getDefault().getTable(name);
     table.getEntry("pipeline").setNumber(pipeline);
   }
 
   @Override
-  public void resetPipeline(){
+  public void resetPipeline() {
     setPipeline(defualtPipeline);
   }
 }

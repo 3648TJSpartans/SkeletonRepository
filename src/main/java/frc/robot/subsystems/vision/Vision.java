@@ -28,6 +28,8 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.subsystems.vision.VisionIO.PoseObservationType;
 import java.util.LinkedList;
 import java.util.List;
+
+import org.littletonrobotics.junction.AutoLogOutput;
 import org.littletonrobotics.junction.Logger;
 
 public class Vision extends SubsystemBase {
@@ -60,6 +62,7 @@ public class Vision extends SubsystemBase {
    *
    * @param cameraIndex The index of the camera to use.
    */
+  @AutoLogOutput(key = "Vision/CameraReadTx")
   public Rotation2d getTargetX(int cameraIndex) {
     return inputs[cameraIndex].latestTargetObservation.tx();
   }
@@ -183,10 +186,11 @@ public class Vision extends SubsystemBase {
         Matrix<N3, N1> visionMeasurementStdDevs);
   }
 
-  public void setPipeline(int pipeline, int cameraIndex){
+  public void setPipeline(int pipeline, int cameraIndex) {
     io[cameraIndex].setPipeline(pipeline);
   }
-  public void resetPipeline(int cameraIndex){
+
+  public void resetPipeline(int cameraIndex) {
     io[cameraIndex].resetPipeline();
   }
 }
