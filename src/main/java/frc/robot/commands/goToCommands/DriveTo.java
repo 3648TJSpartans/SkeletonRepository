@@ -17,7 +17,7 @@ import frc.robot.subsystems.drive.Drive;
 public class DriveTo extends Command {
     private final Supplier<Pose2d> robotPoseSupplier;
     private final Supplier<Pose2d> targetPoseSupplier;
-    //This interface is neccasasy to stop type erasure in constructors. 
+    //This interface is neccasasy to stop type erasure in constructors (I had to google what that meant)
     @FunctionalInterface
     public interface Pose2dListSupplier extends Supplier<List<Pose2d>>{}
 
