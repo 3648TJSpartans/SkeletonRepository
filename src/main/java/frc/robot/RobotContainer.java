@@ -55,6 +55,7 @@ import frc.robot.commands.relativeEncoderCommands.RelCmd;
 import frc.robot.commands.simpleMotorCommands.SimpleMotorCmd;
 import frc.robot.commands.goToCommands.DriveToNearest;
 import frc.robot.commands.goToCommands.DriveToPose;
+import frc.robot.commands.goToCommands.AlignTx;
 import frc.robot.subsystems.drive.Drive;
 import frc.robot.subsystems.drive.GyroIO;
 import frc.robot.subsystems.drive.GyroIONavX;
@@ -418,6 +419,7 @@ public class RobotContainer {
         Command driveTest = new DriveTo(m_drive, () -> PoseConstants.examplePose);
 
         m_driveController.rightTrigger().whileTrue(driveTest);
+        m_driveController.leftTrigger().whileTrue(new AlignTx(m_drive, m_vision,0,0));
     }
 
     public void configureAbsoluteEncoder() {
