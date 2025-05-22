@@ -17,8 +17,9 @@ import frc.robot.subsystems.drive.Drive;
 public class DriveTo extends Command {
     private final Supplier<Pose2d> robotPoseSupplier;
     private final Supplier<Pose2d> targetPoseSupplier;
-
-    private interface Pose2dListSupplier extends Supplier<List<Pose2d>>{}
+    //This interface is neccasasy to stop type erasure in constructors. 
+    @FunctionalInterface
+    public interface Pose2dListSupplier extends Supplier<List<Pose2d>>{}
 
     private final Drive drive;
     // Defines PID controlelrs
@@ -29,7 +30,11 @@ public class DriveTo extends Command {
     private final ProfiledPIDController thetaController = new ProfiledPIDController(
             goToConstants.thetakP, 0.0, goToConstants.thetakD,
             new TrapezoidProfile.Constraints(goToConstants.thetaMaxVelocity, goToConstants.thetaMaxAcceleration), 0.02);
-
+    
+    //Drive to Pose
+    //@param drive - robot drive subsystem
+    //@param robotPose - A Pose 2d Supplier of current robot pose
+    //@param targetPose - Pose2d Supplier of target pose. 
     public DriveTo(Drive drive, Supplier<Pose2d> robotPose, Supplier<Pose2d> targetPose) {
         this.robotPoseSupplier = robotPose;
         this.targetPoseSupplier = targetPose;
@@ -43,10 +48,16 @@ public class DriveTo extends Command {
         thetaController.setGoal(0.0);
     }
 
+     //Drive to Pose
+    //@param drive - robot drive subsystem
+    //@param targetPose - Pose2d Supplier of target pose. 
     public DriveTo(Drive drive, Supplier<Pose2d> targetPose) {
         this(drive, drive::getPose, targetPose);
     }
-
+    //Drive to Nearest Pose
+    //@param drive - robot drive subsystem
+    //@param robotPose - A Pose 2d Supplier of current robot pose
+    //@param targetPoses - List<Pose2d> Supplier of target pose. 
     public DriveTo(Drive drive, Supplier<Pose2d> robotPose, Pose2dListSupplier targetPoses){
         this(drive, robotPose, ()-> robotPose.get().nearest(targetPoses.get()));
     }

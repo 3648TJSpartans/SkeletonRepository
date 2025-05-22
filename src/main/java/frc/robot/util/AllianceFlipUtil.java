@@ -1,5 +1,8 @@
 package frc.robot.util;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.littletonrobotics.junction.AutoLogOutput;
 
 // Copyright (c) 2025 FRC 6328
@@ -59,6 +62,13 @@ public class AllianceFlipUtil {
         Pose2d[] out = new Pose2d[poses.length];
         for (int i = 0; i < poses.length; i++) {
             out[i] = apply(poses[i]);
+        }
+        return out;
+    }
+    public static List<Pose2d> apply(List<Pose2d> poses) {
+        List<Pose2d> out = new ArrayList<>();
+        for (int i = 0; i < poses.size(); i++) {
+            out.add(apply(poses.get(i)));
         }
         return out;
     }

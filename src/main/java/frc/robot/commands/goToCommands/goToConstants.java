@@ -1,5 +1,8 @@
 package frc.robot.commands.goToCommands;
 
+import java.util.Arrays;
+import java.util.List;
+
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.util.Units;
@@ -26,12 +29,12 @@ public class goToConstants {
                 public final static double fieldLength = 17.548;
                 public final static double fieldWidth = 8.042;
 
-                private static Pose2d[] examplePoseListBlue = new Pose2d[] {
+                private static List<Pose2d> examplePoseListBlue = Arrays.asList(
                                 new Pose2d(2, 2, Rotation2d.fromDegrees(180)),
                                 new Pose2d(3, 3, Rotation2d.fromDegrees(270))
-                };
+                );
 
-                public final static Pose2d[] examplePoseList = AllianceFlipUtil.apply(examplePoseListBlue);
+                public final static List<Pose2d> examplePoseList = AllianceFlipUtil.apply(examplePoseListBlue);
 
                 public static enum AutonState {
                         EXAMPLE1,

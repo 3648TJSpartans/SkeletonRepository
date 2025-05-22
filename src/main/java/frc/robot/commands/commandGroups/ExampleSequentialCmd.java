@@ -2,6 +2,7 @@ package frc.robot.commands.commandGroups;
 
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+import frc.robot.commands.goToCommands.DriveTo;
 import frc.robot.commands.goToCommands.goToConstants.PoseConstants;
 import frc.robot.subsystems.absoluteEncoder.AbsEncoder;
 import frc.robot.subsystems.absoluteEncoder.AbsEncoderConstants;
@@ -39,7 +40,7 @@ public class ExampleSequentialCmd extends SequentialCommandGroup {
 
         m_relCommand = AutoBuildingBlocks.relCmd(m_relEncoder, RelEncoderConstants.setpoint1);
         m_absCommand = AutoBuildingBlocks.absCmd(m_absEncoder, AbsEncoderConstants.setpoint1);
-        m_driveCommand = AutoBuildingBlocks.driveToNearest(m_drive, PoseConstants.examplePoseList);
+        m_driveCommand = new DriveTo(m_drive, ()-> PoseConstants.examplePoseList);
 
         addCommands(
                 new SequentialCommandGroup(
