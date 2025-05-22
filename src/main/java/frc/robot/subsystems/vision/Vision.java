@@ -183,7 +183,10 @@ public class Vision extends SubsystemBase {
         Matrix<N3, N1> visionMeasurementStdDevs);
   }
 
-  public double getTx() {
-    return io[0].getTx();
+  public void setPipeline(int pipeline, int cameraIndex){
+    io[cameraIndex].setPipeline(pipeline);
+  }
+  public void resetPipeline(int cameraIndex){
+    io[cameraIndex].resetPipeline();
   }
 }
