@@ -15,8 +15,8 @@ import frc.robot.subsystems.vision.Vision;
 
 public class AlignTx extends Command {
 
-    protected static double kP = 2;
-    protected static double kD = 0;
+    protected static double kP = 2.0;
+    protected static double kD = 0.0;
     protected static double maxSpeed = 1.5;
     protected static double maxAcceleration = 1.5;
     protected final ProfiledPIDController xController;
