@@ -193,4 +193,8 @@ public class Vision extends SubsystemBase {
   public void resetPipeline(int cameraIndex) {
     io[cameraIndex].resetPipeline();
   }
+  @AutoLogOutput(key = "Vision/Tag-RelativePose")
+  public Pose2d getTagRelativePose(int cameraIndex){
+    return io[cameraIndex].getTagRelativePose();
+  }
 }

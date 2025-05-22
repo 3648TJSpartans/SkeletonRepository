@@ -13,6 +13,7 @@
 
 package frc.robot.subsystems.vision;
 
+import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Rotation3d;
@@ -67,10 +68,12 @@ public class VisionIOLimelight implements VisionIO {
     var table = NetworkTableInstance.getDefault().getTable(name);
     return table.getDoubleTopic("tx").subscribe(0.0).getAsDouble();
   }
-
-  public double[] get_botpose_targetspace() {
+  //If we're always gettign 0, the error is in here
+  @Override
+  public Pose2d getTagRelativePose() {
     var table = NetworkTableInstance.getDefault().getTable(name);
-    return table.getDoubleArrayTopic("botpose_targetspace").subscribe(new double[6]).get();
+    double[] tableValues = table.getDoubleArrayTopic("botpose_targetspace").subscribe(new double[6]).get();
+    return new Pose2d(tableValues[0],tableValues[1],new Rotation2d(Units.degreesToRadians(tableValues[4])));
   }
 
   @Override

@@ -43,7 +43,7 @@ import frc.robot.commands.absoluteEncoderCommands.AbsCmd;
 import frc.robot.commands.commandGroups.ExampleSequentialCmd;
 import frc.robot.commands.goToCommands.goToConstants.PoseConstants;
 import frc.robot.commands.goToCommands.DriveTo;
-import frc.robot.commands.goToCommands.DriveToNearest;
+import frc.robot.commands.goToCommands.AlignToTag;
 import frc.robot.commands.goToCommands.DriveToPose;
 import frc.robot.commands.goToCommands.goToConstants;
 import frc.robot.commands.goToCommands.goToConstants.PoseConstants.AutonState;
@@ -55,7 +55,6 @@ import frc.robot.commands.relativeEncoderCommands.RelCmd;
 import frc.robot.commands.simpleMotorCommands.SimpleMotorCmd;
 import frc.robot.commands.goToCommands.DriveToNearest;
 import frc.robot.commands.goToCommands.DriveToPose;
-import frc.robot.commands.goToCommands.AlignTx;
 import frc.robot.subsystems.drive.Drive;
 import frc.robot.subsystems.drive.GyroIO;
 import frc.robot.subsystems.drive.GyroIONavX;
@@ -426,7 +425,7 @@ public class RobotContainer {
                 Command driveTest = new DriveTo(m_drive, () -> PoseConstants.examplePose);
 
                 m_driveController.rightTrigger().whileTrue(driveTest);
-                m_driveController.leftTrigger().whileTrue(new AlignTx(m_drive, m_vision, 0, 1));
+                m_driveController.leftTrigger().whileTrue(new AlignToTag(m_drive,()->m_vision.getTagRelativePose(1),()-> new Pose2d(0,.15,new Rotation2d())));
         }
 
         public void configureAbsoluteEncoder() {
