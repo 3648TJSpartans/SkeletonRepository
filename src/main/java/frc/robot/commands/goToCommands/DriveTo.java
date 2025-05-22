@@ -1,5 +1,6 @@
 package frc.robot.commands.goToCommands;
 
+import java.util.List;
 import java.util.function.Supplier;
 
 import org.littletonrobotics.junction.Logger;
@@ -16,6 +17,9 @@ import frc.robot.subsystems.drive.Drive;
 public class DriveTo extends Command {
     private final Supplier<Pose2d> robotPoseSupplier;
     private final Supplier<Pose2d> targetPoseSupplier;
+
+    private interface Pose2dListSupplier extends Supplier<List<Pose2d>>{}
+
     private final Drive drive;
     // Defines PID controlelrs
     private final ProfiledPIDController driveController = new ProfiledPIDController(
@@ -43,6 +47,12 @@ public class DriveTo extends Command {
         this(drive, drive::getPose, targetPose);
     }
 
+    public DriveTo(Drive drive, Supplier<Pose2d> robotPose, Pose2dListSupplier targetPoses){
+        this(drive, robotPose, ()-> robotPose.get().nearest(targetPoses.get()));
+    }
+    public DriveTo(Drive drive, Pose2dListSupplier targetPoses){
+        this(drive, drive::getPose, targetPoses);
+    }
     @Override
     public void execute() {
         Pose2d robotPose = robotPoseSupplier.get();
