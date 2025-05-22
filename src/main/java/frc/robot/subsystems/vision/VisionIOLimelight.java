@@ -68,6 +68,11 @@ public class VisionIOLimelight implements VisionIO {
     return table.getDoubleTopic("tx").subscribe(0.0).getAsDouble();
   }
 
+  public double[] get_botpose_targetspace() {
+    var table = NetworkTableInstance.getDefault().getTable(name);
+    return table.getDoubleArrayTopic("botpose_targetspace").subscribe(new double[6]).get();
+  }
+
   @Override
   public void updateInputs(VisionIOInputs inputs) {
     // Update connection status based on whether an update has been seen in the last
