@@ -28,7 +28,7 @@ public class AlignTxDy extends AlignTx{
     @Override
     public void execute(){
         double ySpeed = yController.calculate(dySupplier.get());
-        drive.runVelocity(ChassisSpeeds.fromFieldRelativeSpeeds(xSpeed(),ySpeed, 0.0, drive.getRotation()));
+        drive.runVelocity(ChassisSpeeds.fromRobotRelativeSpeeds(xSpeed(),ySpeed, 0.0, drive.getRotation()));
     }
     @Override
     public boolean isFinished(){

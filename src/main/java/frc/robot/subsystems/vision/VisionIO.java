@@ -52,7 +52,10 @@ public interface VisionIO {
 
   public default void updateInputs(VisionIOInputs inputs) {
   }
-  public default void setPipeline(int pipeline){}
 
-  public default void resetPipeline(){}
+  public default void setPipeline(int pipeline) {
+  }
+
+  public default void resetPipeline() {
+  }
 }
