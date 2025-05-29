@@ -46,6 +46,10 @@ public class AlignToTag extends Command {
     @Override
     public void execute() {
         Pose2d robotPose = robotPoseSupplier.get();
+        //Stops the robot from driving if it doesn't see a tag.
+        if(robotPose.equals(new Pose2d())){
+            return;
+        }
         Pose2d targetPose = targetPoseSupplier.get();
         // Gets the displacement vector -- if the robot goes absolutely the wrong way,
         // switch target pose and robot pose.
@@ -89,4 +93,5 @@ public class AlignToTag extends Command {
     public boolean isFinished() {
         return atGoal();
     }
+    
 }
