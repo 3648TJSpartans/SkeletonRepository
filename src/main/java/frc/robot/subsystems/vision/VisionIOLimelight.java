@@ -71,8 +71,7 @@ public class VisionIOLimelight implements VisionIO {
   //If we're always gettign 0, the error is in here
   @Override
   public Pose2d getTagRelativePose() {
-    var table = NetworkTableInstance.getDefault().getTable(name);
-    double[] tableValues = table.getDoubleArrayTopic("botpose_targetspace").subscribe(new double[6]).get();
+    double[] tableValues = NetworkTableInstance.getDefault().getTable(name).getDoubleArrayTopic("botpose_targetspace").subscribe(new double[6]).get();
     return new Pose2d(tableValues[0],tableValues[1],new Rotation2d(Units.degreesToRadians(tableValues[4])));
   }
 
