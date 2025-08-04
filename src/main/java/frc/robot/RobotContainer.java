@@ -423,9 +423,11 @@ public class RobotContainer {
                                                                 m_drive)
                                                                 .ignoringDisable(true));
                 Command driveTest = new DriveTo(m_drive, () -> PoseConstants.examplePose);
-
+                Pose2d alignOffset = new Pose2d(new Translation2d(.15,.15), new Rotation2d());
+                Command alignToTag = new DriveTo(m_drive, ()-> m_vision.getTagRelativePose(), ()-> alignOffset);
                 m_driveController.rightTrigger().whileTrue(driveTest);
-                m_driveController.leftTrigger().whileTrue(new AlignToTag(m_drive,()->m_vision.getTagRelativePose(1),()-> new Pose2d(0,.15,new Rotation2d())));
+                m_driveController.leftTrigger().whileTrue(alignToTag);
+                
         }
 
         public void configureAbsoluteEncoder() {
