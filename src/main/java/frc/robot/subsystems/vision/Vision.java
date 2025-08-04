@@ -20,6 +20,8 @@ import edu.wpi.first.math.VecBuilder;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Transform2d;
+import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.numbers.N1;
 import edu.wpi.first.math.numbers.N3;
 import edu.wpi.first.wpilibj.Alert;
@@ -196,5 +198,23 @@ public class Vision extends SubsystemBase {
   @AutoLogOutput(key = "Vision/Tag-RelativePose")
   public Pose2d getTagRelativePose(int cameraIndex){
     return io[cameraIndex].getTagRelativePose();
+  }
+  //Average Pose
+  //May have some issues with the rotation code. 
+  public Pose2d getTagRelativePose(){
+    int validTags = 0;
+    Translation2d translation2d = new Translation2d();
+    double rotation = 0;
+    for(VisionIO targetIO:io){
+      Pose2d ioPose = targetIO.getTagRelativePose();
+      if(ioPose.equals(new Pose2d())){
+        continue;
+      }
+      validTags++;
+      translation2d = translation2d.plus(ioPose.getTranslation());
+      rotation += ioPose.getRotation().getRadians();
+    }
+    //catch for no valid tags
+    return(validTags == 0 ? new Pose2d() : new Pose2d(translation2d.div(validTags),new Rotation2d(rotation/validTags)));
   }
 }
