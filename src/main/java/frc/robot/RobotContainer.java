@@ -43,7 +43,6 @@ import frc.robot.commands.absoluteEncoderCommands.AbsCmd;
 import frc.robot.commands.commandGroups.ExampleSequentialCmd;
 import frc.robot.commands.goToCommands.goToConstants.PoseConstants;
 import frc.robot.commands.goToCommands.DriveTo;
-import frc.robot.commands.goToCommands.AlignToTag;
 import frc.robot.commands.goToCommands.DriveToPose;
 import frc.robot.commands.goToCommands.goToConstants;
 import frc.robot.commands.goToCommands.goToConstants.PoseConstants.AutonState;
