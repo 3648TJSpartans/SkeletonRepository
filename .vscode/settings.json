@@ -56,5 +56,12 @@
     "edu.wpi.first.math.proto.*",
     "edu.wpi.first.math.**.proto.*",
     "edu.wpi.first.math.**.struct.*",
-  ]
+  ],
+
+  "[java]": {
+    "editor.defaultFormatter": "redhat.java",
+    "editor.formatOnSave": true
+  },
+    "java.format.settings.url": "formatterconfig.xml",
+    "java.format.settings.profile": "GoogleStyle",
 }

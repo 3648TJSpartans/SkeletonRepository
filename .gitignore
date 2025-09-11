@@ -188,3 +188,6 @@ compile_commands.json
 
 #Advantage Scope
 src/main/java/frc/robot/BuildConstants.java
+
+# AdvantageScope logs
+*.akitlog
