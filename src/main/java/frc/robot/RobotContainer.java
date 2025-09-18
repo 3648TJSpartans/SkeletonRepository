@@ -43,7 +43,7 @@ import frc.robot.commands.absoluteEncoderCommands.AbsCmd;
 import frc.robot.commands.commandGroups.ExampleSequentialCmd;
 import frc.robot.commands.goToCommands.goToConstants.PoseConstants;
 import frc.robot.commands.goToCommands.DriveTo;
-import frc.robot.commands.goToCommands.DriveTo2;
+import frc.robot.commands.goToCommands.DriveToTag;
 import frc.robot.commands.goToCommands.DriveToPose;
 import frc.robot.commands.goToCommands.goToConstants;
 import frc.robot.commands.goToCommands.goToConstants.PoseConstants.AutonState;
@@ -381,7 +381,7 @@ public class RobotContainer {
                                 m_drive).ignoringDisable(true));
                 Command driveTest = new DriveTo(m_drive, () -> PoseConstants.examplePose);
                 Pose2d alignOffset = new Pose2d(new Translation2d(.60, .0), new Rotation2d(0));
-                Command alignToTag = new DriveTo2(m_drive, () -> m_vision.getTagRelativePose(),
+                Command alignToTag = new DriveToTag(m_drive, () -> m_vision.getTagRelativePose(),
                                 () -> alignOffset);
                 m_driveController.rightTrigger().whileTrue(driveTest);
                 m_driveController.leftTrigger().whileTrue(alignToTag);

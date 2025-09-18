@@ -14,7 +14,7 @@ import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.drive.Drive;
 
-public class DriveTo2 extends Command {
+public class DriveToTag extends Command {
     private final Supplier<Pose2d> robotPoseSupplier;
     private final Supplier<Pose2d> targetPoseSupplier;
     private final Drive drive;
@@ -33,7 +33,7 @@ public class DriveTo2 extends Command {
                             goToConstants.thetaMaxAcceleration),
                     0.02);
 
-    public DriveTo2(Drive drive, Supplier<Pose2d> robotPose, Supplier<Pose2d> targetPose) {
+    public DriveToTag(Drive drive, Supplier<Pose2d> robotPose, Supplier<Pose2d> targetPose) {
         this.robotPoseSupplier = robotPose;
         this.targetPoseSupplier = targetPose;
         this.drive = drive;
@@ -46,7 +46,7 @@ public class DriveTo2 extends Command {
         thetaController.setGoal(0.0);
     }
 
-    public DriveTo2(Drive drive, Supplier<Pose2d> targetPose) {
+    public DriveToTag(Drive drive, Supplier<Pose2d> targetPose) {
         this(drive, drive::getPose, targetPose);
     }
 
