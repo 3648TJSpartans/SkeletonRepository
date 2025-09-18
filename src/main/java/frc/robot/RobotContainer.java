@@ -161,8 +161,8 @@ public class RobotContainer {
                                 // parameters
                                 // Make sure camera name match in the coprocessor!
                                 m_vision = new Vision(m_drive::addVisionMeasurement,
-                                                new VisionIOLimelight(VisionConstants.camera0Name,
-                                                                m_drive::getRotation),
+                                                // new
+                                                // VisionIOLimelight(VisionConstants.camera0Name,m_drive::getRotation),
                                                 new VisionIOLimelight(VisionConstants.camera1Name,
                                                                 m_drive::getRotation));
                                 break;
@@ -380,7 +380,7 @@ public class RobotContainer {
                                 new Pose2d(m_drive.getPose().getTranslation(), new Rotation2d())),
                                 m_drive).ignoringDisable(true));
                 Command driveTest = new DriveTo(m_drive, () -> PoseConstants.examplePose);
-                Pose2d alignOffset = new Pose2d(new Translation2d(.30, .30), new Rotation2d());
+                Pose2d alignOffset = new Pose2d(new Translation2d(.60, .0), new Rotation2d(0));
                 Command alignToTag = new DriveTo2(m_drive, () -> m_vision.getTagRelativePose(),
                                 () -> alignOffset);
                 m_driveController.rightTrigger().whileTrue(driveTest);

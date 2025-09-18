@@ -15,14 +15,14 @@ public class goToConstants {
         public static final double driveMaxAcceleration = 1.5;
         public static final double thetaMaxVelocity = Units.degreesToRadians(360.0);
         public static final double thetaMaxAcceleration = Units.degreesToRadians(720.0);
-        public static final double driveTolerance = 0.03;
+        public static final double driveTolerance = 0.1;
         public static final double thetaTolerance = Units.degreesToRadians(1);
         public static final double ffMinRadius = 0.2;
         public static final double ffMaxRadius = 0.6;
 
         public static class PoseConstants {
                 public final static Pose2d examplePose =
-                                new Pose2d(0, 0, Rotation2d.fromDegrees(0));
+                                new Pose2d(3.57, 2.75, Rotation2d.fromDegrees(60));
                 public final static Pose2d examplePose2 =
                                 new Pose2d(1, 1, Rotation2d.fromDegrees(90));
                 public final static double fieldLength = 17.548;

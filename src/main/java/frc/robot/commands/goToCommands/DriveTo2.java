@@ -1,7 +1,8 @@
 package frc.robot.commands.goToCommands;
 
 import java.util.function.Supplier;
-
+import org.littletonrobotics.junction.AutoLog;
+import org.littletonrobotics.junction.AutoLogOutput;
 import org.littletonrobotics.junction.Logger;
 
 import edu.wpi.first.math.controller.ProfiledPIDController;
@@ -17,6 +18,8 @@ public class DriveTo2 extends Command {
     private final Supplier<Pose2d> robotPoseSupplier;
     private final Supplier<Pose2d> targetPoseSupplier;
     private final Drive drive;
+    private double dp;
+    private double dtheta;
     // Defines PID controlelrs
     private final ProfiledPIDController driveController =
             new ProfiledPIDController(goToConstants.drivekP, 0.0, goToConstants.drivekD,
@@ -56,22 +59,33 @@ public class DriveTo2 extends Command {
         Translation2d displacement = targetPose.getTranslation().minus(robotPose.getTranslation());
         // Defines translational speed the robot should go. displacement.getNorm is the
         // magnitude of the displacement.
+        dp = displacement.getNorm();
         double driveSpeed = driveController.calculate(displacement.getNorm());
         // sets velocity to the normalized displacement vector(direction of
         // displacement) timesd the desired drive speed.
-        Translation2d setVelocity = displacement.div(displacement.getNorm()).times(driveSpeed);
+        Translation2d setVelocity = displacement.div(dp).times(driveSpeed);
 
         // Gets the displacement angle -- if the robot rotates absolutely the wrong way,
         // switch target pose and robot pose.
         Rotation2d thetaDisplacement = targetPose.getRotation().minus(robotPose.getRotation());
+        dtheta = thetaDisplacement.getRadians();
         // Gets PID for thera displacement
-        double thetaVelocity = thetaController.calculate(thetaDisplacement.getRadians());
+        double thetaVelocity = thetaController.calculate(dtheta);
         // runs velocities
-        if (targetPose.equals(new Pose2d())) {
-            return;
+        if (!robotPose.equals(new Pose2d())) {
+            Logger.recordOutput("DriveTo2/SeeingTag", true);
+            // drive.runVelocity(ChassisSpeeds.fromFieldRelativeSpeeds(setVelocity.getX(),
+            // setVelocity.getY(), thetaVelocity, robotPose.getRotation()));
+            drive.runVelocity(new ChassisSpeeds(setVelocity.getX(), setVelocity.getY(), 0
+            // -thetaVelocity
+            ));
+        } else {
+            Logger.recordOutput("DriveTo2/SeeingTag", false);
+            drive.runVelocity(
+                    ChassisSpeeds.fromRobotRelativeSpeeds(0, 0, 0, robotPose.getRotation()));
         }
-        drive.runVelocity(ChassisSpeeds.fromFieldRelativeSpeeds(setVelocity.getX(),
-                setVelocity.getY(), thetaVelocity, robotPose.getRotation()));
+        // drive.runVelocity(ChassisSpeeds.fromFieldRelativeSpeeds(setVelocity.getX(),
+        // setVelocity.getY(), thetaVelocity, robotPose.getRotation()));
 
         // Lets Log stuff
         Logger.recordOutput("DriveTo2/displacement", displacement);
@@ -84,8 +98,10 @@ public class DriveTo2 extends Command {
         Logger.recordOutput("DriveTo2/thetaVelocity", thetaVelocity);
     }
 
+    @AutoLogOutput(key = "DriveTo2/atGoal")
     public boolean atGoal() {
-        return driveController.atGoal() && thetaController.atGoal();
+        return Math.abs(dtheta) < goToConstants.thetaTolerance
+                && Math.abs(dp) < goToConstants.driveTolerance;
     }
 
     @Override
