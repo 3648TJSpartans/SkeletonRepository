@@ -18,13 +18,17 @@ public class DriveTo extends Command {
     private final Supplier<Pose2d> targetPoseSupplier;
     private final Drive drive;
     // Defines PID controlelrs
-    private final ProfiledPIDController driveController = new ProfiledPIDController(
-            goToConstants.drivekP, 0.0, goToConstants.drivekD,
-            new TrapezoidProfile.Constraints(goToConstants.driveMaxVelocity, goToConstants.driveMaxAcceleration), 0.02);
+    private final ProfiledPIDController driveController =
+            new ProfiledPIDController(goToConstants.drivekP, 0.0, goToConstants.drivekD,
+                    new TrapezoidProfile.Constraints(goToConstants.driveMaxVelocity,
+                            goToConstants.driveMaxAcceleration),
+                    0.02);
 
-    private final ProfiledPIDController thetaController = new ProfiledPIDController(
-            goToConstants.thetakP, 0.0, goToConstants.thetakD,
-            new TrapezoidProfile.Constraints(goToConstants.thetaMaxVelocity, goToConstants.thetaMaxAcceleration), 0.02);
+    private final ProfiledPIDController thetaController =
+            new ProfiledPIDController(goToConstants.thetakP, 0.0, goToConstants.thetakD,
+                    new TrapezoidProfile.Constraints(goToConstants.thetaMaxVelocity,
+                            goToConstants.thetaMaxAcceleration),
+                    0.02);
 
     public DriveTo(Drive drive, Supplier<Pose2d> robotPose, Supplier<Pose2d> targetPose) {
         this.robotPoseSupplier = robotPose;
@@ -63,10 +67,8 @@ public class DriveTo extends Command {
         // Gets PID for thera displacement
         double thetaVelocity = thetaController.calculate(thetaDisplacement.getRadians());
         // runs velocities
-        drive.runVelocity(
-                ChassisSpeeds.fromFieldRelativeSpeeds(
-                        setVelocity.getX(), setVelocity.getY(), thetaVelocity,
-                        robotPose.getRotation()));
+        drive.runVelocity(ChassisSpeeds.fromFieldRelativeSpeeds(setVelocity.getX(),
+                setVelocity.getY(), thetaVelocity, robotPose.getRotation()));
 
         // Lets Log stuff
         Logger.recordOutput("DriveTo/displacement", displacement);
