@@ -13,14 +13,23 @@
 
 package frc.robot.subsystems.vision;
 
-import static frc.robot.subsystems.vision.VisionConstants.*;
-
+import static frc.robot.subsystems.vision.VisionConstants.angularStdDevBaseline;
+import static frc.robot.subsystems.vision.VisionConstants.angularStdDevMegatag2Factor;
+import static frc.robot.subsystems.vision.VisionConstants.aprilTagLayout;
+import static frc.robot.subsystems.vision.VisionConstants.cameraStdDevFactors;
+import static frc.robot.subsystems.vision.VisionConstants.linearStdDevBaseline;
+import static frc.robot.subsystems.vision.VisionConstants.linearStdDevMegatag2Factor;
+import static frc.robot.subsystems.vision.VisionConstants.maxAmbiguity;
+import static frc.robot.subsystems.vision.VisionConstants.maxZError;
+import java.util.LinkedList;
+import java.util.List;
+import org.littletonrobotics.junction.AutoLogOutput;
+import org.littletonrobotics.junction.Logger;
 import edu.wpi.first.math.Matrix;
 import edu.wpi.first.math.VecBuilder;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.math.geometry.Transform2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.numbers.N1;
 import edu.wpi.first.math.numbers.N3;
@@ -28,20 +37,16 @@ import edu.wpi.first.wpilibj.Alert;
 import edu.wpi.first.wpilibj.Alert.AlertType;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.subsystems.vision.VisionIO.PoseObservationType;
-import java.util.LinkedList;
-import java.util.List;
-
-import org.littletonrobotics.junction.AutoLogOutput;
-import org.littletonrobotics.junction.Logger;
 
 public class Vision extends SubsystemBase {
   private final VisionConsumer consumer;
-  private final VisionConsumer targetSpaceConsumer;
+  private final TimelessVisionConsumer targetSpaceConsumer;
   private final VisionIO[] io;
   private final VisionIOInputsAutoLogged[] inputs;
   private final Alert[] disconnectedAlerts;
 
-  public Vision(VisionConsumer consumer, VisionConsumer targetSpaceConsumer, VisionIO... io) {
+  public Vision(VisionConsumer consumer, TimelessVisionConsumer targetSpaceConsumer,
+      VisionIO... io) {
     this.consumer = consumer;
     this.targetSpaceConsumer = targetSpaceConsumer;
     this.io = io;
@@ -164,6 +169,14 @@ public class Vision extends SubsystemBase {
       allRobotPosesRejected.addAll(robotPosesRejected);
     }
 
+    // Update Botpose_targetspace
+    Pose2d targetspaceObservation = getTagRelativePose();
+    double stdDevFactor = targetspaceObservation.getX() * targetspaceObservation.getX()
+        + targetspaceObservation.getY() * targetspaceObservation.getY();
+    double linearStdDev = linearStdDevBaseline * stdDevFactor;
+    double angularStdDev = angularStdDevBaseline * stdDevFactor;
+    targetSpaceConsumer.accept(targetspaceObservation,
+        VecBuilder.fill(linearStdDev, linearStdDev, angularStdDev));
     // Log summary data
     Logger.recordOutput("Vision/Summary/TagPoses",
         allTagPoses.toArray(new Pose3d[allTagPoses.size()]));
@@ -179,6 +192,10 @@ public class Vision extends SubsystemBase {
   public static interface VisionConsumer {
     public void accept(Pose2d visionRobotPoseMeters, double timestampSeconds,
         Matrix<N3, N1> visionMeasurementStdDevs);
+  }
+  @FunctionalInterface
+  public static interface TimelessVisionConsumer {
+    public void accept(Pose2d visionRobotPoseMeters, Matrix<N3, N1> visionMeasurementStdDevs);
   }
 
   public void setPipeline(int pipeline, int cameraIndex) {

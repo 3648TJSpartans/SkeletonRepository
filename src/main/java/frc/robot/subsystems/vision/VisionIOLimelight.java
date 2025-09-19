@@ -103,6 +103,7 @@ public class VisionIOLimelight implements VisionIO {
     // Read new pose observations from NetworkTables
     Set<Integer> tagIds = new HashSet<>();
     List<PoseObservation> poseObservations = new LinkedList<>();
+
     for (var rawSample : megatag1Subscriber.readQueue()) {
       if (rawSample.value.length == 0)
         continue;
@@ -111,7 +112,7 @@ public class VisionIOLimelight implements VisionIO {
       }
       poseObservations.add(new PoseObservation(
           // Timestamp, based on server timestamp of publish and latency
-          rawSample.timestamp * 1.0e-6 - rawSample.value[6] * 1.0e-3,
+          rawSample.timestamp * 1.0e-6 - (latencySubscriber.get()) * 1.0e-3,
 
           // 3D pose estimate
           parsePose(rawSample.value),
