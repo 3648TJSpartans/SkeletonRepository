@@ -158,6 +158,7 @@ public class RobotContainer {
                                 // parameters
                                 // Make sure camera name match in the coprocessor!
                                 m_vision = new Vision(m_drive::addVisionMeasurement,
+                                                m_drive::addTargetSpaceVisionMeasurement,
                                                 // new
                                                 // VisionIOLimelight(VisionConstants.camera0Name,m_drive::getRotation),
                                                 new VisionIOLimelight(VisionConstants.camera1Name,
@@ -172,6 +173,7 @@ public class RobotContainer {
                                                 new ModuleIOSim());
 
                                 m_vision = new Vision(m_drive::addVisionMeasurement,
+                                                m_drive::addTargetSpaceVisionMeasurement,
                                                 new VisionIOLimelight(VisionConstants.camera0Name,
                                                                 m_drive::getRotation),
                                                 new VisionIOLimelight(VisionConstants.camera1Name,
@@ -185,6 +187,7 @@ public class RobotContainer {
                                                 new ModuleIO() {});
 
                                 m_vision = new Vision(m_drive::addVisionMeasurement,
+                                                m_drive::addTargetSpaceVisionMeasurement,
                                                 new VisionIOLimelight(VisionConstants.camera0Name,
                                                                 m_drive::getRotation),
                                                 new VisionIOLimelight(VisionConstants.camera1Name,
@@ -378,7 +381,7 @@ public class RobotContainer {
                                 m_drive).ignoringDisable(true));
                 Command driveTest = new DriveTo(m_drive, () -> PoseConstants.examplePose);
                 Pose2d alignOffset = new Pose2d(new Translation2d(.60, .0), new Rotation2d(0));
-                Command alignToTag = new DriveToTag(m_drive, () -> m_vision.getTagRelativePose(),
+                Command alignToTag = new DriveToTag(m_drive, m_drive::getTargetSpacePose,
                                 () -> alignOffset);
                 m_driveController.rightTrigger().whileTrue(driveTest);
                 m_driveController.leftTrigger().whileTrue(alignToTag);
