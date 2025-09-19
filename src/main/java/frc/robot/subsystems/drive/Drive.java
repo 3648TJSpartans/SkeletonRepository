@@ -39,6 +39,7 @@ import edu.wpi.first.wpilibj.Alert;
 import edu.wpi.first.wpilibj.Alert.AlertType;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
@@ -57,26 +58,20 @@ public class Drive extends SubsystemBase {
   private final GyroIOInputsAutoLogged gyroInputs = new GyroIOInputsAutoLogged();
   private final Module[] modules = new Module[4]; // FL, FR, BL, BR
   private final SysIdRoutine sysId;
-  private final Alert gyroDisconnectedAlert = new Alert("Disconnected gyro, using kinematics as fallback.",
-      AlertType.kError);
+  private final Alert gyroDisconnectedAlert =
+      new Alert("Disconnected gyro, using kinematics as fallback.", AlertType.kError);
 
   private SwerveDriveKinematics kinematics = new SwerveDriveKinematics(moduleTranslations);
   private Rotation2d rawGyroRotation = new Rotation2d();
   private SwerveModulePosition[] lastModulePositions = // For delta tracking
-      new SwerveModulePosition[] {
-          new SwerveModulePosition(),
-          new SwerveModulePosition(),
-          new SwerveModulePosition(),
-          new SwerveModulePosition()
-      };
-  private SwerveDrivePoseEstimator poseEstimator = new SwerveDrivePoseEstimator(kinematics, rawGyroRotation,
-      lastModulePositions, new Pose2d());
+      new SwerveModulePosition[] {new SwerveModulePosition(), new SwerveModulePosition(),
+          new SwerveModulePosition(), new SwerveModulePosition()};
+  private SwerveDrivePoseEstimator poseEstimator =
+      new SwerveDrivePoseEstimator(kinematics, rawGyroRotation, lastModulePositions, new Pose2d());
+  private SwerveDrivePoseEstimator targetSpacePoseEstimator =
+      new SwerveDrivePoseEstimator(kinematics, rawGyroRotation, lastModulePositions, new Pose2d());
 
-  public Drive(
-      GyroIO gyroIO,
-      ModuleIO flModuleIO,
-      ModuleIO frModuleIO,
-      ModuleIO blModuleIO,
+  public Drive(GyroIO gyroIO, ModuleIO flModuleIO, ModuleIO frModuleIO, ModuleIO blModuleIO,
       ModuleIO brModuleIO) {
     this.gyroIO = gyroIO;
     modules[0] = new Module(flModuleIO, 0);
@@ -99,39 +94,27 @@ public class Drive extends SubsystemBase {
     // System.out.println("Configured from Drive Consts. ");
     // config = ppConfig;
     // }
-    AutoBuilder.configure(
-        this::getPose,
-        this::setPose,
-        this::getChassisSpeeds,
-        this::runVelocity,
+    AutoBuilder.configure(this::getPose, this::setPose, this::getChassisSpeeds, this::runVelocity,
         new PPHolonomicDriveController(
             // new PIDConstants(5, 0.0, DriveConstants.driveKd),
             // new PIDConstants(1, 0.0, DriveConstants.turnKd)),
             new PIDConstants(goToConstants.drivekP, 0.0, goToConstants.drivekD),
             new PIDConstants(goToConstants.thetakP, 0.0, goToConstants.thetakD)),
-        ppConfig,
-        () -> DriverStation.getAlliance().orElse(Alliance.Blue) == Alliance.Red,
-        this);
+        ppConfig, () -> DriverStation.getAlliance().orElse(Alliance.Blue) == Alliance.Red, this);
     Pathfinding.setPathfinder(new LocalADStarAK());
-    PathPlannerLogging.setLogActivePathCallback(
-        (activePath) -> {
-          Logger.recordOutput(
-              "Odometry/Trajectory", activePath.toArray(new Pose2d[activePath.size()]));
-        });
-    PathPlannerLogging.setLogTargetPoseCallback(
-        (targetPose) -> {
-          Logger.recordOutput("Odometry/TrajectorySetpoint", targetPose);
-        });
+    PathPlannerLogging.setLogActivePathCallback((activePath) -> {
+      Logger.recordOutput("Odometry/Trajectory", activePath.toArray(new Pose2d[activePath.size()]));
+    });
+    PathPlannerLogging.setLogTargetPoseCallback((targetPose) -> {
+      Logger.recordOutput("Odometry/TrajectorySetpoint", targetPose);
+    });
 
     // Configure SysId
     sysId = new SysIdRoutine(
-        new SysIdRoutine.Config(
-            null,
-            null,
-            null,
+        new SysIdRoutine.Config(null, null, null,
             (state) -> Logger.recordOutput("Drive/SysIdState", state.toString())),
-        new SysIdRoutine.Mechanism(
-            (voltage) -> runCharacterization(voltage.in(Volts)), null, this));
+        new SysIdRoutine.Mechanism((voltage) -> runCharacterization(voltage.in(Volts)), null,
+            this));
   }
 
   @Override
@@ -158,7 +141,8 @@ public class Drive extends SubsystemBase {
     }
 
     // Update odometry
-    double[] sampleTimestamps = modules[0].getOdometryTimestamps(); // All signals are sampled together
+    double[] sampleTimestamps = modules[0].getOdometryTimestamps(); // All signals are sampled
+                                                                    // together
     int sampleCount = sampleTimestamps.length;
     for (int i = 0; i < sampleCount; i++) {
       // Read wheel positions and deltas from each module
@@ -185,6 +169,8 @@ public class Drive extends SubsystemBase {
 
       // Apply update
       poseEstimator.updateWithTime(sampleTimestamps[i], rawGyroRotation, modulePositions);
+      targetSpacePoseEstimator.updateWithTime(sampleTimestamps[i], rawGyroRotation,
+          modulePositions);
     }
 
     // Update gyro alert
@@ -228,10 +214,8 @@ public class Drive extends SubsystemBase {
   }
 
   /**
-   * Stops the drive and turns the modules to an X arrangement to resist movement.
-   * The modules will
-   * return to their normal orientations the next time a nonzero velocity is
-   * requested.
+   * Stops the drive and turns the modules to an X arrangement to resist movement. The modules will
+   * return to their normal orientations the next time a nonzero velocity is requested.
    */
   public void stopWithX() {
     Rotation2d[] headings = new Rotation2d[4];
@@ -244,8 +228,7 @@ public class Drive extends SubsystemBase {
 
   /** Returns a command to run a quasistatic test in the specified direction. */
   public Command sysIdQuasistatic(SysIdRoutine.Direction direction) {
-    return run(() -> runCharacterization(0.0))
-        .withTimeout(1.0)
+    return run(() -> runCharacterization(0.0)).withTimeout(1.0)
         .andThen(sysId.quasistatic(direction));
   }
 
@@ -255,8 +238,7 @@ public class Drive extends SubsystemBase {
   }
 
   /**
-   * Returns the module states (turn angles and drive velocities) for all of the
-   * modules.
+   * Returns the module states (turn angles and drive velocities) for all of the modules.
    */
   @AutoLogOutput(key = "SwerveStates/Measured")
   private SwerveModuleState[] getModuleStates() {
@@ -268,8 +250,7 @@ public class Drive extends SubsystemBase {
   }
 
   /**
-   * Returns the module positions (turn angles and drive positions) for all of the
-   * modules.
+   * Returns the module positions (turn angles and drive positions) for all of the modules.
    */
   private SwerveModulePosition[] getModulePositions() {
     SwerveModulePosition[] states = new SwerveModulePosition[4];
@@ -309,6 +290,12 @@ public class Drive extends SubsystemBase {
     return poseEstimator.getEstimatedPosition();
   }
 
+  @AutoLogOutput(key = "Odometry/RobotTargetSpace")
+  public Pose2d getTargetSpacePose() {
+    return targetSpacePoseEstimator.getEstimatedPosition();
+  }
+
+
   /** Returns the current odometry rotation. */
   public Rotation2d getRotation() {
     return getPose().getRotation();
@@ -319,13 +306,22 @@ public class Drive extends SubsystemBase {
     poseEstimator.resetPosition(rawGyroRotation, getModulePositions(), pose);
   }
 
+  /** Resets the current odometry pose. */
+  public void setTargetSpacePose(Pose2d pose) {
+    targetSpacePoseEstimator.resetPosition(rawGyroRotation, getModulePositions(), pose);
+  }
+
   /** Adds a new timestamped vision measurement. */
-  public void addVisionMeasurement(
-      Pose2d visionRobotPoseMeters,
-      double timestampSeconds,
+  public void addVisionMeasurement(Pose2d visionRobotPoseMeters, double timestampSeconds,
       Matrix<N3, N1> visionMeasurementStdDevs) {
-    poseEstimator.addVisionMeasurement(
-        visionRobotPoseMeters, timestampSeconds, visionMeasurementStdDevs);
+    poseEstimator.addVisionMeasurement(visionRobotPoseMeters, timestampSeconds,
+        visionMeasurementStdDevs);
+  }
+
+  public void addTargetSpaceVisionMeasurement(Pose2d visionRobotPoseMeters,
+      Matrix<N3, N1> visionMeasurementStdDevs) {
+    targetSpacePoseEstimator.addVisionMeasurement(visionRobotPoseMeters, Timer.getFPGATimestamp(),
+        visionMeasurementStdDevs);
   }
 
   /** Returns the maximum linear speed in meters per sec. */
