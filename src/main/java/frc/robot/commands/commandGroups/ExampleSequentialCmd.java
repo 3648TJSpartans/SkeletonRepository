@@ -10,15 +10,13 @@ import frc.robot.subsystems.relativeEncoder.RelEncoder;
 import frc.robot.subsystems.relativeEncoder.RelEncoderConstants;
 
 /*
- * Command groups can be used to chain multiple commands together.
- * For example, if you want to move one motor, then drive somewhere,
- * then move another motor (as shown in this example), you can use 
+ * Command groups can be used to chain multiple commands together. For example, if you want to move
+ * one motor, then drive somewhere, then move another motor (as shown in this example), you can use
  * command groups to do so.
  * 
- * This command group is sequential, which means the first command
- * finishes, and then the next one starts. Other command groups, like
- * parallel groups, in which two commands are both executed simultaneously,
- * can be used as well.
+ * This command group is sequential, which means the first command finishes, and then the next one
+ * starts. Other command groups, like parallel groups, in which two commands are both executed
+ * simultaneously, can be used as well.
  */
 
 public class ExampleSequentialCmd extends SequentialCommandGroup {
@@ -28,10 +26,8 @@ public class ExampleSequentialCmd extends SequentialCommandGroup {
     private final Drive m_drive;
     private final Command m_relCommand;
     private final Command m_absCommand;
-    private final Command m_driveCommand;
 
-    public ExampleSequentialCmd(Drive drive, AbsEncoder absEncoder,
-            RelEncoder relEncoder) {
+    public ExampleSequentialCmd(Drive drive, AbsEncoder absEncoder, RelEncoder relEncoder) {
 
         m_drive = drive;
         m_relEncoder = relEncoder;
@@ -39,13 +35,8 @@ public class ExampleSequentialCmd extends SequentialCommandGroup {
 
         m_relCommand = AutoBuildingBlocks.relCmd(m_relEncoder, RelEncoderConstants.setpoint1);
         m_absCommand = AutoBuildingBlocks.absCmd(m_absEncoder, AbsEncoderConstants.setpoint1);
-        m_driveCommand = AutoBuildingBlocks.driveToNearest(m_drive, PoseConstants.examplePoseList);
 
-        addCommands(
-                new SequentialCommandGroup(
-                        m_relCommand,
-                        m_driveCommand,
-                        m_absCommand));
+        addCommands(new SequentialCommandGroup(m_relCommand, m_absCommand));
     }
 
 }
