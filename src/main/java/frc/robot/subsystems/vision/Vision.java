@@ -36,12 +36,14 @@ import org.littletonrobotics.junction.Logger;
 
 public class Vision extends SubsystemBase {
   private final VisionConsumer consumer;
+  private final VisionConsumer targetSpaceConsumer;
   private final VisionIO[] io;
   private final VisionIOInputsAutoLogged[] inputs;
   private final Alert[] disconnectedAlerts;
 
-  public Vision(VisionConsumer consumer, VisionIO... io) {
+  public Vision(VisionConsumer consumer, VisionConsumer targetSpaceConsumer, VisionIO... io) {
     this.consumer = consumer;
+    this.targetSpaceConsumer = targetSpaceConsumer;
     this.io = io;
 
     // Initialize inputs
