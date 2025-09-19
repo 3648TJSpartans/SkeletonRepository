@@ -77,7 +77,7 @@ public class DriveToTag extends Command {
             // drive.runVelocity(ChassisSpeeds.fromFieldRelativeSpeeds(setVelocity.getX(),
             // setVelocity.getY(), thetaVelocity, robotPose.getRotation()));
             drive.runVelocity(
-                    new ChassisSpeeds(setVelocity.getX(), setVelocity.getY(), -thetaVelocity));
+                    new ChassisSpeeds(-setVelocity.getX(), -setVelocity.getY(), -thetaVelocity));
         } else {
             Logger.recordOutput("DriveTo2/SeeingTag", false);
             drive.runVelocity(

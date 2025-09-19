@@ -171,12 +171,14 @@ public class Vision extends SubsystemBase {
 
     // Update Botpose_targetspace
     Pose2d targetspaceObservation = getTagRelativePose();
-    double stdDevFactor = targetspaceObservation.getX() * targetspaceObservation.getX()
-        + targetspaceObservation.getY() * targetspaceObservation.getY();
-    double linearStdDev = linearStdDevBaseline * stdDevFactor;
-    double angularStdDev = angularStdDevBaseline * stdDevFactor;
-    targetSpaceConsumer.accept(targetspaceObservation,
-        VecBuilder.fill(linearStdDev, linearStdDev, angularStdDev));
+    if (!(targetspaceObservation.getX() == 0 || targetspaceObservation.getY() == 0)) {
+      double stdDevFactor = targetspaceObservation.getX() * targetspaceObservation.getX()
+          + targetspaceObservation.getY() * targetspaceObservation.getY();
+      double linearStdDev = linearStdDevBaseline * stdDevFactor;
+      double angularStdDev = angularStdDevBaseline * stdDevFactor;
+      targetSpaceConsumer.accept(targetspaceObservation,
+          VecBuilder.fill(linearStdDev, linearStdDev, angularStdDev));
+    }
     // Log summary data
     Logger.recordOutput("Vision/Summary/TagPoses",
         allTagPoses.toArray(new Pose3d[allTagPoses.size()]));

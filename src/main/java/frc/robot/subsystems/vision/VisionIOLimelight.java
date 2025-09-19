@@ -79,7 +79,7 @@ public class VisionIOLimelight implements VisionIO {
   public Pose2d getTagRelativePose() {
     double[] tableValues = botpose_targetSpaceSubscriber.get();
     Logger.recordOutput(outputName, tableValues);
-    return new Pose2d(-tableValues[2], tableValues[0],
+    return new Pose2d(tableValues[2], -tableValues[0],
         new Rotation2d(Units.degreesToRadians(tableValues[4])));
   }
 

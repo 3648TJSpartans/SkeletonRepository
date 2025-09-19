@@ -380,11 +380,16 @@ public class RobotContainer {
                                 new Pose2d(m_drive.getPose().getTranslation(), new Rotation2d())),
                                 m_drive).ignoringDisable(true));
                 Command driveTest = new DriveTo(m_drive, () -> PoseConstants.examplePose);
-                Pose2d alignOffset = new Pose2d(new Translation2d(.60, .0), new Rotation2d(0));
-                Command alignToTag = new DriveToTag(m_drive, m_drive::getTargetSpacePose,
-                                () -> alignOffset);
-                m_driveController.rightTrigger().whileTrue(driveTest);
-                m_driveController.leftTrigger().whileTrue(alignToTag);
+                Pose2d alignOffsetRight =
+                                new Pose2d(new Translation2d(-.75, -.17), new Rotation2d(0));
+                Pose2d alignOffsetLeft =
+                                new Pose2d(new Translation2d(-.75, .17), new Rotation2d(0));
+                Command alignToTagRight = new DriveToTag(m_drive, m_drive::getTargetSpacePose,
+                                () -> alignOffsetRight);
+                Command alignToTagLeft = new DriveToTag(m_drive, m_drive::getTargetSpacePose,
+                                () -> alignOffsetLeft);
+                m_driveController.rightTrigger().whileTrue(alignToTagRight);
+                m_driveController.leftTrigger().whileTrue(alignToTagLeft);
 
         }
 
