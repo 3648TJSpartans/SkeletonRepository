@@ -44,6 +44,8 @@ public class Vision extends SubsystemBase {
   private final VisionIO[] io;
   private final VisionIOInputsAutoLogged[] inputs;
   private final Alert[] disconnectedAlerts;
+  private int[] restrictedTags;
+  private boolean tagsRestricted = false;
 
   public Vision(VisionConsumer consumer, TimelessVisionConsumer targetSpaceConsumer,
       VisionIO... io) {
@@ -170,7 +172,8 @@ public class Vision extends SubsystemBase {
     }
 
     // Update Botpose_targetspace
-    Pose2d targetspaceObservation = getTagRelativePose();
+    Pose2d targetspaceObservation =
+        tagsRestricted ? getRestrictedTagRelativePose() : getTagRelativePose();
     if (!(targetspaceObservation.getX() == 0 || targetspaceObservation.getY() == 0)) {
       double stdDevFactor = targetspaceObservation.getX() * targetspaceObservation.getX()
           + targetspaceObservation.getY() * targetspaceObservation.getY();
@@ -232,5 +235,38 @@ public class Vision extends SubsystemBase {
     // catch for no valid tags
     return (validTags == 0 ? new Pose2d()
         : new Pose2d(translation2d.div(validTags), new Rotation2d(rotation / validTags)));
+  }
+
+  public Pose2d getRestrictedTagRelativePose() {
+    int validTags = 0;
+    Translation2d translation2d = new Translation2d();
+    double rotation = 0;
+    for (int i : restrictedTags) {
+      VisionIO targetIO = io[i];
+      Pose2d ioPose = targetIO.getTagRelativePose();
+      if (ioPose.equals(new Pose2d())) {
+        continue;
+      }
+      validTags++;
+      translation2d = translation2d.plus(ioPose.getTranslation());
+      rotation += ioPose.getRotation().getRadians();
+    }
+    // catch for no valid tags
+    return (validTags == 0 ? new Pose2d()
+        : new Pose2d(translation2d.div(validTags), new Rotation2d(rotation / validTags)));
+  }
+
+
+  public void restrictTags(int... restrictedTags) {
+    this.restrictedTags = restrictedTags;
+    tagsRestricted = true;
+  }
+
+  public boolean getTagsRestricted() {
+    return tagsRestricted;
+  }
+
+  public void unrestrictTags() {
+    tagsRestricted = false;
   }
 }

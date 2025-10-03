@@ -160,9 +160,11 @@ public class RobotContainer {
                                 m_vision = new Vision(m_drive::addVisionMeasurement,
                                                 m_drive::addTargetSpaceVisionMeasurement,
                                                 // new
-                                                // VisionIOLimelight(VisionConstants.camera0Name,m_drive::getRotation),
+                                                new VisionIOLimelight(VisionConstants.camera0Name,
+                                                                m_drive::getRotation),
                                                 new VisionIOLimelight(VisionConstants.camera1Name,
                                                                 m_drive::getRotation));
+                                m_vision.restrictTags(1);// Only reads from second limelight
                                 break;
 
                         case SIM:
