@@ -1,4 +1,4 @@
-package frc.robot.subsystems.absoluteEncoder;
+package frc.robot.subsystems.turret;
 
 import com.revrobotics.AbsoluteEncoder;
 import com.revrobotics.spark.SparkMax;
@@ -14,14 +14,14 @@ import frc.robot.util.TunableNumber;
 
 import com.revrobotics.spark.SparkClosedLoopController;
 
-public class AbsEncoderSparkMax implements AbsEncoderIO {
+public class TurretSparkMax implements TurretIO {
 
     private SparkMax motor;
     private AbsoluteEncoder encoder;
     private SparkClosedLoopController motorController;
 
-    public AbsEncoderSparkMax() {
-        motor = new SparkMax(AbsEncoderConstants.absEncoderMotorCan, MotorType.kBrushless);
+    public TurretSparkMax() {
+        motor = new SparkMax(TurretConstants.absEncoderMotorCan, MotorType.kBrushless);
         motorController = motor.getClosedLoopController();
         encoder = motor.getAbsoluteEncoder();
 
@@ -31,14 +31,14 @@ public class AbsEncoderSparkMax implements AbsEncoderIO {
                 .voltageCompensation(12.0);
         config.closedLoop
                 .feedbackSensor(FeedbackSensor.kAbsoluteEncoder)
-                .pidf(new TunableNumber("absEncoder/kP", AbsEncoderConstants.kP).get(),
-                        new TunableNumber("absEncoder/kI", AbsEncoderConstants.kI).get(),
-                        new TunableNumber("absEncoder/kD", AbsEncoderConstants.kD).get(),
-                        new TunableNumber("absEncoder/kFF", AbsEncoderConstants.kFF).get())
-                .outputRange(AbsEncoderConstants.kMinRange, AbsEncoderConstants.kMaxRange);
+                .pidf(new TunableNumber("absEncoder/kP", TurretConstants.kP).get(),
+                        new TunableNumber("absEncoder/kI", TurretConstants.kI).get(),
+                        new TunableNumber("absEncoder/kD", TurretConstants.kD).get(),
+                        new TunableNumber("absEncoder/kFF", TurretConstants.kFF).get())
+                .outputRange(TurretConstants.kMinRange, TurretConstants.kMaxRange);
         config.signals
                 .absoluteEncoderPositionAlwaysOn(true)
-                .absoluteEncoderPositionPeriodMs((int) (1000.0 / AbsEncoderConstants.kAbsEncoderOdometryFrequency))
+                .absoluteEncoderPositionPeriodMs((int) (1000.0 / TurretConstants.kAbsEncoderOdometryFrequency))
                 .absoluteEncoderVelocityAlwaysOn(true)
                 .absoluteEncoderVelocityPeriodMs(20)
                 .appliedOutputPeriodMs(20)

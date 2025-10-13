@@ -1,13 +1,13 @@
-package frc.robot.subsystems.absoluteEncoder;
+package frc.robot.subsystems.turret;
 
 import org.littletonrobotics.junction.Logger;
 
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class Turret extends SubsystemBase {
-    private final AbsEncoderIO io;
+    private final TurretIO io;
 
-    public Turret(AbsEncoderIO io) {
+    public Turret(TurretIO io) {
         this.io = io;
     }
 

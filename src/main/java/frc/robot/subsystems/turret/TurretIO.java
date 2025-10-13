@@ -1,6 +1,6 @@
-package frc.robot.subsystems.absoluteEncoder;
+package frc.robot.subsystems.turret;
 
-public interface AbsEncoderIO {
+public interface TurretIO {
     public default double getPosition() {
         return 0;
     }
