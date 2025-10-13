@@ -26,20 +26,28 @@ public class AbsEncoderSparkMax implements AbsEncoderIO {
         encoder = motor.getAbsoluteEncoder();
 
         var config = new SparkMaxConfig();
-        config.inverted(false).idleMode(IdleMode.kBrake).voltageCompensation(12.0);
-        config.closedLoop.feedbackSensor(FeedbackSensor.kAbsoluteEncoder)
+        config.inverted(false)
+                .idleMode(IdleMode.kBrake)
+                .voltageCompensation(12.0);
+        config.closedLoop
+                .feedbackSensor(FeedbackSensor.kAbsoluteEncoder)
                 .pidf(new TunableNumber("absEncoder/kP", AbsEncoderConstants.kP).get(),
                         new TunableNumber("absEncoder/kI", AbsEncoderConstants.kI).get(),
                         new TunableNumber("absEncoder/kD", AbsEncoderConstants.kD).get(),
                         new TunableNumber("absEncoder/kFF", AbsEncoderConstants.kFF).get())
                 .outputRange(AbsEncoderConstants.kMinRange, AbsEncoderConstants.kMaxRange);
-        config.signals.absoluteEncoderPositionAlwaysOn(true)
-                .absoluteEncoderPositionPeriodMs(
-                        (int) (1000.0 / AbsEncoderConstants.kAbsEncoderOdometryFrequency))
-                .absoluteEncoderVelocityAlwaysOn(true).absoluteEncoderVelocityPeriodMs(20)
-                .appliedOutputPeriodMs(20).busVoltagePeriodMs(20).outputCurrentPeriodMs(20);
+        config.signals
+                .absoluteEncoderPositionAlwaysOn(true)
+                .absoluteEncoderPositionPeriodMs((int) (1000.0 / AbsEncoderConstants.kAbsEncoderOdometryFrequency))
+                .absoluteEncoderVelocityAlwaysOn(true)
+                .absoluteEncoderVelocityPeriodMs(20)
+                .appliedOutputPeriodMs(20)
+                .busVoltagePeriodMs(20)
+                .outputCurrentPeriodMs(20);
 
-        motor.configure(config, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
+        motor.configure(
+                config, ResetMode.kResetSafeParameters,
+                PersistMode.kPersistParameters);
     }
 
     @Override
@@ -53,7 +61,8 @@ public class AbsEncoderSparkMax implements AbsEncoderIO {
     }
 
     @Override
-    public void updateValues() {}
+    public void updateValues() {
+    }
 
     @Override
     public double getPosition() {

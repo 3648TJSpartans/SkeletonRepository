@@ -79,6 +79,7 @@ import frc.robot.subsystems.absoluteEncoder.AbsEncoderSparkMax;
 
 import com.pathplanner.lib.path.PathPlannerPath;
 import com.pathplanner.lib.path.Waypoint;
+import com.revrobotics.AbsoluteEncoder;
 import com.pathplanner.lib.path.GoalEndState;
 import com.pathplanner.lib.path.PathConstraints;
 
