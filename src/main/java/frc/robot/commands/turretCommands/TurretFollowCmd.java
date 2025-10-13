@@ -3,6 +3,7 @@ package frc.robot.commands.turretCommands;
 import java.util.function.Supplier;
 import org.littletonrobotics.junction.Logger;
 import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.turret.Turret;
@@ -11,15 +12,23 @@ import frc.robot.subsystems.turret.TurretConstants;
 public class TurretFollowCmd extends Command {
     private final Turret m_turret;
     private final Supplier<Translation2d> targetDisplacementSupplier;
+    private final Supplier<Rotation2d> robotRotationSupplier;
 
-    public TurretFollowCmd(Turret turret, Supplier<Translation2d> targetDisplacementSupplier) {
+    @FunctionalInterface
+    public interface Rotatation2DSupplier{
+        Supplier<Rotation2d>
+    }
+
+
+    public TurretFollowCmd(Turret turret, Supplier<Translation2d> targetDisplacementSupplier,
+            Supplier<Rotation2d> robotRotation) {
         this.m_turret = turret;
         this.targetDisplacementSupplier = targetDisplacementSupplier;
         addRequirements(m_turret);
     }
 
-    public TurretFollowCmd(Turret turret, Supplier<Pose2d> robotPoseSupplier,
-            Supplier<Pose2d> targetPoseSupplier) {
+    public TurretFollowCmd(Turret turret, Supplier<Translation2d> robotPoseSupplier,
+            Supplier<Translation2d> targetPoseSupplier) {
         this(turret, () -> targetPoseSupplier.get().minus(robotPoseSupplier.get()));
     }
 
