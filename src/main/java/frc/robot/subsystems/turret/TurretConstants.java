@@ -5,13 +5,13 @@ import edu.wpi.first.math.geometry.Rotation2d;
 public class TurretConstants {
     public static final int absEncoderMotorCan = 15;
 
-    public static final double kP = 1;
+    public static final double kP = .1;
     public static final double kI = 0;
     public static final double kD = 0;
     public static final double kFF = 0;
 
-    public static final double kMinRange = -1;
-    public static final double kMaxRange = 1;
+    public static final double kMinRange = -.05;
+    public static final double kMaxRange = 0.05;
 
     public static final double setpoint1 = 0;
     public static final double setpoint2 = 1;
