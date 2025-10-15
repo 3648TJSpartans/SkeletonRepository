@@ -2,6 +2,7 @@ package frc.robot.commands.turretCommands;
 
 import java.util.List;
 import java.util.function.Supplier;
+import org.littletonrobotics.junction.AutoLog;
 import org.littletonrobotics.junction.Logger;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -28,7 +29,7 @@ public class TurretFollowCmd extends Command {
     }
 
     public TurretFollowCmd(Turret turret, Translation2dSupplier targetDisplacementSupplier,
-            Rotation2d Supplier robotRotationSupplier) {
+            Rotation2dSupplier robotRotationSupplier) {
         this.m_turret = turret;
         this.targetDisplacementSupplier = targetDisplacementSupplier;
         this.robotRotationSupplier = robotRotationSupplier;
@@ -37,7 +38,8 @@ public class TurretFollowCmd extends Command {
 
     public TurretFollowCmd(Turret turret, Pose2dSupplier robotPoseSupplier,
             Translation2dSupplier targetPoseSupplier) {
-        this(turret, () -> );
+        this(turret, () -> targetPoseSupplier.get().minus(robotPoseSupplier.get().getTranslation()),
+                () -> robotPoseSupplier.get().getRotation());
     }
 
 
@@ -48,7 +50,17 @@ public class TurretFollowCmd extends Command {
 
     @Override
     public void execute() {
+        Translation2d displacement = targetDisplacementSupplier.get();
+        Rotation2d targetAngle = displacement.getAngle();
+        Rotation2d robotRotation = robotRotationSupplier.get();
+        Rotation2d totalRotation =
+                targetAngle.plus(robotRotation).plus(TurretConstants.rotationOffset);
+        m_turret.setTo(-totalRotation.getRotations() * TurretConstants.encoderPositionFactor);
 
+        Logger.recordOutput("Turret/TargetTranslation", displacement);
+        Logger.recordOutput("Turret/TargetAngle", targetAngle);
+        Logger.recordOutput("Turret/RobotRotation", robotRotation);
+        Logger.recordOutput("Turret/totalRotation", totalRotation);
     }
 
     @Override

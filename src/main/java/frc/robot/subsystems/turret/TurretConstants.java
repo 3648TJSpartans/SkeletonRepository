@@ -1,5 +1,7 @@
 package frc.robot.subsystems.turret;
 
+import edu.wpi.first.math.geometry.Rotation2d;
+
 public class TurretConstants {
     public static final int absEncoderMotorCan = 15;
 
@@ -16,8 +18,9 @@ public class TurretConstants {
 
     public static final double setpointTolerance = 0.05;
 
-    public static double kAbsEncoderOdometryFrequency = 100;
+    public static final double kAbsEncoderOdometryFrequency = 100;
     public static final boolean encoderInverted = false;
     public static final double encoderPositionFactor = 1;
 
+    public static final Rotation2d rotationOffset = new Rotation2d(Math.PI);
 }
