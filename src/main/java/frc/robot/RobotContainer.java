@@ -52,6 +52,7 @@ import frc.robot.commands.relativeEncoderCommands.HomeRelCmd;
 import frc.robot.commands.relativeEncoderCommands.RelAnalogCmd;
 import frc.robot.commands.relativeEncoderCommands.RelCmd;
 import frc.robot.commands.simpleMotorCommands.SimpleMotorCmd;
+import frc.robot.commands.turretCommands.TurretFollowCmd;
 import frc.robot.subsystems.drive.Drive;
 import frc.robot.subsystems.drive.GyroIO;
 import frc.robot.subsystems.drive.GyroIONavX;
@@ -67,6 +68,8 @@ import frc.robot.subsystems.simpleMotor.SimpleMotor;
 import frc.robot.subsystems.simpleMotor.SimpleMotorConstants;
 import frc.robot.subsystems.simpleMotor.SimpleMotorIO;
 import frc.robot.subsystems.simpleMotor.SimpleMotorSparkMax;
+import frc.robot.subsystems.turret.Turret;
+import frc.robot.subsystems.turret.TurretSparkMax;
 import frc.robot.subsystems.vision.Vision;
 import frc.robot.subsystems.vision.VisionConstants;
 import frc.robot.subsystems.vision.VisionIOLimelight;
@@ -115,6 +118,7 @@ public class RobotContainer {
         private final SimpleMotor m_simpleMotor;
         private final LedSubsystem m_leds;
         private final Vision m_vision;
+        private final Turret m_turret;
         private boolean override;
         private boolean endgameClosed = true;
 
@@ -145,6 +149,7 @@ public class RobotContainer {
                 m_relEncoder = new RelEncoder(new RelEncoderSparkMax());
                 m_simpleMotor = new SimpleMotor(new SimpleMotorSparkMax());
                 m_leds = new LedSubsystem();
+                m_turret = new Turret(new TurretSparkMax());
                 Logger.recordOutput("Poses/shouldFlip", AllianceFlipUtil.shouldFlip());
                 Logger.recordOutput("Override", override);
                 override = false;
@@ -308,6 +313,12 @@ public class RobotContainer {
                                 m_drive.sysIdDynamic(SysIdRoutine.Direction.kReverse));
                 autoChooser.addOption("Micah's test", AutoBuilder
                                 .buildAuto("src\\main\\deploy\\pathplanner\\autos\\test.auto"));
+        }
+
+        public void configureTurret() {
+                m_turret.setDefaultCommand(new TurretFollowCmd(m_turret,
+                                () -> m_drive.getTargetSpacePose().getTranslation(),
+                                () -> m_drive.getTargetSpacePose().getRotation()));
         }
 
         public void configureSimpleMotor() {
