@@ -55,12 +55,17 @@ public class TurretFollowCmd extends Command {
         Rotation2d robotRotation = robotRotationSupplier.get();
         Rotation2d totalRotation =
                 targetAngle.plus(robotRotation).plus(TurretConstants.rotationOffset);
-        m_turret.setTo(-totalRotation.getRotations() * TurretConstants.encoderPositionFactor);
+
+        double setPoint =
+                (totalRotation.getRadians() * TurretConstants.encoderPositionFactor / (2 * Math.PI)
+                        + .5);
+        m_turret.setTo(setPoint);
 
         Logger.recordOutput("Turret/TargetTranslation", displacement);
         Logger.recordOutput("Turret/TargetAngle", targetAngle);
         Logger.recordOutput("Turret/RobotRotation", robotRotation);
         Logger.recordOutput("Turret/totalRotation", totalRotation);
+        Logger.recordOutput("Turret/setPoint", setPoint);
     }
 
     @Override
