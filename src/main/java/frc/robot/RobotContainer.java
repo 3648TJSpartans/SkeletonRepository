@@ -243,7 +243,7 @@ public class RobotContainer {
                 configureRelativeEncoder();
                 configureSimpleMotor();
                 configureDrive();
-
+                configureTurret();
                 m_copilotController.rightTrigger()
                                 .onTrue(new InstantCommand(() -> toggleOverride()));
                 /*
@@ -316,9 +316,8 @@ public class RobotContainer {
         }
 
         public void configureTurret() {
-                m_turret.setDefaultCommand(new TurretFollowCmd(m_turret,
-                                () -> m_drive.getTargetSpacePose().getTranslation(),
-                                () -> m_drive.getTargetSpacePose().getRotation()));
+                m_turret.setDefaultCommand(
+                                new TurretFollowCmd(m_turret, m_drive::getTargetSpacePose));
         }
 
         public void configureSimpleMotor() {

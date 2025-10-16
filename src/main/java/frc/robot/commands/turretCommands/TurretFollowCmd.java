@@ -36,6 +36,11 @@ public class TurretFollowCmd extends Command {
         addRequirements(m_turret);
     }
 
+    public TurretFollowCmd(Turret turret, Pose2dSupplier targetPoseTransform) {
+        this(turret, () -> targetPoseTransform.get().getTranslation(),
+                () -> targetPoseTransform.get().getRotation());
+    }
+
     public TurretFollowCmd(Turret turret, Pose2dSupplier robotPoseSupplier,
             Translation2dSupplier targetPoseSupplier) {
         this(turret, () -> targetPoseSupplier.get().minus(robotPoseSupplier.get().getTranslation()),
