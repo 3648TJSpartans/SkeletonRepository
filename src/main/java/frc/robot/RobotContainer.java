@@ -318,6 +318,12 @@ public class RobotContainer {
         public void configureTurret() {
                 m_turret.setDefaultCommand(
                                 new TurretFollowCmd(m_turret, m_drive::getTargetSpacePose));
+                m_testController.a().onTrue(new InstantCommand(() -> m_turret.setSpeed(0.2)));
+                m_testController.a().onFalse(new InstantCommand(() -> m_turret.setSpeed(0)));
+                m_testController.x().onTrue(new InstantCommand(() -> m_turret.setTo(0.5)));
+                m_testController.x().onFalse(new InstantCommand(() -> m_turret.setSpeed(0)));
+                m_testController.b().whileTrue(
+                                new TurretFollowCmd(m_turret, m_drive::getTargetSpacePose));
         }
 
         public void configureSimpleMotor() {
