@@ -29,8 +29,7 @@ public class DriveConstants {
                                                                       // maximum input for robot
                                                                       // relative
 
-        public static final double maxSpeedMetersPerSec = 4; // 4.46 is max on rev product page, 2
-                                                             // is what it was before
+        public static final double maxSpeedMetersPerSec = 4;
         public static final double odometryFrequency = 100.0; // Hz
         public static final double trackWidth = .6;
         public static final double wheelBase = .6;
@@ -49,18 +48,7 @@ public class DriveConstants {
 
         // Device CAN IDs
         public static final int pigeonCanId = 9;
-        // 3648 chassis
 
-        // public static final int frontLeftDriveCanId = 8;
-        // public static final int backLeftDriveCanId = 6;
-        // public static final int frontRightDriveCanId = 4;
-        // public static final int backRightDriveCanId = 2;
-
-        // public static final int frontLeftTurnCanId = 7;
-        // public static final int backLeftTurnCanId = 5;
-        // public static final int frontRightTurnCanId = 3;
-        // public static final int backRightTurnCanId = 1;
-        // Constants for 3649 Protobot Chassis
         public static final int frontLeftDriveCanId = 8;
         public static final int backLeftDriveCanId = 6;
         public static final int frontRightDriveCanId = 2;

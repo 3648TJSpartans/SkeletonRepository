@@ -20,9 +20,8 @@ import com.revrobotics.RelativeEncoder;
 import frc.robot.util.TunableNumber;
 
 /*
- * This is the file where most of the logic is applied. It
- * implements the IO, which means it must use the same methods
- * that the IO gives it.
+ * This is the file where most of the logic is applied. It implements the IO, which means it must
+ * use the same methods that the IO gives it.
  */
 
 public class RelEncoderSparkMax implements RelEncoderIO {
@@ -45,37 +44,20 @@ public class RelEncoderSparkMax implements RelEncoderIO {
     encoder = motor.getEncoder();
     var motorConfig = new SparkMaxConfig();
     motorConfig.idleMode(IdleMode.kBrake);
-    motorConfig.inverted(false)
-        .idleMode(IdleMode.kBrake)
-        .voltageCompensation(12.0);
-    motorConfig.closedLoop
-        .feedbackSensor(FeedbackSensor.kPrimaryEncoder)
-        .pidf(new TunableNumber("relEncoder/kP", RelEncoderConstants.kP).get(),
-            new TunableNumber("relEncoder/kI", RelEncoderConstants.kI).get(),
-            new TunableNumber("relEncoder/kD", RelEncoderConstants.kD).get(),
-            new TunableNumber("relEncoder/kFF", RelEncoderConstants.kFF).get())
-        .outputRange(
-            new TunableNumber("relEncoder/kMinRange", RelEncoderConstants.kMinRange)
-                .get(),
-            new TunableNumber("relEncoder/kMaxRange", RelEncoderConstants.kMaxRange)
-                .get());
-    motorConfig.signals
-        .absoluteEncoderPositionAlwaysOn(true)
+    motorConfig.inverted(false).idleMode(IdleMode.kBrake).voltageCompensation(12.0);
+    motorConfig.closedLoop.feedbackSensor(FeedbackSensor.kPrimaryEncoder)
+        .pidf(RelEncoderConstants.kP.get(), RelEncoderConstants.kI.get(),
+            RelEncoderConstants.kD.get(), RelEncoderConstants.kFF.get())
+        .outputRange(RelEncoderConstants.kMinRange.get(), RelEncoderConstants.kMaxRange.get());
+    motorConfig.signals.absoluteEncoderPositionAlwaysOn(true)
         .absoluteEncoderPositionPeriodMs((int) (1000.0 / RelEncoderConstants.odometryFrequency))
-        .absoluteEncoderVelocityAlwaysOn(true)
-        .absoluteEncoderVelocityPeriodMs(20)
-        .appliedOutputPeriodMs(20)
-        .busVoltagePeriodMs(20)
-        .outputCurrentPeriodMs(20);
-    motorConfig.absoluteEncoder
-        .inverted(false)
-        .positionConversionFactor(new TunableNumber("relEncoder/encoderPositionFactor",
-            RelEncoderConstants.elevatorEncoderPositionFactor).get())
-        .velocityConversionFactor(RelEncoderConstants.elevatorEncoderPositionFactor)
+        .absoluteEncoderVelocityAlwaysOn(true).absoluteEncoderVelocityPeriodMs(20)
+        .appliedOutputPeriodMs(20).busVoltagePeriodMs(20).outputCurrentPeriodMs(20);
+    motorConfig.absoluteEncoder.inverted(false)
+        .positionConversionFactor(RelEncoderConstants.elevatorEncoderPositionFactor.get())
+        .velocityConversionFactor(RelEncoderConstants.elevatorEncoderPositionFactor.get())
         .averageDepth(2);
-    motor.configure(
-        motorConfig, ResetMode.kResetSafeParameters,
-        PersistMode.kPersistParameters);
+    motor.configure(motorConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
   }
 
   @Override
@@ -93,8 +75,8 @@ public class RelEncoderSparkMax implements RelEncoderIO {
     Logger.recordOutput("relEncoder/Setpoint", setpoint);
 
     /*
-     * The if statement below make sure that the motor only spins if
-     * it is correctly reset and within safe bounds.
+     * The if statement below make sure that the motor only spins if it is correctly reset and
+     * within safe bounds.
      */
 
     if (!limitReset) {
@@ -121,9 +103,8 @@ public class RelEncoderSparkMax implements RelEncoderIO {
   }
 
   /*
-   * A limit switch is often used with relative encoders to give
-   * the robot a physical point at which to define the encoder's
-   * zero position. The logic for this limit switch is below.
+   * A limit switch is often used with relative encoders to give the robot a physical point at which
+   * to define the encoder's zero position. The logic for this limit switch is below.
    */
 
   @Override
@@ -153,6 +134,25 @@ public class RelEncoderSparkMax implements RelEncoderIO {
   @Override
   public boolean getLimitReset() {
     return limitReset;
+  }
+
+  public void updateValues() {
+    var motorConfig = new SparkMaxConfig();
+    motorConfig.idleMode(IdleMode.kBrake);
+    motorConfig.inverted(false).idleMode(IdleMode.kBrake).voltageCompensation(12.0);
+    motorConfig.closedLoop.feedbackSensor(FeedbackSensor.kPrimaryEncoder)
+        .pidf(RelEncoderConstants.kP.get(), RelEncoderConstants.kI.get(),
+            RelEncoderConstants.kD.get(), RelEncoderConstants.kFF.get())
+        .outputRange(RelEncoderConstants.kMinRange.get(), RelEncoderConstants.kMaxRange.get());
+    motorConfig.signals.absoluteEncoderPositionAlwaysOn(true)
+        .absoluteEncoderPositionPeriodMs((int) (1000.0 / RelEncoderConstants.odometryFrequency))
+        .absoluteEncoderVelocityAlwaysOn(true).absoluteEncoderVelocityPeriodMs(20)
+        .appliedOutputPeriodMs(20).busVoltagePeriodMs(20).outputCurrentPeriodMs(20);
+    motorConfig.absoluteEncoder.inverted(false)
+        .positionConversionFactor(RelEncoderConstants.elevatorEncoderPositionFactor.get())
+        .velocityConversionFactor(RelEncoderConstants.elevatorEncoderPositionFactor.get())
+        .averageDepth(2);
+    motor.configure(motorConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
   }
 
 }

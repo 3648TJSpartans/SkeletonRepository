@@ -33,8 +33,8 @@ public class ExampleSequentialCmd extends SequentialCommandGroup {
         m_relEncoder = relEncoder;
         m_absEncoder = absEncoder;
 
-        m_relCommand = AutoBuildingBlocks.relCmd(m_relEncoder, RelEncoderConstants.setpoint1);
-        m_absCommand = AutoBuildingBlocks.absCmd(m_absEncoder, AbsEncoderConstants.setpoint1);
+        m_relCommand = AutoBuildingBlocks.relCmd(m_relEncoder, RelEncoderConstants.setpoint1.get());
+        m_absCommand = AutoBuildingBlocks.absCmd(m_absEncoder, AbsEncoderConstants.setpoint1.get());
 
         addCommands(new SequentialCommandGroup(m_relCommand, m_absCommand));
     }

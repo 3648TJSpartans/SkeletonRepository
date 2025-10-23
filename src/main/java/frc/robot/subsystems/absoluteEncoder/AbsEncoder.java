@@ -13,7 +13,7 @@ public class AbsEncoder extends SubsystemBase {
 
     @Override
     public void periodic() {
-        // io.updateValues();
+        io.updateValues();
         Logger.recordOutput("absEncoder/position", io.getPosition());
     }
 

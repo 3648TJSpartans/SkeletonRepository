@@ -37,13 +37,14 @@ public class AbsCmd extends Command {
     @Override
     public boolean isFinished() {
         /*
-         * A finish state is essential to commands that are used in command groups
-         * (see command group file for more details). The code below finishes the
-         * command if it's within a certain constant margin, the setpointTolerance.
+         * A finish state is essential to commands that are used in command groups (see command
+         * group file for more details). The code below finishes the command if it's within a
+         * certain constant margin, the setpointTolerance.
          */
-        return ((position - AbsEncoderConstants.setpointTolerance) < m_absEncoder.getPosition()
-                &&
-                m_absEncoder.getPosition() < (position + AbsEncoderConstants.setpointTolerance));
+        return ((position - AbsEncoderConstants.setpointTolerance.get()) < m_absEncoder
+                .getPosition()
+                && m_absEncoder
+                        .getPosition() < (position + AbsEncoderConstants.setpointTolerance.get()));
     }
 
 }

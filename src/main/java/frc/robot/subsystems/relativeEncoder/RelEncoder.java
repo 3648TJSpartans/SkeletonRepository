@@ -5,17 +5,15 @@ import org.littletonrobotics.junction.Logger;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 /*
- * This subsystem controls a single motor with a relative motor, which means
- * the robot knows how many times the robot has spun since it turned on. This
- * means it can track a motor that makes revolutons over 360 degrees, unlike
- * absolute encoders, but it also starts counting at 0 no matter where the 
- * motor is when turned on.
+ * This subsystem controls a single motor with a relative motor, which means the robot knows how
+ * many times the robot has spun since it turned on. This means it can track a motor that makes
+ * revolutons over 360 degrees, unlike absolute encoders, but it also starts counting at 0 no matter
+ * where the motor is when turned on.
  */
 
 /*
- * Subsystems are split into a main file, an IO, and a third file which houses
- * most of the logic. This file, the main file, receives an IO, and uses it
- * to structure the subsystem.
+ * Subsystems are split into a main file, an IO, and a third file which houses most of the logic.
+ * This file, the main file, receives an IO, and uses it to structure the subsystem.
  */
 
 public class RelEncoder extends SubsystemBase {
@@ -70,4 +68,9 @@ public class RelEncoder extends SubsystemBase {
   public boolean getLimitReset() {
     return io.getLimitReset();
   }
+
+  public void updateValues() {
+    io.updateValues();
+  }
+
 }

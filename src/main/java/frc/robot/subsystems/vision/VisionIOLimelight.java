@@ -13,7 +13,7 @@
 
 package frc.robot.subsystems.vision;
 
-import static frc.robot.subsystems.vision.VisionConstants.defualtPipeline;
+import static frc.robot.subsystems.vision.VisionConstants.defaultPipeline;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
@@ -185,6 +185,6 @@ public class VisionIOLimelight implements VisionIO {
 
   @Override
   public void resetPipeline() {
-    setPipeline(defualtPipeline);
+    setPipeline(defaultPipeline);
   }
 }

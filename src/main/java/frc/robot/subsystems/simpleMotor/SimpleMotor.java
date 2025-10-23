@@ -5,15 +5,14 @@ import org.littletonrobotics.junction.Logger;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 /*
- * This subsystem controls a single motor with commands to spin
- * or stop it. Importantly, it lacks an encoder, which means that the 
- * robot won't know how much the motor has spun or its current position.
+ * This subsystem controls a single motor with commands to spin or stop it. Importantly, it lacks an
+ * encoder, which means that the robot won't know how much the motor has spun or its current
+ * position.
  */
 
 /*
- * Subsystems are split into a main file, an IO, and a third file which houses
- * most of the logic. This file, the main file, receives an IO, and uses it
- * to structure the subsystem.
+ * Subsystems are split into a main file, an IO, and a third file which houses most of the logic.
+ * This file, the main file, receives an IO, and uses it to structure the subsystem.
  */
 
 public class SimpleMotor extends SubsystemBase {

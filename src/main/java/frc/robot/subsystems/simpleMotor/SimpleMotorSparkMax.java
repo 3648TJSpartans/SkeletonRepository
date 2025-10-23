@@ -4,9 +4,8 @@ import com.revrobotics.spark.SparkMax;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
 
 /*
- * This is the file where most of the logic is applied. It
- * implements the IO, which means it must use the same methods
- * that the IO gives it.
+ * This is the file where most of the logic is applied. It implements the IO, which means it must
+ * use the same methods that the IO gives it.
  */
 
 public class SimpleMotorSparkMax implements SimpleMotorIO {
