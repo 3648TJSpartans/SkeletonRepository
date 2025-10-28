@@ -17,7 +17,7 @@ public class DriveTo extends Command {
     private final Supplier<Pose2d> robotPoseSupplier;
     private final Supplier<Pose2d> targetPoseSupplier;
     private final Drive drive;
-    // Defines PID controlelrs
+    // Defines PID controllers
     private final ProfiledPIDController driveController =
             new ProfiledPIDController(goToConstants.drivekP, 0.0, goToConstants.drivekD,
                     new TrapezoidProfile.Constraints(goToConstants.driveMaxVelocity,

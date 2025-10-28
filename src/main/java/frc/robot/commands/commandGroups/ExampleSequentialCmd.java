@@ -2,7 +2,6 @@ package frc.robot.commands.commandGroups;
 
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
-import frc.robot.commands.goToCommands.goToConstants.PoseConstants;
 import frc.robot.subsystems.absoluteEncoder.AbsEncoder;
 import frc.robot.subsystems.absoluteEncoder.AbsEncoderConstants;
 import frc.robot.subsystems.drive.Drive;
@@ -23,13 +22,11 @@ public class ExampleSequentialCmd extends SequentialCommandGroup {
 
     private final RelEncoder m_relEncoder;
     private final AbsEncoder m_absEncoder;
-    private final Drive m_drive;
     private final Command m_relCommand;
     private final Command m_absCommand;
 
     public ExampleSequentialCmd(Drive drive, AbsEncoder absEncoder, RelEncoder relEncoder) {
 
-        m_drive = drive;
         m_relEncoder = relEncoder;
         m_absEncoder = absEncoder;
 

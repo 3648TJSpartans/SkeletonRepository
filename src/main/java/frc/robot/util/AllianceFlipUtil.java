@@ -1,7 +1,5 @@
 package frc.robot.util;
 
-import org.littletonrobotics.junction.AutoLogOutput;
-
 // Copyright (c) 2025 FRC 6328
 // http://github.com/Mechanical-Advantage
 //
@@ -9,15 +7,16 @@ import org.littletonrobotics.junction.AutoLogOutput;
 // license that can be found in the LICENSE file at
 // the root directory of this project.
 
-//package org.littletonrobotics.frc2025.util;
+// package org.littletonrobotics.frc2025.util;
 
 import edu.wpi.first.math.geometry.*;
 import edu.wpi.first.wpilibj.DriverStation;
-//import org.littletonrobotics.frc2025.FieldConstants;
-//import org.littletonrobotics.vehicletrajectoryservice.VehicleTrajectoryServiceOuterClass.ModuleForce;
-//import org.littletonrobotics.vehicletrajectoryservice.VehicleTrajectoryServiceOuterClass.VehicleState;
+// import org.littletonrobotics.frc2025.FieldConstants;
+// import
+// org.littletonrobotics.vehicletrajectoryservice.VehicleTrajectoryServiceOuterClass.ModuleForce;
+// import
+// org.littletonrobotics.vehicletrajectoryservice.VehicleTrajectoryServiceOuterClass.VehicleState;
 import frc.robot.commands.goToCommands.goToConstants.PoseConstants;
-import frc.robot.subsystems.drive.Drive;
 
 public class AllianceFlipUtil {
     public static double applyX(double x) {
@@ -37,14 +36,13 @@ public class AllianceFlipUtil {
     }
 
     public static Pose2d apply(Pose2d pose) {
-        return shouldFlip()
-                ? new Pose2d(apply(pose.getTranslation()), apply(pose.getRotation()))
+        return shouldFlip() ? new Pose2d(apply(pose.getTranslation()), apply(pose.getRotation()))
                 : pose;
     }
 
     public static Translation3d apply(Translation3d translation) {
-        return new Translation3d(
-                applyX(translation.getX()), applyY(translation.getY()), translation.getZ());
+        return new Translation3d(applyX(translation.getX()), applyY(translation.getY()),
+                translation.getZ());
     }
 
     public static Rotation3d apply(Rotation3d rotation) {

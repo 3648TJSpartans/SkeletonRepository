@@ -33,8 +33,6 @@ import frc.robot.commands.DriveCommands;
 import frc.robot.commands.absoluteEncoderCommands.AbsAnalogCmd;
 import frc.robot.commands.absoluteEncoderCommands.AbsCmd;
 import frc.robot.commands.commandGroups.ExampleSequentialCmd;
-import frc.robot.commands.goToCommands.goToConstants.PoseConstants;
-import frc.robot.commands.goToCommands.DriveTo;
 import frc.robot.commands.goToCommands.DriveToTag;
 import frc.robot.commands.ledCommands.AutoLEDCommand;
 import frc.robot.commands.ledCommands.TeleopLEDCommand;
@@ -63,16 +61,6 @@ import frc.robot.subsystems.absoluteEncoder.AbsEncoder;
 import frc.robot.subsystems.absoluteEncoder.AbsEncoderConstants;
 import frc.robot.subsystems.absoluteEncoder.AbsEncoderSparkMax;
 
-
-// import frc.robot.subsystems.coralSubsystems.coralIntake.CoralIntake;
-// import frc.robot.subsystems.coralSubsystems.coralIntake.CoralIntakeIO;
-// import frc.robot.subsystems.coralSubsystems.coralIntake.CoralIntakeIOSparkMax;
-// import frc.robot.subsystems.coralSubsystems.elevator.Elevator;
-// import frc.robot.subsystems.coralSubsystems.CoralConstants;
-// import frc.robot.subsystems.coralSubsystems.elevator.ElevatorIO;
-// import frc.robot.subsystems.coralSubsystems.elevator.ElevatorIOSparkMax;
-
-import org.littletonrobotics.junction.AutoLogOutput;
 import org.littletonrobotics.junction.Logger;
 import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
 import org.littletonrobotics.junction.networktables.LoggedNetworkNumber;
@@ -99,8 +87,10 @@ public class RobotContainer {
                         new CommandXboxController(Constants.kDriverControllerPort);
         private final CommandXboxController m_copilotController =
                         new CommandXboxController(Constants.kCopilotControllerPort);
-        private final CommandXboxController m_testController =
-                        new CommandXboxController(Constants.kTestControllerPort);
+        // A third controllr could be used for testing if the buttons on the first two are full.
+        // However, this controller can't be used during competition.
+        // private final CommandXboxController m_testController =
+        // new CommandXboxController(Constants.kTestControllerPort);
         // Dashboard inputs
         private final LoggedDashboardChooser<Command> autoChooser;
 
@@ -290,7 +280,6 @@ public class RobotContainer {
         }
 
         public void configureRelativeEncoder() {
-
                 Command homeEncoder = new HomeRelCmd(m_relEncoder);
                 Command exampleRel1 = new RelCmd(m_relEncoder, RelEncoderConstants.setpoint1.get());
                 Command exampleRel2 = new RelCmd(m_relEncoder, RelEncoderConstants.setpoint2.get());
@@ -331,16 +320,6 @@ public class RobotContainer {
                                 () -> m_vision.getTargetX(0).getDegrees(),
                                 m_driveController.leftBumper(), m_driveController.rightBumper(),
                                 () -> !endgameClosed));
-
-                // Lock to 0° when A button is held
-                // m_driveController
-                // .b()
-                // .whileTrue(
-                // DriveCommands.joystickDriveAtAngle(
-                // m_drive,
-                // () -> m_driveController.getLeftY(),
-                // () -> m_driveController.getLeftX(),
-                // () -> new Rotation2d()));
 
                 // Switch to X pattern when X button is pressed
                 m_driveController.x().onTrue(Commands.runOnce(m_drive::stopWithX, m_drive));

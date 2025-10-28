@@ -17,8 +17,6 @@ import org.littletonrobotics.junction.Logger;
 
 import com.revrobotics.RelativeEncoder;
 
-import frc.robot.util.TunableNumber;
-
 /*
  * This is the file where most of the logic is applied. It implements the IO, which means it must
  * use the same methods that the IO gives it.
