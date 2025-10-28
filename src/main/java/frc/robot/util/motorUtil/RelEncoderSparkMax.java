@@ -58,7 +58,6 @@ public class RelEncoderSparkMax extends MotorIO {
         motorController.setReference(speed, ControlType.kVelocity, ClosedLoopSlot.kSlot0);
     }
 
-    @Override
     public void setPower(double power) {
         motor.set(power);
     }
@@ -71,5 +70,10 @@ public class RelEncoderSparkMax extends MotorIO {
     @Override
     public double getSpeed() {
         return encoder.getVelocity();
+    }
+
+    @Override
+    public void setEncoder(double setpoint) {
+        encoder.setPosition(setpoint);
     }
 }

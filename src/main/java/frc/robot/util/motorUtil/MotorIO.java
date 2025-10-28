@@ -4,7 +4,7 @@ import org.littletonrobotics.junction.Logger;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.util.TunableNumber;
 
-public abstract class MotorIO {
+public abstract class MotorIO extends SubsystemBase {
     private final String name;
     private final TunableNumber m_poseTolerance;
     private final TunableNumber m_speedTolerance;
@@ -19,13 +19,9 @@ public abstract class MotorIO {
                 new TunableNumber(loggingName + "/Tolerances/speedTolerance", speedTolerance);
     }
 
-    public double getPosition() {
-        return 0.0;
-    }
+    abstract double getPosition();
 
-    public double getSpeed() {
-        return 0.0;
-    }
+    abstract double getSpeed();
 
     public void setPosition(double position) {
         m_positionSetpoint = position;
@@ -35,17 +31,17 @@ public abstract class MotorIO {
         m_speedSetpoint = speed;
     }
 
-    public boolean positionInTolerance() {
+    public final boolean positionInTolerance() {
         return Math.abs(getPosition() - m_positionSetpoint) < m_poseTolerance.get();
     }
 
-    public boolean speedInTolerance() {
+    public final boolean speedInTolerance() {
         return Math.abs(getSpeed() - m_speedSetpoint) < m_speedTolerance.get();
     }
 
-    public void setPower(double power) {}
+    abstract void setPower(double power);
 
-    public void updateValues() {
+    public final void updateValues() {
         Logger.recordOutput("name" + "/pose", getPosition());
         Logger.recordOutput("name" + "/speed", getSpeed());
         Logger.recordOutput("name" + "/setPose", m_positionSetpoint);
@@ -54,19 +50,22 @@ public abstract class MotorIO {
         Logger.recordOutput("name" + "/speedInTolerance", speedInTolerance());
     }
 
-    public void setEncoder(double setpoint) {
+    abstract void setEncoder(double setpoint);
 
-    }
-
-    public void resetEncoder() {
+    public final void resetEncoder() {
         setEncoder(0.0);
     }
 
-    public void stop() {
+    public final void stop() {
         setSpeed(0.0);
     }
 
-    public String getName() {
+    public final String getName() {
         return name;
+    }
+
+    @Override
+    public void periodic() {
+        updateValues();
     }
 }

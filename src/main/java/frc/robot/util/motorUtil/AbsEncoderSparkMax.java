@@ -21,11 +21,11 @@ public class AbsEncoderSparkMax extends MotorIO {
     private SparkClosedLoopController motorController;
     private String name;
 
-    public AbsEncoderSparkMax(String loggingName, TunableNumber motorCan, double positionTolerance,
+    public AbsEncoderSparkMax(String loggingName, int motorCan, double positionTolerance,
             double speedTolerance, double kP, double kI, double kD, double kFF, double minPower,
             double maxPower, double encoderOdometryFrequency) {
         super(loggingName, positionTolerance, speedTolerance);
-        motor = new SparkMax((int) motorCan.get(), MotorType.kBrushless);
+        motor = new SparkMax(motorCan, MotorType.kBrushless);
         motorController = motor.getClosedLoopController();
         encoder = motor.getAbsoluteEncoder();
         name = getName();
@@ -70,5 +70,11 @@ public class AbsEncoderSparkMax extends MotorIO {
     @Override
     public double getSpeed() {
         return encoder.getVelocity();
+    }
+
+    // Absolute Encoders cannot reset
+    @Override
+    public void setEncoder(double setpoint) {
+        return;
     }
 }

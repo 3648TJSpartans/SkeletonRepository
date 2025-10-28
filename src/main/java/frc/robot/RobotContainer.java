@@ -62,12 +62,15 @@ import frc.robot.subsystems.vision.Vision;
 import frc.robot.subsystems.vision.VisionConstants;
 import frc.robot.subsystems.vision.VisionIOLimelight;
 import frc.robot.util.AllianceFlipUtil;
+import frc.robot.util.motorUtil.MotorIO;
 import frc.robot.util.TunableNumber;
+import frc.robot.util.motorUtil.AbsEncoderSparkMax;
 import frc.robot.util.TunableNumber;
 import frc.robot.subsystems.absoluteEncoder.AbsEncoderConstants;
 
 import com.pathplanner.lib.path.PathPlannerPath;
 import com.pathplanner.lib.path.Waypoint;
+import com.revrobotics.AbsoluteEncoder;
 import com.pathplanner.lib.path.GoalEndState;
 import com.pathplanner.lib.path.PathConstraints;
 
@@ -103,6 +106,16 @@ public class RobotContainer {
         private final Vision m_vision;
         private boolean override;
         private boolean endgameClosed = true;
+
+        private final MotorIO absEncoder = new AbsEncoderSparkMax("absEncoder",
+                        AbsEncoderConstants.absEncoderMotorCan,
+                        AbsEncoderConstants.setpointTolerance, AbsEncoderConstants.speedTolerance,
+                        AbsEncoderConstants.kP, AbsEncoderConstants.kI, AbsEncoderConstants.kD,
+                        AbsEncoderConstants.kFF, AbsEncoderConstants.kMinRange,
+                        AbsEncoderConstants.kMaxRange,
+                        AbsEncoderConstants.kAbsEncoderOdometryFrequency
+
+        );
 
         // Controller
         private final CommandXboxController m_driveController =
