@@ -7,9 +7,9 @@ public class ExampleMotorSubsystem extends SubsystemBase {
     private final MotorIO m_motor1;
     private final MotorIO m_motor2;
 
-    public ExampleMotorSubsystem(MotorIO motor1, MotorIO motor2) {
-        m_motor1 = motor1;
-        m_motor2 = motor2;
+    public ExampleMotorSubsystem() {
+        m_motor1 = ExampleMotorSubsystemConstants.motor1;
+        m_motor2 = ExampleMotorSubsystemConstants.motor2;
     }
 
     public void setPower(double power) {

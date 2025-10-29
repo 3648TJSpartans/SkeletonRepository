@@ -1,8 +1,7 @@
 package frc.robot.subsystems.exampleMotorSubsystem;
 
 import frc.robot.util.TunableNumber;
-import frc.robot.util.motorUtil.MotorConfig;
-
+import frc.robot.util.motorUtil.*;
 /*
  * Constants files contain numbers and other values that shouldn't change while robot code is
  * running, except for tuning.
@@ -37,4 +36,8 @@ public class ExampleMotorSubsystemConstants {
     // Copies motor 1 config except for changing name and CAN id
     public static final MotorConfig motor2Config =
             motor1Config.name("exampleSubsystem/motor2").motorCan(motor2Can);
+
+
+    public static final MotorIO motor1 = new AbsEncoderSparkMax(motor1Config);
+    public static final MotorIO motor2 = new RelEncoderSparkMax(motor2Config);
 }
