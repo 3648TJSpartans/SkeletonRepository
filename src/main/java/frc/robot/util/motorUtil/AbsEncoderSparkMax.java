@@ -21,25 +21,20 @@ public class AbsEncoderSparkMax extends MotorIO {
     private SparkClosedLoopController motorController;
     private String name;
 
-    public AbsEncoderSparkMax(String loggingName, int motorCan, double positionTolerance,
-            double speedTolerance, double kP, double kI, double kD, double kFF, double minPower,
-            double maxPower, double encoderOdometryFrequency) {
-        super(loggingName, positionTolerance, speedTolerance);
-        motor = new SparkMax(motorCan, MotorType.kBrushless);
+    public AbsEncoderSparkMax(MotorConfig motorConfig) {
+        super(motorConfig.name(), motorConfig.positionTolerance(), motorConfig.speedTolerance());
+        motor = new SparkMax(motorConfig.motorCan(), MotorType.kBrushless);
         motorController = motor.getClosedLoopController();
         encoder = motor.getAbsoluteEncoder();
         name = getName();
         var config = new SparkMaxConfig();
         config.inverted(false).idleMode(IdleMode.kBrake).voltageCompensation(12.0);
         config.closedLoop.feedbackSensor(FeedbackSensor.kAbsoluteEncoder)
-                .pidf(new TunableNumber(name + "/PIDF/P", kP).get(),
-                        new TunableNumber(name + "/PIDF/I", kI).get(),
-                        new TunableNumber(name + "/PIDF/D", kD).get(),
-                        new TunableNumber(name + "/PIDF/FF", kFF).get())
-                .outputRange(new TunableNumber(name + "/PowerRange/minPower", minPower).get(),
-                        new TunableNumber(name + "/PowerRange/maxPower", maxPower).get());
+                .pidf(motorConfig.p(), motorConfig.i(), motorConfig.d(), motorConfig.ff())
+                .outputRange(motorConfig.minPower(), motorConfig.maxPower());
         config.signals.absoluteEncoderPositionAlwaysOn(true)
-                .absoluteEncoderPositionPeriodMs((int) (1000.0 / encoderOdometryFrequency))
+                .absoluteEncoderPositionPeriodMs(
+                        (int) (1000.0 / motorConfig.encoderOdometryFrequency()))
                 .absoluteEncoderVelocityAlwaysOn(true).absoluteEncoderVelocityPeriodMs(20)
                 .appliedOutputPeriodMs(20).busVoltagePeriodMs(20).outputCurrentPeriodMs(20);
 
