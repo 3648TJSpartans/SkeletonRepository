@@ -7,6 +7,7 @@ package frc.robot.commands.ledCommands;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.leds.*;
 
+// Simple command that sets the LEDs to a specific pattern during teleop.
 public class TeleopLEDCommand extends Command {
     private final LedSubsystem m_leds;
 
@@ -17,8 +18,7 @@ public class TeleopLEDCommand extends Command {
 
     // Called when the command is initially scheduled.
     @Override
-    public void initialize() {
-    }
+    public void initialize() {}
 
     // Called every time the scheduler runs while the command is scheduled.
     @Override

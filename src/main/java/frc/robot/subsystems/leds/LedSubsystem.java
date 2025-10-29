@@ -24,8 +24,8 @@ public class LedSubsystem extends SubsystemBase {
         // colors or patterns. Since we are limited to a single LED strip along the
         // whole robot, these are often necessary.
 
-        buffer0 = ledBuffer.createView(LedConstants.buffer1StartLeft, LedConstants.buffer1EndLeft);
-        buffer1 = ledBuffer.createView(LedConstants.buffer2StartLeft, LedConstants.buffer2EndLeft);
+        buffer0 = ledBuffer.createView(LedConstants.buffer0Start, LedConstants.buffer0End);
+        buffer1 = ledBuffer.createView(LedConstants.buffer1Start, LedConstants.buffer1End);
 
         led.setLength(ledBuffer.getLength());
         led.setData(ledBuffer);
