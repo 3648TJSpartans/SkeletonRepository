@@ -87,7 +87,7 @@ public class RobotContainer {
                         new CommandXboxController(Constants.kDriverControllerPort);
         private final CommandXboxController m_copilotController =
                         new CommandXboxController(Constants.kCopilotControllerPort);
-        // A third controllr could be used for testing if the buttons on the first two are full.
+        // A third controller could be used for testing if the buttons on the first two are full.
         // However, this controller can't be used during competition.
         // private final CommandXboxController m_testController =
         // new CommandXboxController(Constants.kTestControllerPort);
@@ -123,7 +123,7 @@ public class RobotContainer {
 
                                 // To change number of limelights, just add or delete IOs in the
                                 // parameters
-                                // Make sure camera name match in the coprocessor!
+                                // Make sure camera names match in the coprocessor!
                                 m_vision = new Vision(m_drive::addVisionMeasurement,
                                                 m_drive::addTargetSpaceVisionMeasurement,
                                                 // new
