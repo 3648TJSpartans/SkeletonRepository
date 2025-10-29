@@ -29,7 +29,8 @@ public class RelEncoderSparkMax extends MotorIO {
         encoder = motor.getEncoder();
         name = getName();
         var config = new SparkMaxConfig();
-        config.inverted(false).idleMode(IdleMode.kBrake).voltageCompensation(12.0);
+        config.inverted(motorConfig.isInverted()).idleMode(IdleMode.kBrake)
+                .voltageCompensation(12.0);
         config.closedLoop.feedbackSensor(FeedbackSensor.kPrimaryEncoder)
                 .pidf(motorConfig.p(), motorConfig.i(), motorConfig.d(), motorConfig.ff())
                 .outputRange(motorConfig.minPower(), motorConfig.maxPower());

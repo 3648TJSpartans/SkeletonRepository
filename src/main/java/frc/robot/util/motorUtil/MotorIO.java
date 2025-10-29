@@ -19,9 +19,9 @@ public abstract class MotorIO extends SubsystemBase {
                 new TunableNumber(loggingName + "/Tolerances/speedTolerance", speedTolerance);
     }
 
-    abstract double getPosition();
+    public abstract double getPosition();
 
-    abstract double getSpeed();
+    public abstract double getSpeed();
 
     public void setPosition(double position) {
         m_positionSetpoint = position;
@@ -39,7 +39,7 @@ public abstract class MotorIO extends SubsystemBase {
         return Math.abs(getSpeed() - m_speedSetpoint) < m_speedTolerance.get();
     }
 
-    abstract void setPower(double power);
+    public abstract void setPower(double power);
 
     public final void updateValues() {
         Logger.recordOutput("name" + "/pose", getPosition());
@@ -50,7 +50,7 @@ public abstract class MotorIO extends SubsystemBase {
         Logger.recordOutput("name" + "/speedInTolerance", speedInTolerance());
     }
 
-    abstract void setEncoder(double setpoint);
+    public abstract void setEncoder(double setpoint);
 
     public final void resetEncoder() {
         setEncoder(0.0);

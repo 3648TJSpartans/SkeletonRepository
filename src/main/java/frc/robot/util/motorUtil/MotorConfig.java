@@ -14,54 +14,73 @@ public class MotorConfig {
     private double m_minPower = 0.0;
     private double m_maxPower = 0.0;
     private double m_encoderOdometryFrequency = 100;
+    private boolean m_isInverted = false;
 
     public MotorConfig(String name) {
         m_loggingName = "MotorIOs/" + name;
     }
 
-    public void name(String name) {
+    public MotorConfig name(String name) {
         m_loggingName = "MotorIOs/" + name;
+        return this;
     }
 
-    public void motorCan(int motorCAN) {
+    public MotorConfig motorCan(int motorCAN) {
         m_motorCan = (int) new TunableNumber(m_loggingName + "/motorCAN", motorCAN).get();
+        return this;
     }
 
-    public void positionTolerance(double positionTolerance) {
+    public MotorConfig positionTolerance(double positionTolerance) {
         m_positionTolerance = positionTolerance;
+        return this;
     }
 
-    public void speedTolerance(double speedTolerance) {
+    public MotorConfig speedTolerance(double speedTolerance) {
         m_speedTolerance = speedTolerance;
+        return this;
     }
 
-    public void p(double p) {
+    public MotorConfig p(double p) {
         m_P = new TunableNumber(m_loggingName + "/PIDF/P", p).get();
+        return this;
     }
 
-    public void i(double i) {
+    public MotorConfig i(double i) {
         m_I = new TunableNumber(m_loggingName + "/PIDF/I", i).get();
+        return this;
     }
 
-    public void d(double d) {
+    public MotorConfig d(double d) {
         m_D = new TunableNumber(m_loggingName + "/PIDF/D", d).get();
+        return this;
     }
 
-    public void ff(double ff) {
+    public MotorConfig ff(double ff) {
         m_FF = new TunableNumber(m_loggingName + "/PIDF/FF", ff).get();
+        return this;
     }
 
-    public void minPower(double minPower) {
+    public MotorConfig minPower(double minPower) {
         m_minPower = new TunableNumber(m_loggingName + "/PowerRange/minPower", minPower).get();
+        return this;
     }
 
-    public void maxPower(double maxPower) {
+    public MotorConfig maxPower(double maxPower) {
         m_maxPower = new TunableNumber(m_loggingName + "/PowerRange/maxPower", maxPower).get();
+        return this;
     }
 
-    public void encoderOdometryFrequency(double encoderOdometryFrequency) {
+    public MotorConfig encoderOdometryFrequency(double encoderOdometryFrequency) {
         m_encoderOdometryFrequency = new TunableNumber(m_loggingName + "/EncoderOdometryFrequency",
                 encoderOdometryFrequency).get();
+        return this;
+    }
+
+    // Not Tunable
+    // TODO change with Tunable Boolean if you want to.
+    public MotorConfig isInverted(boolean isInverted) {
+        m_isInverted = isInverted;
+        return this;
     }
 
     public String name() {
@@ -106,5 +125,9 @@ public class MotorConfig {
 
     public double encoderOdometryFrequency() {
         return m_encoderOdometryFrequency;
+    }
+
+    public boolean isInverted() {
+        return m_isInverted;
     }
 }

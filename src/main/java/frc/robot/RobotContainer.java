@@ -52,8 +52,8 @@ import frc.robot.subsystems.drive.GyroIONavX;
 import frc.robot.subsystems.drive.ModuleIO;
 import frc.robot.subsystems.drive.ModuleIOSim;
 import frc.robot.subsystems.drive.ModuleIOSpark;
+import frc.robot.subsystems.exampleMotorSubsystem.exampleMotorSubsystemConstants;
 import frc.robot.subsystems.leds.LedSubsystem;
-import frc.robot.subsystems.relativeEncoder.RelEncoderConstants;
 import frc.robot.subsystems.simpleMotor.SimpleMotor;
 import frc.robot.subsystems.simpleMotor.SimpleMotorConstants;
 import frc.robot.subsystems.simpleMotor.SimpleMotorIO;
@@ -66,7 +66,6 @@ import frc.robot.util.motorUtil.MotorIO;
 import frc.robot.util.TunableNumber;
 import frc.robot.util.motorUtil.AbsEncoderSparkMax;
 import frc.robot.util.TunableNumber;
-import frc.robot.subsystems.absoluteEncoder.AbsEncoderConstants;
 
 import com.pathplanner.lib.path.PathPlannerPath;
 import com.pathplanner.lib.path.Waypoint;
@@ -107,15 +106,6 @@ public class RobotContainer {
         private boolean override;
         private boolean endgameClosed = true;
 
-        private final MotorIO absEncoder = new AbsEncoderSparkMax("absEncoder",
-                        AbsEncoderConstants.absEncoderMotorCan,
-                        AbsEncoderConstants.setpointTolerance, AbsEncoderConstants.speedTolerance,
-                        AbsEncoderConstants.kP, AbsEncoderConstants.kI, AbsEncoderConstants.kD,
-                        AbsEncoderConstants.kFF, AbsEncoderConstants.kMinRange,
-                        AbsEncoderConstants.kMaxRange,
-                        AbsEncoderConstants.kAbsEncoderOdometryFrequency
-
-        );
 
         // Controller
         private final CommandXboxController m_driveController =
