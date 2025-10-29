@@ -12,7 +12,7 @@ public abstract class MotorIO extends SubsystemBase {
     private double m_positionSetpoint;
 
     public MotorIO(String loggingName, double poseTolerance, double speedTolerance) {
-        this.name = "MotorIOs/" + loggingName;
+        this.name = loggingName;
         m_poseTolerance =
                 new TunableNumber(loggingName + "/Tolerances/poseTolerance", poseTolerance);
         m_speedTolerance =
