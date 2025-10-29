@@ -14,5 +14,11 @@ public class ExampleMotorSubsystem extends SubsystemBase {
 
     public void setPower(double power) {
         m_motor1.setPower(power);
+        m_motor2.setPower(power);
+    }
+
+    public void stop() {
+        m_motor1.stop();
+        m_motor2.stop();
     }
 }
