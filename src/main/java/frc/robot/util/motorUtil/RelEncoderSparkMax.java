@@ -46,11 +46,13 @@ public class RelEncoderSparkMax extends MotorIO {
 
     @Override
     public void setPosition(double setpoint) {
+        super.setPosition(setpoint);
         motorController.setReference(setpoint, ControlType.kPosition, ClosedLoopSlot.kSlot0);
     }
 
     @Override
     public void setSpeed(double speed) {
+        super.setPosition(speed);
         motorController.setReference(speed, ControlType.kVelocity, ClosedLoopSlot.kSlot0);
     }
 
