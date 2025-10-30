@@ -58,7 +58,7 @@ public class DriveCommands {
 
     // Square magnitude for more precise control
     linearMagnitude =
-        linearMagnitude * linearMagnitude * DriveConstants.fieldRelativeMaxInputPercent;
+        linearMagnitude * linearMagnitude * DriveConstants.fieldRelativeMaxInputPercent.get();
 
     // Return new linear velocity
     return new Pose2d(new Translation2d(), linearDirection)
@@ -78,11 +78,11 @@ public class DriveCommands {
         drive.runVelocity(new ChassisSpeeds(
 
             MathUtil.applyDeadband(xSupplier.getAsDouble(), DEADBAND)
-                * DriveConstants.robotRelativeMaxInputPercent,
+                * DriveConstants.robotRelativeMaxInputPercent.get(),
             MathUtil.applyDeadband(ySupplier.getAsDouble(), DEADBAND)
-                * DriveConstants.robotRelativeMaxInputPercent,
+                * DriveConstants.robotRelativeMaxInputPercent.get(),
             MathUtil.applyDeadband(omegaSupplier.getAsDouble(), DEADBAND)
-                * DriveConstants.robotRelativeMaxInputPercent));
+                * DriveConstants.robotRelativeMaxInputPercent.get()));
       } else {
         // Get linear velocity
         Translation2d linearVelocity =
@@ -92,8 +92,9 @@ public class DriveCommands {
         double omega = MathUtil.applyDeadband(omegaSupplier.getAsDouble(), DEADBAND);
 
         // Square rotation value for more precise control
-        omega = Math.copySign(omega * omega, omega) * DriveConstants.fieldRelativeMaxInputPercent
-            * (slowDown.getAsBoolean() ? .5 : 1);
+        omega =
+            Math.copySign(omega * omega, omega) * DriveConstants.fieldRelativeMaxInputPercent.get()
+                * (slowDown.getAsBoolean() ? .5 : 1);
 
         // Convert to field relative speeds & send command
         ChassisSpeeds speeds =

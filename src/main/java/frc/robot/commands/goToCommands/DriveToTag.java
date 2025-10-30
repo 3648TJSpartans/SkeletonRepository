@@ -21,13 +21,13 @@ public class DriveToTag extends Command {
     private double dtheta;
     // Defines PID controlelrs
     private final ProfiledPIDController driveController =
-            new ProfiledPIDController(goToConstants.drivekP, 0.0, goToConstants.drivekD,
-                    new TrapezoidProfile.Constraints(goToConstants.driveMaxVelocity,
-                            goToConstants.driveMaxAcceleration),
+            new ProfiledPIDController(goToConstants.drivekP.get(), 0.0, goToConstants.drivekD.get(),
+                    new TrapezoidProfile.Constraints(goToConstants.driveMaxVelocity.get(),
+                            goToConstants.driveMaxAcceleration.get()),
                     0.02);
 
     private final ProfiledPIDController thetaController =
-            new ProfiledPIDController(goToConstants.thetakP, 0.0, goToConstants.thetakD,
+            new ProfiledPIDController(goToConstants.thetakP.get(), 0.0, goToConstants.thetakD.get(),
                     new TrapezoidProfile.Constraints(goToConstants.thetaMaxVelocity,
                             goToConstants.thetaMaxAcceleration),
                     0.02);
@@ -37,8 +37,8 @@ public class DriveToTag extends Command {
         this.targetPoseSupplier = targetPose;
         this.drive = drive;
         // Sets PID tolerances for at Goal.
-        driveController.setTolerance(goToConstants.driveTolerance);
-        thetaController.setTolerance(goToConstants.thetaTolerance);
+        driveController.setTolerance(goToConstants.driveTolerance.get());
+        thetaController.setTolerance(goToConstants.thetaTolerance.get());
         // Means theta will take mimunimum path.
         thetaController.enableContinuousInput(-Math.PI, Math.PI);
         driveController.setGoal(0.0);
@@ -98,8 +98,8 @@ public class DriveToTag extends Command {
 
     @AutoLogOutput(key = "DriveTo2/atGoal")
     public boolean atGoal() {
-        return Math.abs(dtheta) < goToConstants.thetaTolerance
-                && Math.abs(dp) < goToConstants.driveTolerance;
+        return Math.abs(dtheta) < goToConstants.thetaTolerance.get()
+                && Math.abs(dp) < goToConstants.driveTolerance.get();
     }
 
     @Override

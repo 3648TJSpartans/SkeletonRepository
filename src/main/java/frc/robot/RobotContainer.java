@@ -209,6 +209,7 @@ public class RobotContainer {
                                 .onTrue(new InstantCommand(() -> toggleOverride()));
         }
 
+
         private void configureAlerts() {
                 new Trigger(() -> DriverStation.isTeleopEnabled()
                                 && DriverStation.getMatchTime() > 0
@@ -290,6 +291,7 @@ public class RobotContainer {
                 m_copilotController.leftTrigger().whileTrue(homeEncoder);
                 m_copilotController.x().whileTrue(exampleRel1);
                 m_copilotController.y().whileTrue(exampleRel2);
+                m_driveController.y().onTrue(new InstantCommand(() -> m_relEncoder.updateValues()));
 
         }
 
@@ -351,6 +353,7 @@ public class RobotContainer {
                 m_absEncoder.setDefaultCommand(absAnalog);
                 m_copilotController.a().whileTrue(exampleAbs1);
                 m_copilotController.b().whileTrue(exampleAbs2);
+                m_driveController.y().onTrue(new InstantCommand(() -> m_absEncoder.updateValues()));
 
         }
 

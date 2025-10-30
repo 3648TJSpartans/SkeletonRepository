@@ -19,17 +19,23 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.math.util.Units;
+import frc.robot.util.TunableNumber;
 
 public class DriveConstants {
-        public static final double fieldRelativeMaxInputPercent = 1; // value between 0+ and 1,
-                                                                     // allowing control maximum
-                                                                     // input for field relative
-        public static final double robotRelativeMaxInputPercent = .5; // value between 0+ and 1,
-                                                                      // allowing control
-                                                                      // maximum input for robot
-                                                                      // relative
+        public static final TunableNumber fieldRelativeMaxInputPercent =
+                        new TunableNumber("drive/fieldRelativeMaxInputPercent", 1);
+        // value between 0+ and 1,
+        // allowing control maximum
+        // input for field relative
+        public static final TunableNumber robotRelativeMaxInputPercent =
+                        new TunableNumber("drive/robotRelativeMaxInputPercent", .5);
+        // value between 0+ and 1,
+        // allowing control
+        // maximum input for robot
+        // relative
 
-        public static final double maxSpeedMetersPerSec = 4;
+        public static final TunableNumber maxSpeedMetersPerSec =
+                        new TunableNumber("drive/maxSpeedMetersPerSec", 4);
         public static final double odometryFrequency = 100.0; // Hz
         public static final double trackWidth = .6;
         public static final double wheelBase = .6;
@@ -84,14 +90,15 @@ public class DriveConstants {
                                                                     // Rad/Sec
 
         // Drive PID configuration
-        public static final double driveKp = 0.0;
-        public static final double driveKd = 0.0;
-        public static final double driveKs = 0.14381;
-        public static final double driveKv = 0.10033;
-        public static final double driveSimP = 0.05;
-        public static final double driveSimD = 0.0;
-        public static final double driveSimKs = 0.0;
-        public static final double driveSimKv = 0.0789;
+        public static final TunableNumber driveKp = new TunableNumber("drive/driveKp", 0);
+        public static final TunableNumber driveKd = new TunableNumber("drive/driveKd", 0);
+        public static final TunableNumber driveKs = new TunableNumber("drive/driveKs", 0.14381);
+        public static final TunableNumber driveKv = new TunableNumber("drive/driveKv", 0.10033);
+        public static final TunableNumber driveSimP = new TunableNumber("drive/driveSimP", 0.05);
+        public static final TunableNumber driveSimD = new TunableNumber("drive/driveSimD", 0);
+        public static final TunableNumber driveSimKs = new TunableNumber("drive/driveSimKs", 0);
+        public static final TunableNumber driveSimKv =
+                        new TunableNumber("drive/driveSimKv", 0.0789);
 
         // Turn motor configuration
         public static final boolean turnInverted = false;
@@ -106,10 +113,10 @@ public class DriveConstants {
                                                                                      // Rad/Sec
 
         // Turn PID configuration
-        public static final double turnKp = 2.0;
-        public static final double turnKd = 0.0;
-        public static final double turnSimP = 8.0;
-        public static final double turnSimD = 0.0;
+        public static final TunableNumber turnKp = new TunableNumber("drive/turnKp", 2.0);
+        public static final TunableNumber turnKd = new TunableNumber("drive/turnKd", 0);
+        public static final TunableNumber turnSimP = new TunableNumber("drive/turnSimP", 8.0);
+        public static final TunableNumber turnSimD = new TunableNumber("drive/turnSimD", 0);
         public static final double turnPIDMinInput = 0; // Radians
         public static final double turnPIDMaxInput = 2 * Math.PI; // Radians
 

@@ -98,8 +98,8 @@ public class Drive extends SubsystemBase {
         new PPHolonomicDriveController(
             // new PIDConstants(5, 0.0, DriveConstants.driveKd),
             // new PIDConstants(1, 0.0, DriveConstants.turnKd)),
-            new PIDConstants(goToConstants.drivekP, 0.0, goToConstants.drivekD),
-            new PIDConstants(goToConstants.thetakP, 0.0, goToConstants.thetakD)),
+            new PIDConstants(goToConstants.drivekP.get(), 0.0, goToConstants.drivekD.get()),
+            new PIDConstants(goToConstants.thetakP.get(), 0.0, goToConstants.thetakD.get())),
         ppConfig, () -> DriverStation.getAlliance().orElse(Alliance.Blue) == Alliance.Red, this);
     Pathfinding.setPathfinder(new LocalADStarAK());
     PathPlannerLogging.setLogActivePathCallback((activePath) -> {
@@ -186,7 +186,7 @@ public class Drive extends SubsystemBase {
     // Calculate module setpoints
     ChassisSpeeds discreteSpeeds = ChassisSpeeds.discretize(speeds, 0.02);
     SwerveModuleState[] setpointStates = kinematics.toSwerveModuleStates(discreteSpeeds);
-    SwerveDriveKinematics.desaturateWheelSpeeds(setpointStates, maxSpeedMetersPerSec);
+    SwerveDriveKinematics.desaturateWheelSpeeds(setpointStates, maxSpeedMetersPerSec.get());
 
     // Log unoptimized setpoints
     Logger.recordOutput("SwerveStates/Setpoints", setpointStates);
@@ -326,11 +326,11 @@ public class Drive extends SubsystemBase {
 
   /** Returns the maximum linear speed in meters per sec. */
   public double getMaxLinearSpeedMetersPerSec() {
-    return maxSpeedMetersPerSec;
+    return maxSpeedMetersPerSec.get();
   }
 
   /** Returns the maximum angular speed in radians per sec. */
   public double getMaxAngularSpeedRadPerSec() {
-    return maxSpeedMetersPerSec / driveBaseRadius;
+    return maxSpeedMetersPerSec.get() / driveBaseRadius;
   }
 }

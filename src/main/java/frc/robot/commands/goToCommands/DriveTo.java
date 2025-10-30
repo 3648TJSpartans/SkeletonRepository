@@ -19,13 +19,13 @@ public class DriveTo extends Command {
     private final Drive drive;
     // Defines PID controllers
     private final ProfiledPIDController driveController =
-            new ProfiledPIDController(goToConstants.drivekP, 0.0, goToConstants.drivekD,
-                    new TrapezoidProfile.Constraints(goToConstants.driveMaxVelocity,
-                            goToConstants.driveMaxAcceleration),
+            new ProfiledPIDController(goToConstants.drivekP.get(), 0.0, goToConstants.drivekD.get(),
+                    new TrapezoidProfile.Constraints(goToConstants.driveMaxVelocity.get(),
+                            goToConstants.driveMaxAcceleration.get()),
                     0.02);
 
     private final ProfiledPIDController thetaController =
-            new ProfiledPIDController(goToConstants.thetakP, 0.0, goToConstants.thetakD,
+            new ProfiledPIDController(goToConstants.thetakP.get(), 0.0, goToConstants.thetakD.get(),
                     new TrapezoidProfile.Constraints(goToConstants.thetaMaxVelocity,
                             goToConstants.thetaMaxAcceleration),
                     0.02);
@@ -35,8 +35,8 @@ public class DriveTo extends Command {
         this.targetPoseSupplier = targetPose;
         this.drive = drive;
         // Sets PID tolerances for at Goal.
-        driveController.setTolerance(goToConstants.driveTolerance);
-        thetaController.setTolerance(goToConstants.thetaTolerance);
+        driveController.setTolerance(goToConstants.driveTolerance.get());
+        thetaController.setTolerance(goToConstants.thetaTolerance.get());
         // Means theta will take mimunimum path.
         thetaController.enableContinuousInput(-Math.PI, Math.PI);
         driveController.setGoal(0.0);

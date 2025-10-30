@@ -21,6 +21,10 @@ public class AbsEncoder extends SubsystemBase {
         return io.getPosition();
     }
 
+    public void updateValues() {
+        io.updateValues();
+    }
+
     public void setTo(double setpoint) {
         Logger.recordOutput("absEncoder/setPos", setpoint);
         io.setTo(setpoint);

@@ -4,19 +4,23 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.util.Units;
 import frc.robot.util.AllianceFlipUtil;
+import frc.robot.util.TunableNumber;
 
 public class goToConstants {
 
-        public static final double drivekP = 2.0;
-        public static final double drivekD = 0.0;
-        public static final double thetakP = 5.0;
-        public static final double thetakD = 0.0;
-        public static final double driveMaxVelocity = .5;
-        public static final double driveMaxAcceleration = 1.5;
+        public static final TunableNumber drivekP = new TunableNumber("goTo/driveKP", 2);
+        public static final TunableNumber drivekD = new TunableNumber("goTo/driveKD", 0);
+        public static final TunableNumber thetakP = new TunableNumber("goTo/thetakP", 5);
+        public static final TunableNumber thetakD = new TunableNumber("goTo/thetaKD", 0);
+        public static final TunableNumber driveMaxVelocity =
+                        new TunableNumber("goTo/driveMaxVelocity", .5);
+        public static final TunableNumber driveMaxAcceleration =
+                        new TunableNumber("goTo/driveMaxAcceleration", 1.5);
         public static final double thetaMaxVelocity = Units.degreesToRadians(360.0);
         public static final double thetaMaxAcceleration = Units.degreesToRadians(720.0);
-        public static final double driveTolerance = 0.05;
-        public static final double thetaTolerance = Units.degreesToRadians(1);
+        public static final TunableNumber driveTolerance = new TunableNumber("goTo/driveKp", 0.05);
+        public static final TunableNumber thetaTolerance =
+                        new TunableNumber("goTo/driveKp", Units.degreesToRadians(1));
         public static final double ffMinRadius = 0.2;
         public static final double ffMaxRadius = 0.6;
 
