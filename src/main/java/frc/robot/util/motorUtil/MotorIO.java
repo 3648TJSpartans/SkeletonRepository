@@ -10,6 +10,7 @@ public abstract class MotorIO extends SubsystemBase {
     private final TunableNumber m_speedTolerance;
     private double m_speedSetpoint;
     private double m_positionSetpoint;
+    private double m_powerSetpoint;
 
     public MotorIO(String loggingName, double poseTolerance, double speedTolerance) {
         this.name = loggingName;
@@ -39,15 +40,18 @@ public abstract class MotorIO extends SubsystemBase {
         return Math.abs(getSpeed() - m_speedSetpoint) < m_speedTolerance.get();
     }
 
-    public abstract void setPower(double power);
+    public abstract void setPower(double power){
+        m_powerSetpoint = power;
+    };
 
     public final void updateValues() {
-        Logger.recordOutput("name" + "/pose", getPosition());
-        Logger.recordOutput("name" + "/speed", getSpeed());
-        Logger.recordOutput("name" + "/setPose", m_positionSetpoint);
-        Logger.recordOutput("name" + "/setSpeed", m_speedSetpoint);
-        Logger.recordOutput("name" + "/poseInTolerance", positionInTolerance());
-        Logger.recordOutput("name" + "/speedInTolerance", speedInTolerance());
+        Logger.recordOutput(name + "/pose", getPosition());
+        Logger.recordOutput(name + "/speed", getSpeed());
+        Logger.recordOutput(name + "/setPose", m_positionSetpoint);
+        Logger.recordOutput(name + "/setSpeed", m_speedSetpoint);
+        Logger.recordOutput(name + "/poseInTolerance", positionInTolerance());
+        Logger.recordOutput(name + "/speedInTolerance", speedInTolerance());
+        logger.recordOutput(name + "/setPower", m_powerSetpoint)
     }
 
     public abstract void setEncoder(double setpoint);
