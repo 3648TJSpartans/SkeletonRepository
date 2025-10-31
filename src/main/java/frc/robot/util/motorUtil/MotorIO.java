@@ -40,7 +40,7 @@ public abstract class MotorIO extends SubsystemBase {
         return Math.abs(getSpeed() - m_speedSetpoint) < m_speedTolerance.get();
     }
 
-    public abstract void setPower(double power){
+    public void setPower(double power) {
         m_powerSetpoint = power;
     };
 
@@ -51,7 +51,7 @@ public abstract class MotorIO extends SubsystemBase {
         Logger.recordOutput(name + "/setSpeed", m_speedSetpoint);
         Logger.recordOutput(name + "/poseInTolerance", positionInTolerance());
         Logger.recordOutput(name + "/speedInTolerance", speedInTolerance());
-        logger.recordOutput(name + "/setPower", m_powerSetpoint)
+        Logger.recordOutput(name + "/setPower", m_powerSetpoint);
     }
 
     public abstract void setEncoder(double setpoint);

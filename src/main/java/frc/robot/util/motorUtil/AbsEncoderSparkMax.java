@@ -56,6 +56,7 @@ public class AbsEncoderSparkMax extends MotorIO {
 
     @Override
     public void setPower(double power) {
+        super.setPower(power);
         motor.set(power);
     }
 
