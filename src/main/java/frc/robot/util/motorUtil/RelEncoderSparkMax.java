@@ -57,6 +57,7 @@ public class RelEncoderSparkMax extends MotorIO {
     }
 
     public void setPower(double power) {
+        super.setPower(power);
         motor.set(power);
     }
 
