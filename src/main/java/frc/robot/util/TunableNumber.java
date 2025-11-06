@@ -4,19 +4,20 @@
 
 package frc.robot.util;
 
-import static frc.robot.Constants.*;
+import static frc.robot.util.TuningUpdater.*;
 
 import org.littletonrobotics.junction.Logger;
 
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 /**
- * Class for a tunable number. Gets value from dashboard in tuning mode, returns
- * default if not or
+ * Class for a tunable number. Gets value from dashboard in tuning mode, returns default if not or
  * value not in dashboard.
  */
 public class TunableNumber {
-  private static final String TABLE_KEY = "TunableNumbers";
+
+  private static TuningUpdater updater = new TuningUpdater();
 
   private String key;
   private double defaultValue;
@@ -70,15 +71,15 @@ public class TunableNumber {
    * @return The current value
    */
   public double get() {
-    Logger.recordOutput(key, TUNING_MODE ? SmartDashboard.getNumber(key, defaultValue) : defaultValue);
+    Logger.recordOutput(key,
+        TUNING_MODE ? SmartDashboard.getNumber(key, defaultValue) : defaultValue);
     return TUNING_MODE ? SmartDashboard.getNumber(key, defaultValue) : defaultValue;
   }
 
   /**
    * Checks whether the number has changed since our last check
    *
-   * @return True if the number has changed since the last time this method was
-   *         called, false
+   * @return True if the number has changed since the last time this method was called, false
    *         otherwise
    */
   public boolean hasChanged() {
