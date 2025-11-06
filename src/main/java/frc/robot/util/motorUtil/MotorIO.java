@@ -1,10 +1,14 @@
 package frc.robot.util.motorUtil;
 
+import java.util.ArrayList;
 import org.littletonrobotics.junction.Logger;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.util.TunableNumber;
 
 public abstract class MotorIO extends SubsystemBase {
+
+    private static ArrayList<MotorIO> m_motorList;
+
     private final String name;
     private final TunableNumber m_poseTolerance;
     private final TunableNumber m_speedTolerance;
@@ -18,6 +22,7 @@ public abstract class MotorIO extends SubsystemBase {
                 new TunableNumber(loggingName + "/Tolerances/poseTolerance", poseTolerance);
         m_speedTolerance =
                 new TunableNumber(loggingName + "/Tolerances/speedTolerance", speedTolerance);
+        m_motorList.add(this);
     }
 
     public abstract double getPosition();
@@ -45,8 +50,8 @@ public abstract class MotorIO extends SubsystemBase {
     };
 
     public final void updateValues() {
-        Logger.recordOutput(name + "/pose", getPosition());
-        Logger.recordOutput(name + "/speed", getSpeed());
+        Logger.recordOutput(name + "/getPosition", getPosition());
+        Logger.recordOutput(name + "/getSpeed", getSpeed());
         Logger.recordOutput(name + "/setPose", m_positionSetpoint);
         Logger.recordOutput(name + "/setSpeed", m_speedSetpoint);
         Logger.recordOutput(name + "/poseInTolerance", positionInTolerance());
