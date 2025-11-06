@@ -21,9 +21,13 @@ public class RelEncoderSparkMax extends MotorIO {
     private RelativeEncoder encoder;
     private SparkClosedLoopController motorController;
     private String name;
+    private double m_positionTolerance;
+    private double m_speedTolerance;
+    private MotorConfig m_motorConfig;
 
     public RelEncoderSparkMax(MotorConfig motorConfig) {
-        super(motorConfig.name(), motorConfig.positionTolerance(), motorConfig.speedTolerance());
+        super(motorConfig.name());
+        m_motorConfig = motorConfig;
         motor = new SparkMax(motorConfig.motorCan(), MotorType.kBrushless);
         motorController = motor.getClosedLoopController();
         encoder = motor.getEncoder();
@@ -39,7 +43,8 @@ public class RelEncoderSparkMax extends MotorIO {
                         (int) (1000.0 / motorConfig.encoderOdometryFrequency()))
                 .absoluteEncoderVelocityAlwaysOn(true).absoluteEncoderVelocityPeriodMs(20)
                 .appliedOutputPeriodMs(20).busVoltagePeriodMs(20).outputCurrentPeriodMs(20);
-
+        m_positionTolerance = motorConfig.positionTolerance();
+        m_speedTolerance = motorConfig.speedTolerance();
         motor.configure(config, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
     }
 
@@ -75,4 +80,37 @@ public class RelEncoderSparkMax extends MotorIO {
     public void setEncoder(double setpoint) {
         encoder.setPosition(setpoint);
     }
+
+    public double getPositionTolerance() {
+        return m_positionTolerance;
+    }
+
+    public double getSpeedTolerance() {
+        return m_speedTolerance;
+    }
+
+    @Override
+    public void configureMotor() {
+        var config = new SparkMaxConfig();
+        config.inverted(m_motorConfig.isInverted()).idleMode(m_motorConfig.idleMode())
+                .voltageCompensation(12.0);
+        config.closedLoop.feedbackSensor(FeedbackSensor.kPrimaryEncoder)
+                .pidf(m_motorConfig.p(), m_motorConfig.i(), m_motorConfig.d(), m_motorConfig.ff())
+                .outputRange(m_motorConfig.minPower(), m_motorConfig.maxPower());
+        config.signals.absoluteEncoderPositionAlwaysOn(true)
+                .absoluteEncoderPositionPeriodMs(
+                        (int) (1000.0 / m_motorConfig.encoderOdometryFrequency()))
+                .absoluteEncoderVelocityAlwaysOn(true).absoluteEncoderVelocityPeriodMs(20)
+                .appliedOutputPeriodMs(20).busVoltagePeriodMs(20).outputCurrentPeriodMs(20);
+        motor.configure(config, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
+
+        m_positionTolerance = m_motorConfig.positionTolerance();
+        m_speedTolerance = m_motorConfig.speedTolerance();
+    }
+
+    public void configureMotor(MotorConfig motorConfig) {
+        m_motorConfig = motorConfig;
+        configureMotor();
+    }
 }
+

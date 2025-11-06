@@ -10,18 +10,12 @@ public abstract class MotorIO extends SubsystemBase {
     private static ArrayList<MotorIO> m_motorList;
 
     private final String name;
-    private final TunableNumber m_poseTolerance;
-    private final TunableNumber m_speedTolerance;
     private double m_speedSetpoint;
     private double m_positionSetpoint;
     private double m_powerSetpoint;
 
-    public MotorIO(String loggingName, double poseTolerance, double speedTolerance) {
+    public MotorIO(String loggingName) {
         this.name = loggingName;
-        m_poseTolerance =
-                new TunableNumber(loggingName + "/Tolerances/poseTolerance", poseTolerance);
-        m_speedTolerance =
-                new TunableNumber(loggingName + "/Tolerances/speedTolerance", speedTolerance);
         m_motorList.add(this);
     }
 
@@ -38,11 +32,11 @@ public abstract class MotorIO extends SubsystemBase {
     }
 
     public final boolean positionInTolerance() {
-        return Math.abs(getPosition() - m_positionSetpoint) < m_poseTolerance.get();
+        return Math.abs(getPosition() - m_positionSetpoint) < getPositionTolerance();
     }
 
     public final boolean speedInTolerance() {
-        return Math.abs(getSpeed() - m_speedSetpoint) < m_speedTolerance.get();
+        return Math.abs(getSpeed() - m_speedSetpoint) < getSpeedTolerance();
     }
 
     public void setPower(double power) {
@@ -73,8 +67,20 @@ public abstract class MotorIO extends SubsystemBase {
         return name;
     }
 
+    public abstract double getPositionTolerance();
+
+    public abstract double getSpeedTolerance();
+
     @Override
     public void periodic() {
         updateValues();
+    }
+
+    public void configureMotor() {}
+
+    public void reconfigureMotors() {
+        for (MotorIO motor : m_motorList) {
+            motor.configureMotor();
+        }
     }
 }
