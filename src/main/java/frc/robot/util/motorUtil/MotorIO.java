@@ -78,7 +78,7 @@ public abstract class MotorIO extends SubsystemBase {
 
     public void configureMotor() {}
 
-    public void reconfigureMotors() {
+    public static final void reconfigureMotors() {
         for (MotorIO motor : m_motorList) {
             motor.configureMotor();
         }

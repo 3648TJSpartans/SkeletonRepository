@@ -212,6 +212,9 @@ public class RobotContainer {
 
                 m_copilotController.rightTrigger()
                                 .onTrue(new InstantCommand(() -> toggleOverride()));
+
+                m_testController.leftTrigger()
+                                .onTrue(new InstantCommand(MotorIO::reconfigureMotors));
                 /*
                  * m_led.setLedPattern(LedConstants.elevatorHeight, m_led.elevatorBuffer);
                  * m_led.setLedPattern(LedConstants.teal, m_led.leftGuideBuffer);
