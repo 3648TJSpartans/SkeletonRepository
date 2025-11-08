@@ -38,6 +38,7 @@ import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.commands.DriveCommands;
+import frc.robot.commands.exampleSubsystemCommands.ExampleMotorCmd;
 import frc.robot.commands.goToCommands.goToConstants.PoseConstants;
 import frc.robot.commands.goToCommands.DriveTo;
 import frc.robot.commands.goToCommands.DriveToTag;
@@ -52,6 +53,7 @@ import frc.robot.subsystems.drive.GyroIONavX;
 import frc.robot.subsystems.drive.ModuleIO;
 import frc.robot.subsystems.drive.ModuleIOSim;
 import frc.robot.subsystems.drive.ModuleIOSpark;
+import frc.robot.subsystems.exampleMotorSubsystem.ExampleMotorSubsystem;
 import frc.robot.subsystems.exampleMotorSubsystem.ExampleMotorSubsystemConstants;
 import frc.robot.subsystems.leds.LedSubsystem;
 import frc.robot.subsystems.simpleMotor.SimpleMotor;
@@ -105,9 +107,9 @@ public class RobotContainer {
         private final SimpleMotor m_simpleMotor;
         private final LedSubsystem m_leds;
         private final Vision m_vision;
+        private final ExampleMotorSubsystem m_exampleMotorSubsystem;
         private boolean override;
         private boolean endgameClosed = true;
-        private final MotorIO m_motorIO;
 
         // Controller
         private final CommandXboxController m_driveController =
@@ -134,10 +136,7 @@ public class RobotContainer {
         public RobotContainer() {
                 m_simpleMotor = new SimpleMotor(new SimpleMotorSparkMax());
                 m_leds = new LedSubsystem();
-                m_motorIO = new AbsEncoderSparkMax(new MotorConfig("testMotor").motorCan(13).p(.5)
-                                .i(0).d(0).ff(0).encoderOdometryFrequency(100).minPower(-.1)
-                                .maxPower(.1).isInverted(false).positionTolerance(0.02)
-                                .speedTolerance(0.02));
+                m_exampleMotorSubsystem = new ExampleMotorSubsystem();
                 Logger.recordOutput("Poses/shouldFlip", AllianceFlipUtil.shouldFlip());
                 Logger.recordOutput("Override", override);
                 override = false;
@@ -215,6 +214,7 @@ public class RobotContainer {
                 configureAutoChooser();
                 configureSimpleMotor();
                 configureDrive();
+                configureExampleSubsystem();
 
                 m_copilotController.rightTrigger()
                                 .onTrue(new InstantCommand(() -> toggleOverride()));
@@ -222,14 +222,7 @@ public class RobotContainer {
                 new Trigger(DriverStation::isEnabled)
                                 .onTrue(new InstantCommand(MotorIO::reconfigureMotors));
 
-                m_testController.leftBumper()
-                                .whileTrue(new InstantCommand(() -> m_motorIO.setPosition(0.75))
-                                                .repeatedly())
-                                .onFalse(new InstantCommand(m_motorIO::stop));
-                m_testController.rightBumper()
-                                .whileTrue(new InstantCommand(() -> m_motorIO.setPosition(0.25))
-                                                .repeatedly())
-                                .onFalse(new InstantCommand(m_motorIO::stop));
+
                 /*
                  * m_led.setLedPattern(LedConstants.elevatorHeight, m_led.elevatorBuffer);
                  * m_led.setLedPattern(LedConstants.teal, m_led.leftGuideBuffer);
@@ -366,6 +359,12 @@ public class RobotContainer {
                 m_driveController.rightTrigger().whileTrue(alignToTagRight);
                 m_driveController.leftTrigger().whileTrue(alignToTagLeft);
 
+        }
+
+        public void configureExampleSubsystem() {
+                Command motorCommand = new ExampleMotorCmd(m_exampleMotorSubsystem,
+                                ExampleMotorSubsystemConstants.power);
+                m_testController.leftBumper().whileTrue(motorCommand);
         }
 
         public Command getAutonomousCommand() {
