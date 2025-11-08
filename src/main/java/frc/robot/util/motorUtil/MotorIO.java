@@ -1,13 +1,14 @@
 package frc.robot.util.motorUtil;
 
 import java.util.ArrayList;
+import java.util.List;
 import org.littletonrobotics.junction.Logger;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.util.TunableNumber;
 
 public abstract class MotorIO extends SubsystemBase {
 
-    private static ArrayList<MotorIO> m_motorList;
+    private static List<MotorIO> m_motorList = new ArrayList<MotorIO>();
 
     private final String name;
     private double m_speedSetpoint;
@@ -60,7 +61,7 @@ public abstract class MotorIO extends SubsystemBase {
     }
 
     public final void stop() {
-        setSpeed(0.0);
+        setPower(0.0);
     }
 
     public final String getName() {

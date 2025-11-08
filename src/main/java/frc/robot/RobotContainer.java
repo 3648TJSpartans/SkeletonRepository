@@ -63,8 +63,10 @@ import frc.robot.subsystems.vision.VisionConstants;
 import frc.robot.subsystems.vision.VisionIOLimelight;
 import frc.robot.util.AllianceFlipUtil;
 import frc.robot.util.motorUtil.MotorIO;
+import frc.robot.util.motorUtil.RelEncoderSparkMax;
 import frc.robot.util.TunableNumber;
 import frc.robot.util.motorUtil.AbsEncoderSparkMax;
+import frc.robot.util.motorUtil.MotorConfig;
 import frc.robot.util.TunableNumber;
 
 import com.pathplanner.lib.path.PathPlannerPath;
@@ -105,7 +107,7 @@ public class RobotContainer {
         private final Vision m_vision;
         private boolean override;
         private boolean endgameClosed = true;
-
+        private final MotorIO m_motorIO;
 
         // Controller
         private final CommandXboxController m_driveController =
@@ -132,6 +134,10 @@ public class RobotContainer {
         public RobotContainer() {
                 m_simpleMotor = new SimpleMotor(new SimpleMotorSparkMax());
                 m_leds = new LedSubsystem();
+                m_motorIO = new AbsEncoderSparkMax(new MotorConfig("testMotor").motorCan(13).p(.5)
+                                .i(0).d(0).ff(0).encoderOdometryFrequency(100).minPower(-.1)
+                                .maxPower(.1).isInverted(false).positionTolerance(0.02)
+                                .speedTolerance(0.02));
                 Logger.recordOutput("Poses/shouldFlip", AllianceFlipUtil.shouldFlip());
                 Logger.recordOutput("Override", override);
                 override = false;
@@ -213,8 +219,17 @@ public class RobotContainer {
                 m_copilotController.rightTrigger()
                                 .onTrue(new InstantCommand(() -> toggleOverride()));
 
-                m_testController.leftTrigger()
+                new Trigger(DriverStation::isEnabled)
                                 .onTrue(new InstantCommand(MotorIO::reconfigureMotors));
+
+                m_testController.leftBumper()
+                                .whileTrue(new InstantCommand(() -> m_motorIO.setPosition(0.75))
+                                                .repeatedly())
+                                .onFalse(new InstantCommand(m_motorIO::stop));
+                m_testController.rightBumper()
+                                .whileTrue(new InstantCommand(() -> m_motorIO.setPosition(0.25))
+                                                .repeatedly())
+                                .onFalse(new InstantCommand(m_motorIO::stop));
                 /*
                  * m_led.setLedPattern(LedConstants.elevatorHeight, m_led.elevatorBuffer);
                  * m_led.setLedPattern(LedConstants.teal, m_led.leftGuideBuffer);
