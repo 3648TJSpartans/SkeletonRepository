@@ -32,20 +32,7 @@ public class RelEncoderSparkMax extends MotorIO {
         motorController = motor.getClosedLoopController();
         encoder = motor.getEncoder();
         name = getName();
-        var config = new SparkMaxConfig();
-        config.inverted(motorConfig.isInverted()).idleMode(IdleMode.kBrake)
-                .voltageCompensation(12.0);
-        config.closedLoop.feedbackSensor(FeedbackSensor.kPrimaryEncoder)
-                .pidf(motorConfig.p(), motorConfig.i(), motorConfig.d(), motorConfig.ff())
-                .outputRange(motorConfig.minPower(), motorConfig.maxPower());
-        config.signals.absoluteEncoderPositionAlwaysOn(true)
-                .absoluteEncoderPositionPeriodMs(
-                        (int) (1000.0 / motorConfig.encoderOdometryFrequency()))
-                .absoluteEncoderVelocityAlwaysOn(true).absoluteEncoderVelocityPeriodMs(20)
-                .appliedOutputPeriodMs(20).busVoltagePeriodMs(20).outputCurrentPeriodMs(20);
-        m_positionTolerance = motorConfig.positionTolerance();
-        m_speedTolerance = motorConfig.speedTolerance();
-        motor.configure(config, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
+        configureMotor(motorConfig);
     }
 
 
