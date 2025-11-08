@@ -107,326 +107,300 @@ import org.littletonrobotics.junction.Logger;
  * subsystems, commands, and button mappings) should be declared here.
  */
 public class RobotContainer {
-        // Subsystems
-        private final Drive m_drive;
-        private final AbsEncoder m_absEncoder;
-        private final RelEncoder m_relEncoder;
-        private final SimpleMotor m_simpleMotor;
-        private final LedSubsystem m_leds;
-        private final Vision m_vision;
-        private boolean override;
-        private boolean endgameClosed = true;
+    // Subsystems
+    private final Drive m_drive;
+    private final AbsEncoder m_absEncoder;
+    private final RelEncoder m_relEncoder;
+    private final SimpleMotor m_simpleMotor;
+    private final LedSubsystem m_leds;
+    private final Vision m_vision;
+    private boolean override;
+    private boolean endgameClosed = true;
 
-        // Controller
-        private final CommandXboxController m_driveController =
-                        new CommandXboxController(Constants.kDriverControllerPort);
-        private final CommandXboxController m_copilotController =
-                        new CommandXboxController(Constants.kCopilotControllerPort);
-        private final CommandXboxController m_testController =
-                        new CommandXboxController(Constants.kTestControllerPort);
-        // Dashboard inputs
-        private final LoggedDashboardChooser<Command> autoChooser;
+    // Controller
+    private final CommandXboxController m_driveController =
+            new CommandXboxController(Constants.kDriverControllerPort);
+    private final CommandXboxController m_copilotController =
+            new CommandXboxController(Constants.kCopilotControllerPort);
+    private final CommandXboxController m_testController =
+            new CommandXboxController(Constants.kTestControllerPort);
+    // Dashboard inputs
+    private final LoggedDashboardChooser<Command> autoChooser;
 
-        // Alerts
-        private final LoggedNetworkNumber endgameAlert1 =
-                        new LoggedNetworkNumber("/SmartDashboard/Endgame Alert #1", 30.0);
-        private final LoggedNetworkNumber endgameAlert2 =
-                        new LoggedNetworkNumber("/SmartDashboard/Endgame Alert #2", 15.0);
-        private final LoggedNetworkNumber endgameAlert3 =
-                        new LoggedNetworkNumber("/SmartDashboard/Endgame Alert #3", 5.0);
+    // Alerts
+    private final LoggedNetworkNumber endgameAlert1 =
+            new LoggedNetworkNumber("/SmartDashboard/Endgame Alert #1", 30.0);
+    private final LoggedNetworkNumber endgameAlert2 =
+            new LoggedNetworkNumber("/SmartDashboard/Endgame Alert #2", 15.0);
+    private final LoggedNetworkNumber endgameAlert3 =
+            new LoggedNetworkNumber("/SmartDashboard/Endgame Alert #3", 5.0);
 
-        /**
-         * The container for the robot. Contains subsystems, OI devices, and commands.
+    /**
+     * The container for the robot. Contains subsystems, OI devices, and commands.
+     */
+
+    public RobotContainer() {
+        m_absEncoder = new AbsEncoder(new AbsEncoderSparkMax());
+        m_relEncoder = new RelEncoder(new RelEncoderSparkMax());
+        m_simpleMotor = new SimpleMotor(new SimpleMotorSparkMax());
+        m_leds = new LedSubsystem();
+        Logger.recordOutput("Poses/shouldFlip", AllianceFlipUtil.shouldFlip());
+        Logger.recordOutput("Override", override);
+        override = false;
+        switch (Constants.currentMode) {
+            case REAL:
+                // Real robot, instantiate hardware IO implementations
+                m_drive = new Drive(new GyroIONavX(), new ModuleIOSpark(0), new ModuleIOSpark(1),
+                        new ModuleIOSpark(2), new ModuleIOSpark(3));
+
+                // To change number of limelights, just add or delete IOs in the
+                // parameters
+                // Make sure camera name match in the coprocessor!
+                m_vision = new Vision(m_drive::addVisionMeasurement,
+                        m_drive::addTargetSpaceVisionMeasurement,
+                        // new
+                        // VisionIOLimelight(VisionConstants.camera0Name,m_drive::getRotation),
+                        new VisionIOLimelight(VisionConstants.camera1Name, m_drive::getRotation));
+                break;
+
+            case SIM:
+                // Sim robot, instantiate physics sim IO implementations
+
+                m_drive = new Drive(new GyroIO() {}, new ModuleIOSim(), new ModuleIOSim(),
+                        new ModuleIOSim(), new ModuleIOSim());
+
+                m_vision = new Vision(m_drive::addVisionMeasurement,
+                        m_drive::addTargetSpaceVisionMeasurement,
+                        new VisionIOLimelight(VisionConstants.camera0Name, m_drive::getRotation),
+                        new VisionIOLimelight(VisionConstants.camera1Name, m_drive::getRotation));
+                break;
+
+            default:
+                // Replayed robot, disable IO implementations
+                m_drive = new Drive(new GyroIO() {}, new ModuleIO() {}, new ModuleIO() {},
+                        new ModuleIO() {}, new ModuleIO() {});
+
+                m_vision = new Vision(m_drive::addVisionMeasurement,
+                        m_drive::addTargetSpaceVisionMeasurement,
+                        new VisionIOLimelight(VisionConstants.camera0Name, m_drive::getRotation),
+                        new VisionIOLimelight(VisionConstants.camera1Name, m_drive::getRotation));
+                break;
+        }
+
+        configureAutos();
+
+        // Set up auto routines
+        autoChooser = new LoggedDashboardChooser<>("Auto Choices", AutoBuilder.buildAutoChooser());
+        configureAutoChooser();
+        // Configure the button bindings
+        configureButtonBindings();
+    }
+
+    /**
+     * Use this method to define your button->command mappings. Buttons can be created by
+     * instantiating a {@link GenericHID} or one of its subclasses
+     * ({@link edu.wpi.first.wpilibj.Joystick} or {@link XboxController}), and then passing it to a
+     * {@link edu.wpi.first.wpilibj2.command.button.JoystickButton}.
+     */
+
+    private void configureAutos() {
+        Command homeAuto = new HomeRelCmd(m_relEncoder);
+        Command relOutAuto = new RelCmd(m_relEncoder, RelEncoderConstants.setpoint1);
+        Command absOutAuto = new AbsCmd(m_absEncoder, AbsEncoderConstants.setpoint1);
+        Command simpleMotorAuto = new SimpleMotorCmd(m_simpleMotor, SimpleMotorConstants.speed1);
+        Command sequentialAuto = new ExampleSequentialCmd(m_drive, m_absEncoder, m_relEncoder);
+
+        NamedCommands.registerCommand("homeRel", homeAuto);
+        NamedCommands.registerCommand("relOut", relOutAuto);
+        NamedCommands.registerCommand("absOut", absOutAuto);
+        NamedCommands.registerCommand("motorSpin", simpleMotorAuto);
+        NamedCommands.registerCommand("sequental", sequentialAuto);
+    }
+
+    private void configureButtonBindings() {
+        // configureAutos();
+
+        configureLeds();
+        configureAbsoluteEncoder();
+        configureAutoChooser();
+        configureRelativeEncoder();
+        configureSimpleMotor();
+        configureDrive();
+
+        m_copilotController.rightTrigger().onTrue(new InstantCommand(() -> toggleOverride()));
+        /*
+         * m_led.setLedPattern(LedConstants.elevatorHeight, m_led.elevatorBuffer);
+         * m_led.setLedPattern(LedConstants.teal, m_led.leftGuideBuffer);
+         * m_led.setLedPattern(LedConstants.yellow, m_led.rightGuideBuffer);
          */
+    }
 
-        public RobotContainer() {
-                m_absEncoder = new AbsEncoder(new AbsEncoderSparkMax());
-                m_relEncoder = new RelEncoder(new RelEncoderSparkMax());
-                m_simpleMotor = new SimpleMotor(new SimpleMotorSparkMax());
-                m_leds = new LedSubsystem();
-                Logger.recordOutput("Poses/shouldFlip", AllianceFlipUtil.shouldFlip());
-                Logger.recordOutput("Override", override);
-                override = false;
-                switch (Constants.currentMode) {
-                        case REAL:
-                                // Real robot, instantiate hardware IO implementations
-                                m_drive = new Drive(new GyroIONavX(), new ModuleIOSpark(0),
-                                                new ModuleIOSpark(1), new ModuleIOSpark(2),
-                                                new ModuleIOSpark(3));
+    private void configureAlerts() {
+        new Trigger(() -> DriverStation.isTeleopEnabled() && DriverStation.getMatchTime() > 0
+                && DriverStation.getMatchTime() <= Math.round(endgameAlert1.get()))
+                        .onTrue(controllerRumbleCommand().withTimeout(0.5)
+                                .andThen(Commands.waitSeconds(4.75)).repeatedly().withTimeout(15)
 
-                                // To change number of limelights, just add or delete IOs in the
-                                // parameters
-                                // Make sure camera name match in the coprocessor!
-                                m_vision = new Vision(m_drive::addVisionMeasurement,
-                                                m_drive::addTargetSpaceVisionMeasurement,
-                                                // new
-                                                // VisionIOLimelight(VisionConstants.camera0Name,m_drive::getRotation),
-                                                new VisionIOLimelight(VisionConstants.camera1Name,
-                                                                m_drive::getRotation));
-                                break;
+                        // .beforeStarting(() -> leds.endgameAlert = true)
+                        // .finallyDo(() -> leds.endgameAlert = false)
+                        );
+        new Trigger(() -> DriverStation.isTeleopEnabled() && DriverStation.getMatchTime() > 0
+                && DriverStation.getMatchTime() <= Math.round(endgameAlert2.get()))
+                        .onTrue(controllerRumbleCommand().withTimeout(0.1)
+                                .andThen(Commands.waitSeconds(0.1)).repeatedly().withTimeout(8)
+                        // .beforeStarting(() -> leds.endgameAlert = true)
+                        // .finallyDo(() -> leds.endgameAlert = false)
+                        );
+        new Trigger(() -> DriverStation.isTeleopEnabled() && DriverStation.getMatchTime() > 0
+                && DriverStation.getMatchTime() <= Math.round(endgameAlert2.get()))
+                        .onTrue(controllerRumbleCommand().withTimeout(0.2)
+                                .andThen(Commands.waitSeconds(0.3)).repeatedly().withTimeout(10)
+                        // .beforeStarting(() -> leds.endgameAlert = true)
+                        // .finallyDo(() -> leds.endgameAlert = false)
+                        );
+        // Countdown
+        new Trigger(() -> DriverStation.isTeleopEnabled() && DriverStation.getMatchTime() > 0
+                && DriverStation.getMatchTime() <= Math.round(endgameAlert3.get()))
+                        .onTrue(controllerRumbleCommand().withTimeout(0.8)
+                                .andThen(Commands.waitSeconds(0.2)).repeatedly().withTimeout(5)
+                        // .beforeStarting(() -> leds.endgameAlert = true)
+                        // .finallyDo(() -> leds.endgameAlert = false)
+                        );
 
-                        case SIM:
-                                // Sim robot, instantiate physics sim IO implementations
+    }
 
-                                m_drive = new Drive(new GyroIO() {}, new ModuleIOSim(),
-                                                new ModuleIOSim(), new ModuleIOSim(),
-                                                new ModuleIOSim());
+    public void configureAutoChooser() {
 
-                                m_vision = new Vision(m_drive::addVisionMeasurement,
-                                                m_drive::addTargetSpaceVisionMeasurement,
-                                                new VisionIOLimelight(VisionConstants.camera0Name,
-                                                                m_drive::getRotation),
-                                                new VisionIOLimelight(VisionConstants.camera1Name,
-                                                                m_drive::getRotation));
-                                break;
+        // autoChooser.addOption(
+        // "Drive Wheel Radius Characterization",
+        // DriveCommands.wheelRadiusCharacterization(m_drive));
+        // autoChooser.addOption(
+        // "Drive Simple FF Characterization",
+        // DriveCommands.feedforwardCharacterization(m_drive));
+        autoChooser.addOption("Drive SysId (Quasistatic Forward)",
+                m_drive.sysIdQuasistatic(SysIdRoutine.Direction.kForward));
+        autoChooser.addOption("Drive SysId (Quasistatic Reverse)",
+                m_drive.sysIdQuasistatic(SysIdRoutine.Direction.kReverse));
+        autoChooser.addOption("Drive SysId (Dynamic Forward)",
+                m_drive.sysIdDynamic(SysIdRoutine.Direction.kForward));
+        autoChooser.addOption("Drive SysId (Dynamic Reverse)",
+                m_drive.sysIdDynamic(SysIdRoutine.Direction.kReverse));
+        autoChooser.addOption("Micah's test",
+                AutoBuilder.buildAuto("src\\main\\deploy\\pathplanner\\autos\\test.auto"));
+    }
 
-                        default:
-                                // Replayed robot, disable IO implementations
-                                m_drive = new Drive(new GyroIO() {}, new ModuleIO() {},
-                                                new ModuleIO() {}, new ModuleIO() {},
-                                                new ModuleIO() {});
+    public void configureSimpleMotor() {
+        Command simpleForward = new SimpleMotorCmd(m_simpleMotor, SimpleMotorConstants.speed1);
+        Command simpleBackward = new SimpleMotorCmd(m_simpleMotor, -SimpleMotorConstants.speed1);
 
-                                m_vision = new Vision(m_drive::addVisionMeasurement,
-                                                m_drive::addTargetSpaceVisionMeasurement,
-                                                new VisionIOLimelight(VisionConstants.camera0Name,
-                                                                m_drive::getRotation),
-                                                new VisionIOLimelight(VisionConstants.camera1Name,
-                                                                m_drive::getRotation));
-                                break;
-                }
+        m_copilotController.leftBumper().whileTrue(simpleBackward);
+        m_copilotController.rightBumper().whileTrue(simpleForward);
+    }
 
-                configureAutos();
+    public void configureRelativeEncoder() {
 
-                // Set up auto routines
-                autoChooser = new LoggedDashboardChooser<>("Auto Choices",
-                                AutoBuilder.buildAutoChooser());
-                configureAutoChooser();
-                // Configure the button bindings
-                configureButtonBindings();
-        }
+        Command homeEncoder = new HomeRelCmd(m_relEncoder);
+        Command exampleRel1 = new RelCmd(m_relEncoder, RelEncoderConstants.setpoint1);
+        Command exampleRel2 = new RelCmd(m_relEncoder, RelEncoderConstants.setpoint2);
+        Command analogRelCommand =
+                new RelAnalogCmd(m_relEncoder, () -> m_copilotController.getRightY());
 
-        /**
-         * Use this method to define your button->command mappings. Buttons can be created by
-         * instantiating a {@link GenericHID} or one of its subclasses
-         * ({@link edu.wpi.first.wpilibj.Joystick} or {@link XboxController}), and then passing it
-         * to a {@link edu.wpi.first.wpilibj2.command.button.JoystickButton}.
-         */
+        m_relEncoder.setDefaultCommand(analogRelCommand);
+        m_copilotController.leftTrigger().whileTrue(homeEncoder);
+        m_copilotController.x().whileTrue(exampleRel1);
+        m_copilotController.y().whileTrue(exampleRel2);
 
-        private void configureAutos() {
-                Command homeAuto = new HomeRelCmd(m_relEncoder);
-                Command relOutAuto = new RelCmd(m_relEncoder, RelEncoderConstants.setpoint1);
-                Command absOutAuto = new AbsCmd(m_absEncoder, AbsEncoderConstants.setpoint1);
-                Command simpleMotorAuto =
-                                new SimpleMotorCmd(m_simpleMotor, SimpleMotorConstants.speed1);
-                Command sequentialAuto =
-                                new ExampleSequentialCmd(m_drive, m_absEncoder, m_relEncoder);
+    }
 
-                NamedCommands.registerCommand("homeRel", homeAuto);
-                NamedCommands.registerCommand("relOut", relOutAuto);
-                NamedCommands.registerCommand("absOut", absOutAuto);
-                NamedCommands.registerCommand("motorSpin", simpleMotorAuto);
-                NamedCommands.registerCommand("sequental", sequentialAuto);
-        }
+    public void configureLeds() {
 
-        private void configureButtonBindings() {
-                // configureAutos();
+        // This code changes LED patterns when the robot is in auto or teleop.
+        // It can be manipulated for your desires
 
-                configureLeds();
-                configureAbsoluteEncoder();
-                configureAutoChooser();
-                configureRelativeEncoder();
-                configureSimpleMotor();
-                configureDrive();
+        Command AutoLED = new AutoLEDCommand(m_leds);
+        Command TeleopLED = new TeleopLEDCommand(m_leds);
 
-                m_copilotController.rightTrigger()
-                                .onTrue(new InstantCommand(() -> toggleOverride()));
-                /*
-                 * m_led.setLedPattern(LedConstants.elevatorHeight, m_led.elevatorBuffer);
-                 * m_led.setLedPattern(LedConstants.teal, m_led.leftGuideBuffer);
-                 * m_led.setLedPattern(LedConstants.yellow, m_led.rightGuideBuffer);
-                 */
-        }
+        Trigger autonomous = new Trigger(() -> DriverStation.isAutonomousEnabled());
+        Trigger teleop = new Trigger(() -> DriverStation.isTeleopEnabled());
 
-        private void configureAlerts() {
-                new Trigger(() -> DriverStation.isTeleopEnabled()
-                                && DriverStation.getMatchTime() > 0
-                                && DriverStation.getMatchTime() <= Math.round(endgameAlert1.get()))
-                                                .onTrue(controllerRumbleCommand().withTimeout(0.5)
-                                                                .andThen(Commands.waitSeconds(4.75))
-                                                                .repeatedly().withTimeout(15)
+        autonomous.onTrue(AutoLED);
+        teleop.onTrue(TeleopLED);
 
-                                                // .beforeStarting(() -> leds.endgameAlert = true)
-                                                // .finallyDo(() -> leds.endgameAlert = false)
-                                                );
-                new Trigger(() -> DriverStation.isTeleopEnabled()
-                                && DriverStation.getMatchTime() > 0
-                                && DriverStation.getMatchTime() <= Math.round(endgameAlert2.get()))
-                                                .onTrue(controllerRumbleCommand().withTimeout(0.1)
-                                                                .andThen(Commands.waitSeconds(0.1))
-                                                                .repeatedly().withTimeout(8)
-                                                // .beforeStarting(() -> leds.endgameAlert = true)
-                                                // .finallyDo(() -> leds.endgameAlert = false)
-                                                );
-                new Trigger(() -> DriverStation.isTeleopEnabled()
-                                && DriverStation.getMatchTime() > 0
-                                && DriverStation.getMatchTime() <= Math.round(endgameAlert2.get()))
-                                                .onTrue(controllerRumbleCommand().withTimeout(0.2)
-                                                                .andThen(Commands.waitSeconds(0.3))
-                                                                .repeatedly().withTimeout(10)
-                                                // .beforeStarting(() -> leds.endgameAlert = true)
-                                                // .finallyDo(() -> leds.endgameAlert = false)
-                                                );
-                // Countdown
-                new Trigger(() -> DriverStation.isTeleopEnabled()
-                                && DriverStation.getMatchTime() > 0
-                                && DriverStation.getMatchTime() <= Math.round(endgameAlert3.get()))
-                                                .onTrue(controllerRumbleCommand().withTimeout(0.8)
-                                                                .andThen(Commands.waitSeconds(0.2))
-                                                                .repeatedly().withTimeout(5)
-                                                // .beforeStarting(() -> leds.endgameAlert = true)
-                                                // .finallyDo(() -> leds.endgameAlert = false)
-                                                );
+    }
 
-        }
+    public void configureDrive() {
+        // Default command, normal field-relative drive
+        m_drive.setDefaultCommand(DriveCommands.joystickDrive(m_drive,
 
-        public void configureAutoChooser() {
+                () -> -m_driveController.getLeftY(), () -> -m_driveController.getLeftX(),
+                () -> -m_driveController.getRightX(), m_driveController.leftBumper(),
+                () -> m_vision.getTargetX(0).getDegrees(), m_driveController.leftBumper(),
+                m_driveController.rightBumper(), () -> !endgameClosed));
 
-                // autoChooser.addOption(
-                // "Drive Wheel Radius Characterization",
-                // DriveCommands.wheelRadiusCharacterization(m_drive));
-                // autoChooser.addOption(
-                // "Drive Simple FF Characterization",
-                // DriveCommands.feedforwardCharacterization(m_drive));
-                autoChooser.addOption("Drive SysId (Quasistatic Forward)",
-                                m_drive.sysIdQuasistatic(SysIdRoutine.Direction.kForward));
-                autoChooser.addOption("Drive SysId (Quasistatic Reverse)",
-                                m_drive.sysIdQuasistatic(SysIdRoutine.Direction.kReverse));
-                autoChooser.addOption("Drive SysId (Dynamic Forward)",
-                                m_drive.sysIdDynamic(SysIdRoutine.Direction.kForward));
-                autoChooser.addOption("Drive SysId (Dynamic Reverse)",
-                                m_drive.sysIdDynamic(SysIdRoutine.Direction.kReverse));
-                autoChooser.addOption("Micah's test", AutoBuilder
-                                .buildAuto("src\\main\\deploy\\pathplanner\\autos\\test.auto"));
-        }
+        // Lock to 0° when A button is held
+        // m_driveController
+        // .b()
+        // .whileTrue(
+        // DriveCommands.joystickDriveAtAngle(
+        // m_drive,
+        // () -> m_driveController.getLeftY(),
+        // () -> m_driveController.getLeftX(),
+        // () -> new Rotation2d()));
 
-        public void configureSimpleMotor() {
-                Command simpleForward =
-                                new SimpleMotorCmd(m_simpleMotor, SimpleMotorConstants.speed1);
-                Command simpleBackward =
-                                new SimpleMotorCmd(m_simpleMotor, -SimpleMotorConstants.speed1);
+        // Switch to X pattern when X button is pressed
+        m_driveController.x().onTrue(Commands.runOnce(m_drive::stopWithX, m_drive));
 
-                m_copilotController.leftBumper().whileTrue(simpleBackward);
-                m_copilotController.rightBumper().whileTrue(simpleForward);
-        }
-
-        public void configureRelativeEncoder() {
-
-                Command homeEncoder = new HomeRelCmd(m_relEncoder);
-                Command exampleRel1 = new RelCmd(m_relEncoder, RelEncoderConstants.setpoint1);
-                Command exampleRel2 = new RelCmd(m_relEncoder, RelEncoderConstants.setpoint2);
-                Command analogRelCommand = new RelAnalogCmd(m_relEncoder,
-                                () -> m_copilotController.getRightY());
-
-                m_relEncoder.setDefaultCommand(analogRelCommand);
-                m_copilotController.leftTrigger().whileTrue(homeEncoder);
-                m_copilotController.x().whileTrue(exampleRel1);
-                m_copilotController.y().whileTrue(exampleRel2);
-
-        }
-
-        public void configureLeds() {
-
-                // This code changes LED patterns when the robot is in auto or teleop.
-                // It can be manipulated for your desires
-
-                Command AutoLED = new AutoLEDCommand(m_leds);
-                Command TeleopLED = new TeleopLEDCommand(m_leds);
-
-                Trigger autonomous = new Trigger(() -> DriverStation.isAutonomousEnabled());
-                Trigger teleop = new Trigger(() -> DriverStation.isTeleopEnabled());
-
-                autonomous.onTrue(AutoLED);
-                teleop.onTrue(TeleopLED);
-
-        }
-
-        public void configureDrive() {
-                // Default command, normal field-relative drive
-                m_drive.setDefaultCommand(DriveCommands.joystickDrive(m_drive,
-
-                                () -> -m_driveController.getLeftY(),
-                                () -> -m_driveController.getLeftX(),
-                                () -> -m_driveController.getRightX(),
-                                m_driveController.leftBumper(),
-                                () -> m_vision.getTargetX(0).getDegrees(),
-                                m_driveController.leftBumper(), m_driveController.rightBumper(),
-                                () -> !endgameClosed));
-
-                // Lock to 0° when A button is held
-                // m_driveController
-                // .b()
-                // .whileTrue(
-                // DriveCommands.joystickDriveAtAngle(
-                // m_drive,
-                // () -> m_driveController.getLeftY(),
-                // () -> m_driveController.getLeftX(),
-                // () -> new Rotation2d()));
-
-                // Switch to X pattern when X button is pressed
-                m_driveController.x().onTrue(Commands.runOnce(m_drive::stopWithX, m_drive));
-
-                // Reset gyro to 0° when A button is pressed
-                m_driveController.a().onTrue(Commands.runOnce(() -> m_drive.setPose(
+        // Reset gyro to 0° when A button is pressed
+        m_driveController.a()
+                .onTrue(Commands.runOnce(
+                        () -> m_drive.setPose(
                                 new Pose2d(m_drive.getPose().getTranslation(), new Rotation2d())),
-                                m_drive).ignoringDisable(true));
-                Command driveTest = new DriveTo(m_drive, () -> PoseConstants.examplePose);
-                Pose2d alignOffsetRight =
-                                new Pose2d(new Translation2d(-.75, -.17), new Rotation2d(0));
-                Pose2d alignOffsetLeft =
-                                new Pose2d(new Translation2d(-.75, .17), new Rotation2d(0));
-                Command alignToTagRight = new DriveToTag(m_drive, m_drive::getTargetSpacePose,
-                                () -> alignOffsetRight);
-                Command alignToTagLeft = new DriveToTag(m_drive, m_drive::getTargetSpacePose,
-                                () -> alignOffsetLeft);
-                m_driveController.rightTrigger().whileTrue(alignToTagRight);
-                m_driveController.leftTrigger().whileTrue(alignToTagLeft);
+                        m_drive).ignoringDisable(true));
+        Command driveTest = new DriveTo(m_drive, () -> PoseConstants.examplePose);
+        Pose2d alignOffsetRight = new Pose2d(new Translation2d(-.75, -.17), new Rotation2d(0));
+        Pose2d alignOffsetLeft = new Pose2d(new Translation2d(-.75, .17), new Rotation2d(0));
+        Command alignToTagRight =
+                new DriveToTag(m_drive, m_drive::getTargetSpacePose, () -> alignOffsetRight);
+        Command alignToTagLeft =
+                new DriveToTag(m_drive, m_drive::getTargetSpacePose, () -> alignOffsetLeft);
+        m_driveController.rightTrigger().whileTrue(alignToTagRight);
+        m_driveController.leftTrigger().whileTrue(alignToTagLeft);
 
-        }
+    }
 
-        public void configureAbsoluteEncoder() {
+    public void configureAbsoluteEncoder() {
 
-                Command absAnalog = new AbsAnalogCmd(m_absEncoder,
-                                () -> m_copilotController.getLeftY());
-                Command exampleAbs1 = new AbsCmd(m_absEncoder, AbsEncoderConstants.setpoint1);
-                Command exampleAbs2 = new AbsCmd(m_absEncoder, AbsEncoderConstants.setpoint2);
+        Command absAnalog = new AbsAnalogCmd(m_absEncoder, () -> m_copilotController.getLeftY());
+        Command exampleAbs1 = new AbsCmd(m_absEncoder, AbsEncoderConstants.setpoint1);
+        Command exampleAbs2 = new AbsCmd(m_absEncoder, AbsEncoderConstants.setpoint2);
 
-                m_absEncoder.setDefaultCommand(absAnalog);
-                m_copilotController.a().whileTrue(exampleAbs1);
-                m_copilotController.b().whileTrue(exampleAbs2);
+        m_absEncoder.setDefaultCommand(absAnalog);
+        m_copilotController.a().whileTrue(exampleAbs1);
+        m_copilotController.b().whileTrue(exampleAbs2);
 
-        }
+    }
 
-        public Command getAutonomousCommand() {
-                return autoChooser.get();
-        }
+    public Command getAutonomousCommand() {
+        return autoChooser.get();
+    }
 
-        public void toggleOverride() {
-                override = !override;
-                Logger.recordOutput("Override", override);
-        }
+    public void toggleOverride() {
+        override = !override;
+        Logger.recordOutput("Override", override);
+    }
 
-        private void configureCommandGroups() {
+    private void configureCommandGroups() {
 
-        }
+    }
 
-        private Command controllerRumbleCommand() {
-                return Commands.startEnd(() -> {
-                        m_driveController.getHID().setRumble(RumbleType.kBothRumble, 1.0);
-                        m_copilotController.getHID().setRumble(RumbleType.kBothRumble, 1.0);
-                }, () -> {
-                        m_driveController.getHID().setRumble(RumbleType.kBothRumble, 0.0);
-                        m_copilotController.getHID().setRumble(RumbleType.kBothRumble, 0.0);
-                });
-        }
+    private Command controllerRumbleCommand() {
+        return Commands.startEnd(() -> {
+            m_driveController.getHID().setRumble(RumbleType.kBothRumble, 1.0);
+            m_copilotController.getHID().setRumble(RumbleType.kBothRumble, 1.0);
+        }, () -> {
+            m_driveController.getHID().setRumble(RumbleType.kBothRumble, 0.0);
+            m_copilotController.getHID().setRumble(RumbleType.kBothRumble, 0.0);
+        });
+    }
 
 }
