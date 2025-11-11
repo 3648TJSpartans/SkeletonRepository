@@ -38,9 +38,7 @@ import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.commands.DriveCommands;
-import frc.robot.commands.absoluteEncoderCommands.AbsAnalogCmd;
-import frc.robot.commands.absoluteEncoderCommands.AbsCmd;
-import frc.robot.commands.commandGroups.ExampleSequentialCmd;
+import frc.robot.commands.exampleSubsystemCommands.ExampleMotorCmd;
 import frc.robot.commands.goToCommands.goToConstants.PoseConstants;
 import frc.robot.commands.goToCommands.DriveTo;
 import frc.robot.commands.goToCommands.DriveToTag;
@@ -48,9 +46,6 @@ import frc.robot.commands.goToCommands.goToConstants;
 import frc.robot.commands.goToCommands.goToConstants.PoseConstants.AutonState;
 import frc.robot.commands.ledCommands.AutoLEDCommand;
 import frc.robot.commands.ledCommands.TeleopLEDCommand;
-import frc.robot.commands.relativeEncoderCommands.HomeRelCmd;
-import frc.robot.commands.relativeEncoderCommands.RelAnalogCmd;
-import frc.robot.commands.relativeEncoderCommands.RelCmd;
 import frc.robot.commands.simpleMotorCommands.SimpleMotorCmd;
 import frc.robot.subsystems.drive.Drive;
 import frc.robot.subsystems.drive.GyroIO;
@@ -58,11 +53,9 @@ import frc.robot.subsystems.drive.GyroIONavX;
 import frc.robot.subsystems.drive.ModuleIO;
 import frc.robot.subsystems.drive.ModuleIOSim;
 import frc.robot.subsystems.drive.ModuleIOSpark;
+import frc.robot.subsystems.exampleMotorSubsystem.ExampleMotorSubsystem;
+import frc.robot.subsystems.exampleMotorSubsystem.ExampleMotorSubsystemConstants;
 import frc.robot.subsystems.leds.LedSubsystem;
-import frc.robot.subsystems.relativeEncoder.RelEncoder;
-import frc.robot.subsystems.relativeEncoder.RelEncoderConstants;
-import frc.robot.subsystems.relativeEncoder.RelEncoderIO;
-import frc.robot.subsystems.relativeEncoder.RelEncoderSparkMax;
 import frc.robot.subsystems.simpleMotor.SimpleMotor;
 import frc.robot.subsystems.simpleMotor.SimpleMotorConstants;
 import frc.robot.subsystems.simpleMotor.SimpleMotorIO;
@@ -71,14 +64,16 @@ import frc.robot.subsystems.vision.Vision;
 import frc.robot.subsystems.vision.VisionConstants;
 import frc.robot.subsystems.vision.VisionIOLimelight;
 import frc.robot.util.AllianceFlipUtil;
+import frc.robot.util.motorUtil.MotorIO;
+import frc.robot.util.motorUtil.RelEncoderSparkMax;
 import frc.robot.util.TunableNumber;
+import frc.robot.util.motorUtil.AbsEncoderSparkMax;
+import frc.robot.util.motorUtil.MotorConfig;
 import frc.robot.util.TunableNumber;
-import frc.robot.subsystems.absoluteEncoder.AbsEncoder;
-import frc.robot.subsystems.absoluteEncoder.AbsEncoderConstants;
-import frc.robot.subsystems.absoluteEncoder.AbsEncoderSparkMax;
 
 import com.pathplanner.lib.path.PathPlannerPath;
 import com.pathplanner.lib.path.Waypoint;
+import com.revrobotics.AbsoluteEncoder;
 import com.pathplanner.lib.path.GoalEndState;
 import com.pathplanner.lib.path.PathConstraints;
 
@@ -109,11 +104,10 @@ import org.littletonrobotics.junction.Logger;
 public class RobotContainer {
         // Subsystems
         private final Drive m_drive;
-        private final AbsEncoder m_absEncoder;
-        private final RelEncoder m_relEncoder;
         private final SimpleMotor m_simpleMotor;
         private final LedSubsystem m_leds;
         private final Vision m_vision;
+        private final ExampleMotorSubsystem m_exampleMotorSubsystem;
         private boolean override;
         private boolean endgameClosed = true;
 
@@ -140,10 +134,9 @@ public class RobotContainer {
          */
 
         public RobotContainer() {
-                m_absEncoder = new AbsEncoder(new AbsEncoderSparkMax());
-                m_relEncoder = new RelEncoder(new RelEncoderSparkMax());
                 m_simpleMotor = new SimpleMotor(new SimpleMotorSparkMax());
                 m_leds = new LedSubsystem();
+                m_exampleMotorSubsystem = new ExampleMotorSubsystem();
                 Logger.recordOutput("Poses/shouldFlip", AllianceFlipUtil.shouldFlip());
                 Logger.recordOutput("Override", override);
                 override = false;
@@ -212,34 +205,24 @@ public class RobotContainer {
          * to a {@link edu.wpi.first.wpilibj2.command.button.JoystickButton}.
          */
 
-        private void configureAutos() {
-                Command homeAuto = new HomeRelCmd(m_relEncoder);
-                Command relOutAuto = new RelCmd(m_relEncoder, RelEncoderConstants.setpoint1);
-                Command absOutAuto = new AbsCmd(m_absEncoder, AbsEncoderConstants.setpoint1);
-                Command simpleMotorAuto =
-                                new SimpleMotorCmd(m_simpleMotor, SimpleMotorConstants.speed1);
-                Command sequentialAuto =
-                                new ExampleSequentialCmd(m_drive, m_absEncoder, m_relEncoder);
-
-                NamedCommands.registerCommand("homeRel", homeAuto);
-                NamedCommands.registerCommand("relOut", relOutAuto);
-                NamedCommands.registerCommand("absOut", absOutAuto);
-                NamedCommands.registerCommand("motorSpin", simpleMotorAuto);
-                NamedCommands.registerCommand("sequental", sequentialAuto);
-        }
+        private void configureAutos() {}
 
         private void configureButtonBindings() {
                 // configureAutos();
 
                 configureLeds();
-                configureAbsoluteEncoder();
                 configureAutoChooser();
-                configureRelativeEncoder();
                 configureSimpleMotor();
                 configureDrive();
+                configureExampleSubsystem();
 
                 m_copilotController.rightTrigger()
                                 .onTrue(new InstantCommand(() -> toggleOverride()));
+
+                new Trigger(DriverStation::isEnabled)
+                                .onTrue(new InstantCommand(MotorIO::reconfigureMotors));
+
+
                 /*
                  * m_led.setLedPattern(LedConstants.elevatorHeight, m_led.elevatorBuffer);
                  * m_led.setLedPattern(LedConstants.teal, m_led.leftGuideBuffer);
@@ -319,21 +302,6 @@ public class RobotContainer {
                 m_copilotController.rightBumper().whileTrue(simpleForward);
         }
 
-        public void configureRelativeEncoder() {
-
-                Command homeEncoder = new HomeRelCmd(m_relEncoder);
-                Command exampleRel1 = new RelCmd(m_relEncoder, RelEncoderConstants.setpoint1);
-                Command exampleRel2 = new RelCmd(m_relEncoder, RelEncoderConstants.setpoint2);
-                Command analogRelCommand = new RelAnalogCmd(m_relEncoder,
-                                () -> m_copilotController.getRightY());
-
-                m_relEncoder.setDefaultCommand(analogRelCommand);
-                m_copilotController.leftTrigger().whileTrue(homeEncoder);
-                m_copilotController.x().whileTrue(exampleRel1);
-                m_copilotController.y().whileTrue(exampleRel2);
-
-        }
-
         public void configureLeds() {
 
                 // This code changes LED patterns when the robot is in auto or teleop.
@@ -393,17 +361,10 @@ public class RobotContainer {
 
         }
 
-        public void configureAbsoluteEncoder() {
-
-                Command absAnalog = new AbsAnalogCmd(m_absEncoder,
-                                () -> m_copilotController.getLeftY());
-                Command exampleAbs1 = new AbsCmd(m_absEncoder, AbsEncoderConstants.setpoint1);
-                Command exampleAbs2 = new AbsCmd(m_absEncoder, AbsEncoderConstants.setpoint2);
-
-                m_absEncoder.setDefaultCommand(absAnalog);
-                m_copilotController.a().whileTrue(exampleAbs1);
-                m_copilotController.b().whileTrue(exampleAbs2);
-
+        public void configureExampleSubsystem() {
+                Command motorCommand = new ExampleMotorCmd(m_exampleMotorSubsystem,
+                                ExampleMotorSubsystemConstants.power);
+                m_testController.leftBumper().whileTrue(motorCommand);
         }
 
         public Command getAutonomousCommand() {
