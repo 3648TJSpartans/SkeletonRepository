@@ -20,30 +20,13 @@ public class DriveToTag extends Command {
     private final Drive drive;
     private double dp;
     private double dtheta;
+
     // Defines PID controlelrs
-    private final ProfiledPIDController driveController =
-            new ProfiledPIDController(goToConstants.drivekP, 0.0, goToConstants.drivekD,
-                    new TrapezoidProfile.Constraints(goToConstants.driveMaxVelocity,
-                            goToConstants.driveMaxAcceleration),
-                    0.02);
-
-    private final ProfiledPIDController thetaController =
-            new ProfiledPIDController(goToConstants.thetakP, 0.0, goToConstants.thetakD,
-                    new TrapezoidProfile.Constraints(goToConstants.thetaMaxVelocity,
-                            goToConstants.thetaMaxAcceleration),
-                    0.02);
-
     public DriveToTag(Drive drive, Supplier<Pose2d> robotPose, Supplier<Pose2d> targetPose) {
+        goToConstants.configurePID();
         this.robotPoseSupplier = robotPose;
         this.targetPoseSupplier = targetPose;
         this.drive = drive;
-        // Sets PID tolerances for at Goal.
-        driveController.setTolerance(goToConstants.driveTolerance);
-        thetaController.setTolerance(goToConstants.thetaTolerance);
-        // Means theta will take mimunimum path.
-        thetaController.enableContinuousInput(-Math.PI, Math.PI);
-        driveController.setGoal(0.0);
-        thetaController.setGoal(0.0);
     }
 
     public DriveToTag(Drive drive, Supplier<Pose2d> targetPose) {
@@ -60,7 +43,7 @@ public class DriveToTag extends Command {
         // Defines translational speed the robot should go. displacement.getNorm is the
         // magnitude of the displacement.
         dp = displacement.getNorm();
-        double driveSpeed = driveController.calculate(displacement.getNorm());
+        double driveSpeed = goToConstants.driveController.calculate(displacement.getNorm());
         // sets velocity to the normalized displacement vector(direction of
         // displacement) timesd the desired drive speed.
         Translation2d setVelocity = displacement.div(dp).times(driveSpeed);
@@ -70,7 +53,7 @@ public class DriveToTag extends Command {
         Rotation2d thetaDisplacement = targetPose.getRotation().minus(robotPose.getRotation());
         dtheta = thetaDisplacement.getRadians();
         // Gets PID for thera displacement
-        double thetaVelocity = thetaController.calculate(dtheta);
+        double thetaVelocity = goToConstants.thetaController.calculate(dtheta);
         // runs velocities
         if (!robotPose.equals(new Pose2d())) {
             Logger.recordOutput("DriveTo2/SeeingTag", true);
