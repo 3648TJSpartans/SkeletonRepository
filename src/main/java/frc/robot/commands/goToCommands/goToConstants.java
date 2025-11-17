@@ -63,11 +63,14 @@ public class goToConstants {
 
                 thetaController = new ProfiledPIDController(tunableThetaP.get(),
                                 tunableThetaI.get(), tunableThetaD.get(),
-                                new TrapezoidProfile.Constraints(tunableThetaMaxVelocity.get(),
-                                                tunableThetaMaxAcceleration.get()),
+                                new TrapezoidProfile.Constraints(
+                                                Units.degreesToRadians(
+                                                                tunableThetaMaxVelocity.get()),
+                                                Units.degreesToRadians(
+                                                                tunableThetaMaxAcceleration.get())),
                                 0.02);
-                driveController.setTolerance(driveTolerance);
-                thetaController.setTolerance(thetaTolerance);
+                driveController.setTolerance(tunableDriveTolerance.get());
+                thetaController.setTolerance(Units.degreesToRadians(tunableThetaTolerance.get()));
                 thetaController.enableContinuousInput(-Math.PI, Math.PI);
                 driveController.setGoal(0.0);
                 thetaController.setGoal(0.0);
