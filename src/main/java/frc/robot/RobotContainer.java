@@ -221,8 +221,10 @@ public class RobotContainer {
                 m_copilotController.rightTrigger()
                                 .onTrue(new InstantCommand(() -> toggleOverride()));
 
-                new Trigger(DriverStation::isEnabled)
-                                .onTrue(new InstantCommand(MotorIO::reconfigureMotors));
+                new Trigger(DriverStation::isEnabled).onTrue(new InstantCommand(() -> {
+                        MotorIO.reconfigureMotors();
+                        goToConstants.configurePID();
+                }));
 
 
                 /*

@@ -1,24 +1,85 @@
 package frc.robot.commands.goToCommands;
 
+import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.math.util.Units;
 import frc.robot.util.AllianceFlipUtil;
+import frc.robot.util.TunableNumber;
 
 public class goToConstants {
 
         public static final double drivekP = 2.0;
+        public static final double drivekI = 0.0;
         public static final double drivekD = 0.0;
         public static final double thetakP = 5.0;
+        public static final double thetakI = 0.0;
         public static final double thetakD = 0.0;
         public static final double driveMaxVelocity = .5;
         public static final double driveMaxAcceleration = 1.5;
-        public static final double thetaMaxVelocity = Units.degreesToRadians(360.0);
-        public static final double thetaMaxAcceleration = Units.degreesToRadians(720.0);
+        public static final double thetaMaxVelocity = 360;
+        public static final double thetaMaxAcceleration = 720;
         public static final double driveTolerance = 0.05;
-        public static final double thetaTolerance = Units.degreesToRadians(1);
+        public static final double thetaTolerance = 1;// degree
         public static final double ffMinRadius = 0.2;
         public static final double ffMaxRadius = 0.6;
+
+        public static final TunableNumber tunableDriveP =
+                        new TunableNumber("Commands/DriveTo/drive/P", drivekP);
+        public static final TunableNumber tunableDriveI =
+                        new TunableNumber("Commands/DriveTo/drive/I", drivekI);
+        public static final TunableNumber tunableDriveD =
+                        new TunableNumber("Commands/DriveTo/drive/D", drivekD);
+        public static final TunableNumber tunableThetaP =
+                        new TunableNumber("Commands/DriveTo/theta/P", thetakP);
+        public static final TunableNumber tunableThetaI =
+                        new TunableNumber("Commands/DriveTo/theta/I", thetakI);
+        public static final TunableNumber tunableThetaD =
+                        new TunableNumber("Commands/DriveTo/theta/D", thetakD);
+        public static final TunableNumber tunableDriveMaxVelocity =
+                        new TunableNumber("Commands/DriveTo/drive/maxVelocity", driveMaxVelocity);
+        public static final TunableNumber tunableDriveMaxAcceleration = new TunableNumber(
+                        "Commands/DriveTo/drive/maxAcceleration", driveMaxAcceleration);
+        public static final TunableNumber tunableThetaMaxVelocity = new TunableNumber(
+                        "Commands/DriveTo/theta/maxVelocity(degrees)", thetaMaxVelocity);
+        public static final TunableNumber tunableThetaMaxAcceleration = new TunableNumber(
+                        "Commands/DriveTo/theta/maxAcceleration(degrees)", thetaMaxAcceleration);
+        public static final TunableNumber tunableDriveTolerance =
+                        new TunableNumber("Commands/DriveTo/drive/Tolerance", driveTolerance);
+        public static final TunableNumber tunableThetaTolerance = new TunableNumber(
+                        "Commands/DriveTo/theta/Tolerance(degrees)", thetaTolerance);
+
+        public static ProfiledPIDController driveController = new ProfiledPIDController(
+                        tunableDriveP.get(), tunableDriveI.get(), tunableDriveD.get(),
+                        new TrapezoidProfile.Constraints(tunableDriveMaxVelocity.get(),
+                                        tunableDriveMaxAcceleration.get()),
+                        0.02);
+
+        public static ProfiledPIDController thetaController = new ProfiledPIDController(
+                        tunableThetaP.get(), tunableThetaI.get(), tunableThetaD.get(),
+                        new TrapezoidProfile.Constraints(tunableThetaMaxVelocity.get(),
+                                        tunableThetaMaxAcceleration.get()),
+                        0.02);
+
+        public static void configurePID() {
+                driveController = new ProfiledPIDController(tunableDriveP.get(),
+                                tunableDriveI.get(), tunableDriveD.get(),
+                                new TrapezoidProfile.Constraints(tunableDriveMaxVelocity.get(),
+                                                tunableDriveMaxAcceleration.get()),
+                                0.02);
+
+                thetaController = new ProfiledPIDController(tunableThetaP.get(),
+                                tunableThetaI.get(), tunableThetaD.get(),
+                                new TrapezoidProfile.Constraints(tunableThetaMaxVelocity.get(),
+                                                tunableThetaMaxAcceleration.get()),
+                                0.02);
+                driveController.setTolerance(driveTolerance);
+                thetaController.setTolerance(thetaTolerance);
+                thetaController.enableContinuousInput(-Math.PI, Math.PI);
+                driveController.setGoal(0.0);
+                thetaController.setGoal(0.0);
+        }
 
         public static class PoseConstants {
                 public final static Pose2d examplePose =
