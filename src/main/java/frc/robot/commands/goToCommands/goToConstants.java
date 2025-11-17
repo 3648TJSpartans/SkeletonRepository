@@ -50,17 +50,9 @@ public class goToConstants {
         public static final TunableNumber tunableThetaTolerance = new TunableNumber(
                         "Commands/DriveTo/theta/Tolerance(degrees)", thetaTolerance);
 
-        public static ProfiledPIDController driveController = new ProfiledPIDController(
-                        tunableDriveP.get(), tunableDriveI.get(), tunableDriveD.get(),
-                        new TrapezoidProfile.Constraints(tunableDriveMaxVelocity.get(),
-                                        tunableDriveMaxAcceleration.get()),
-                        0.02);
+        public static ProfiledPIDController driveController;
 
-        public static ProfiledPIDController thetaController = new ProfiledPIDController(
-                        tunableThetaP.get(), tunableThetaI.get(), tunableThetaD.get(),
-                        new TrapezoidProfile.Constraints(tunableThetaMaxVelocity.get(),
-                                        tunableThetaMaxAcceleration.get()),
-                        0.02);
+        public static ProfiledPIDController thetaController;
 
         public static void configurePID() {
                 driveController = new ProfiledPIDController(tunableDriveP.get(),
