@@ -85,8 +85,7 @@ public class VisionIOLimelight implements VisionIO {
 
   @Override
   public void updateInputs(VisionIOInputs inputs) {
-    // Update connection status based on whether an update has been seen in the last
-    // 250ms
+    // Update connection status based on whether an update has been seen in the last 250ms
     inputs.connected =
         ((RobotController.getFPGATime() - latencySubscriber.getLastChange()) / 1000) < 250;
 
@@ -103,7 +102,6 @@ public class VisionIOLimelight implements VisionIO {
     // Read new pose observations from NetworkTables
     Set<Integer> tagIds = new HashSet<>();
     List<PoseObservation> poseObservations = new LinkedList<>();
-
     for (var rawSample : megatag1Subscriber.readQueue()) {
       if (rawSample.value.length == 0)
         continue;
@@ -112,13 +110,12 @@ public class VisionIOLimelight implements VisionIO {
       }
       poseObservations.add(new PoseObservation(
           // Timestamp, based on server timestamp of publish and latency
-          rawSample.timestamp * 1.0e-6 - (latencySubscriber.get()) * 1.0e-3,
+          rawSample.timestamp * 1.0e-6 - rawSample.value[6] * 1.0e-3,
 
           // 3D pose estimate
           parsePose(rawSample.value),
 
-          // Ambiguity, using only the first tag because ambiguity isn't applicable for
-          // multitag
+          // Ambiguity, using only the first tag because ambiguity isn't applicable for multitag
           rawSample.value.length >= 18 ? rawSample.value[17] : 0.0,
 
           // Tag count
