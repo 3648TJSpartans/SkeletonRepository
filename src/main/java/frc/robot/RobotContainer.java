@@ -358,6 +358,12 @@ public class RobotContainer {
                 m_driveController.a().onTrue(Commands.runOnce(() -> m_drive.setPose(
                                 new Pose2d(m_drive.getPose().getTranslation(), new Rotation2d())),
                                 m_drive).ignoringDisable(true));
+                m_driveController.b().onTrue(Commands
+                                .runOnce(() -> m_drive.setPose(
+                                                new Pose2d(m_drive.getPose().getTranslation(),
+                                                                new Rotation2d(Math.PI))),
+                                                m_drive)
+                                .ignoringDisable(true));
                 Command driveTest = new DriveTo(m_drive, () -> PoseConstants.examplePose);
                 Pose2d alignOffsetRight =
                                 new Pose2d(new Translation2d(-.75, -.17), new Rotation2d(0));
