@@ -89,10 +89,44 @@ public class VisionIOLimelight implements VisionIO {
   public void updateInputs(VisionIOInputs inputs) {
     // Update connection status based on whether an update has been seen in the last
     // 250ms
+    inputs.connected =
+        ((RobotController.getFPGATime() - latencySubscriber.getLastChange()) / 1000) < 250;
+
+    // Update target observation
+    inputs.latestTargetObservation = new TargetObservation(
+        Rotation2d.fromDegrees(txSubscriber.get()), Rotation2d.fromDegrees(tySubscriber.get()));
+
 
     Set<Integer> tagIds = new HashSet<>();
     List<PoseObservation> poseObservations = new LinkedList<>();
+    // Megatag 1
+    for (var rawSample : megatag1Subscriber.readQueue()) {
+      if (rawSample.value.length < 18)
+        continue;
+      for (int i = 11; i < rawSample.value.length; i += 7) {
+        tagIds.add((int) rawSample.value[i]);
+      }
+      poseObservations.add(new PoseObservation(
+          // Timestamp, based on server timestamp of publish and latency
+          rawSample.timestamp * 1.0e-6 - (latencySubscriber.get()) * 1.0e-3,
 
+          // 3D pose estimate
+          parsePose(rawSample.value),
+
+          // Ambiguity, using only the first tag because ambiguity isn't applicable for
+          // multitag
+          0.0,
+
+          // Tag count
+          (int) rawSample.value[7],
+
+          // Average tag distance
+          rawSample.value[9],
+
+          // Observation type
+          PoseObservationType.MEGATAG_1));
+    }
+    // Megatag 2
     boolean doRejectUpdate = false;
     LimelightHelpers.SetRobotOrientation(name, rotationSupplier.get().getDegrees(), 0, 0, 0, 0, 0);
     LimelightHelpers.PoseEstimate mt2 = LimelightHelpers.getBotPoseEstimate_wpiBlue_MegaTag2(name);
