@@ -1,7 +1,6 @@
 package frc.robot.util;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.function.BooleanSupplier;
 
 public class Diagnostics {

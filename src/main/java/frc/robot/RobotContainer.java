@@ -64,6 +64,7 @@ import frc.robot.subsystems.vision.Vision;
 import frc.robot.subsystems.vision.VisionConstants;
 import frc.robot.subsystems.vision.VisionIOLimelight;
 import frc.robot.util.AllianceFlipUtil;
+import frc.robot.util.Diagnostics;
 import frc.robot.util.motorUtil.MotorIO;
 import frc.robot.util.motorUtil.RelEncoderSparkMax;
 import frc.robot.util.TunableNumber;
@@ -215,6 +216,7 @@ public class RobotContainer {
                 configureSimpleMotor();
                 configureDrive();
                 configureExampleSubsystem();
+                configureDiagnostic();
 
                 m_copilotController.rightTrigger()
                                 .onTrue(new InstantCommand(() -> toggleOverride()));
@@ -228,6 +230,12 @@ public class RobotContainer {
                  * m_led.setLedPattern(LedConstants.teal, m_led.leftGuideBuffer);
                  * m_led.setLedPattern(LedConstants.yellow, m_led.rightGuideBuffer);
                  */
+        }
+
+        private void configureDiagnostic() {
+                Diagnostics.putRequirements("Driver controller", () -> m_driveController.isConnected());
+                Diagnostics.putRequirements("Copilot controller", () -> m_copilotController.isConnected());
+                Diagnostics.putRequirements("LEDs", () -> m_leds.)
         }
 
         private void configureAlerts() {

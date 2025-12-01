@@ -29,15 +29,23 @@ public class LedSubsystem extends SubsystemBase {
 
         // Create sub-buffers
         // left buffers
-        buffer1Left = ledBuffer.createView(LedConstants.buffer1StartLeft, LedConstants.buffer1EndLeft);
-        buffer2Left = ledBuffer.createView(LedConstants.buffer2StartLeft, LedConstants.buffer2EndLeft);
-        buffer3Left = ledBuffer.createView(LedConstants.buffer3StartLeft, LedConstants.buffer3EndLeft);
-        buffer4Left = ledBuffer.createView(LedConstants.buffer4StartLeft, LedConstants.buffer4EndLeft);
+        buffer1Left =
+                ledBuffer.createView(LedConstants.buffer1StartLeft, LedConstants.buffer1EndLeft);
+        buffer2Left =
+                ledBuffer.createView(LedConstants.buffer2StartLeft, LedConstants.buffer2EndLeft);
+        buffer3Left =
+                ledBuffer.createView(LedConstants.buffer3StartLeft, LedConstants.buffer3EndLeft);
+        buffer4Left =
+                ledBuffer.createView(LedConstants.buffer4StartLeft, LedConstants.buffer4EndLeft);
         // right buffers
-        buffer1Right = ledBuffer.createView(LedConstants.buffer1StartRight, LedConstants.buffer1EndRight);
-        buffer2Right = ledBuffer.createView(LedConstants.buffer2StartRight, LedConstants.buffer2EndRight);
-        buffer3Right = ledBuffer.createView(LedConstants.buffer3StartRight, LedConstants.buffer3EndRight);
-        buffer4Right = ledBuffer.createView(LedConstants.buffer4StartRight, LedConstants.buffer4EndRight);
+        buffer1Right =
+                ledBuffer.createView(LedConstants.buffer1StartRight, LedConstants.buffer1EndRight);
+        buffer2Right =
+                ledBuffer.createView(LedConstants.buffer2StartRight, LedConstants.buffer2EndRight);
+        buffer3Right =
+                ledBuffer.createView(LedConstants.buffer3StartRight, LedConstants.buffer3EndRight);
+        buffer4Right =
+                ledBuffer.createView(LedConstants.buffer4StartRight, LedConstants.buffer4EndRight);
 
         led.setLength(ledBuffer.getLength());
         led.setData(ledBuffer);
