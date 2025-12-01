@@ -67,8 +67,8 @@ public class DriveTo extends Command {
         // Gets PID for thera displacement
         double thetaVelocity = thetaController.calculate(thetaDisplacement.getRadians());
         // runs velocities
-        drive.runVelocity(ChassisSpeeds.fromFieldRelativeSpeeds(setVelocity.getX(),
-                setVelocity.getY(), thetaVelocity, robotPose.getRotation()));
+        drive.runVelocity(ChassisSpeeds.fromFieldRelativeSpeeds(-setVelocity.getX(),
+                -setVelocity.getY(), -thetaVelocity, robotPose.getRotation()));
 
         // Lets Log stuff
         Logger.recordOutput("DriveTo/displacement", displacement);

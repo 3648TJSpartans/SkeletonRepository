@@ -40,8 +40,11 @@ public class ExampleMotorSubsystemConstants {
         // For motors that need different PID values, just make a second
         // set of constants and a second config
 
-        public static final MotorConfig motor2Config =
-                        motor1Config.name("exampleSubsystem/motor2").motorCan(motor2Can);
+        public static final MotorConfig motor2Config = new MotorConfig("exampleSubsystem/motor2")
+                        .motorCan(motor2Can).p(kP).i(kI).d(kD).ff(kFF)
+                        .encoderOdometryFrequency(kOdometryFrequency).minPower(kMinRange)
+                        .maxPower(kMaxRange).isInverted(kEncoderInverted)
+                        .positionTolerance(kPositionTolerance).speedTolerance(kSpeedTolerance);
 
 
         public static final MotorIO motor1 = new AbsEncoderSparkMax(motor1Config);

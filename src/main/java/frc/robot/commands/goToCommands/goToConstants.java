@@ -7,15 +7,15 @@ import frc.robot.util.AllianceFlipUtil;
 
 public class goToConstants {
 
-        public static final double drivekP = 2.0;
+        public static final double drivekP = 4.0;
         public static final double drivekD = 0.0;
         public static final double thetakP = 5.0;
         public static final double thetakD = 0.0;
-        public static final double driveMaxVelocity = .5;
+        public static final double driveMaxVelocity = 4.0;
         public static final double driveMaxAcceleration = 1.5;
         public static final double thetaMaxVelocity = Units.degreesToRadians(360.0);
         public static final double thetaMaxAcceleration = Units.degreesToRadians(720.0);
-        public static final double driveTolerance = 0.05;
+        public static final double driveTolerance = 0.005;
         public static final double thetaTolerance = Units.degreesToRadians(1);
         public static final double ffMinRadius = 0.2;
         public static final double ffMaxRadius = 0.6;
