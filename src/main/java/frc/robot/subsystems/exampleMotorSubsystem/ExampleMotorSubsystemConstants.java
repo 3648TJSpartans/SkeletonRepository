@@ -9,8 +9,8 @@ import frc.robot.util.motorUtil.*;
 
 public class ExampleMotorSubsystemConstants {
 
-        public static final int motor1Can = 15;
-        public static final int motor2Can = 16;
+        public static final int motor1Can = 18;
+        public static final int motor2Can = 17;
 
         public static final double kP = 0.5;
         public static final double kI = 0.0;
