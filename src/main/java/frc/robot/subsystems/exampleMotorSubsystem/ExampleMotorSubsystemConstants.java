@@ -47,7 +47,6 @@ public class ExampleMotorSubsystemConstants {
                         .positionTolerance(kPositionTolerance).speedTolerance(kSpeedTolerance);
 
 
-
         public static final MotorIO motor1 = new AbsEncoderSparkMax(motor1Config);
         public static final MotorIO motor2 = new RelEncoderSparkMax(motor2Config);
 }

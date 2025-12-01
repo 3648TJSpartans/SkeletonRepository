@@ -10,7 +10,7 @@ import frc.robot.util.TunableNumber;
 
 public class goToConstants {
 
-        public static final double drivekP = 8.0;
+        public static final double drivekP = 6.0;
         public static final double drivekI = 0.0;
         public static final double drivekD = 0.0;
         public static final double thetakP = 5.0;
