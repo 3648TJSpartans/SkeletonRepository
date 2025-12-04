@@ -71,6 +71,11 @@ public class DriveConstants {
         public static final int frontRightTurnCanId = 1;
         public static final int backRightTurnCanId = 3;
 
+        public static final int frontLeftTurnEncoderId = 7;
+        public static final int backLeftTurnEncoderId = 5;
+        public static final int frontRightTurnEncoderId = 1;
+        public static final int backRightTurnEncoderId = 3;
+
         // Drive motor configuration
         public static final int driveMotorCurrentLimit = 50;
         public static final double wheelRadiusMeters = Units.inchesToMeters(2);

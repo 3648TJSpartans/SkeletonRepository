@@ -33,6 +33,7 @@ import com.revrobotics.spark.config.SparkMaxConfig;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.filter.Debouncer;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.wpilibj.AnalogEncoder;
 import java.util.Queue;
 import java.util.function.DoubleSupplier;
 
@@ -40,14 +41,14 @@ import java.util.function.DoubleSupplier;
  * Module IO implementation for Spark Flex drive motor controller, Spark Max turn motor controller,
  * and duty cycle absolute encoder.
  */
-public class ModuleIOSpark implements ModuleIO {
+public class ModuleIOMK4Spark implements ModuleIO {
         private final Rotation2d zeroRotation;
 
         // Hardware objects
         private final SparkBase driveSpark;
         private final SparkBase turnSpark;
         private final RelativeEncoder driveEncoder;
-        private final AbsoluteEncoder turnEncoder;
+        private final AnalogEncoder turnEncoder;
 
         // Closed loop controllers
         private final SparkClosedLoopController driveController;
@@ -62,7 +63,7 @@ public class ModuleIOSpark implements ModuleIO {
         private final Debouncer driveConnectedDebounce = new Debouncer(0.5);
         private final Debouncer turnConnectedDebounce = new Debouncer(0.5);
 
-        public ModuleIOSpark(int module) {
+        public ModuleIOMK4Spark(int module) {
                 zeroRotation = switch (module) {
                         case 0 -> frontLeftZeroRotation;
                         case 1 -> frontRightZeroRotation;
@@ -85,7 +86,14 @@ public class ModuleIOSpark implements ModuleIO {
                         default -> 0;
                 }, MotorType.kBrushless);
                 driveEncoder = driveSpark.getEncoder();
-                turnEncoder = turnSpark.getAbsoluteEncoder();
+                // turnEncoder = turnSpark.getAbsoluteEncoder();
+                turnEncoder = new AnalogEncoder(switch (module) {
+                        case 0 -> frontLeftTurnEncoderId;
+                        case 1 -> frontRightTurnEncoderId;
+                        case 2 -> backLeftTurnEncoderId;
+                        case 3 -> backRightTurnEncoderId;
+                        default -> 0;
+                }, 2 * Math.PI, 0.0);
                 driveController = driveSpark.getClosedLoopController();
                 turnController = turnSpark.getClosedLoopController();
 
@@ -132,7 +140,7 @@ public class ModuleIOSpark implements ModuleIO {
                 drivePositionQueue = SparkOdometryThread.getInstance().registerSignal(driveSpark,
                                 driveEncoder::getPosition);
                 turnPositionQueue = SparkOdometryThread.getInstance().registerSignal(turnSpark,
-                                turnEncoder::getPosition);
+                                turnEncoder::get);
         }
 
         @Override
@@ -152,10 +160,12 @@ public class ModuleIOSpark implements ModuleIO {
 
                 // Update turn inputs
                 sparkStickyFault = false;
-                ifOk(turnSpark, turnEncoder::getPosition, (value) -> inputs.turnPosition =
+                ifOk(turnSpark, turnEncoder::get, (value) -> inputs.turnPosition =
                                 new Rotation2d(value).minus(zeroRotation));
-                ifOk(turnSpark, turnEncoder::getVelocity,
-                                (value) -> inputs.turnVelocityRadPerSec = value);
+                // TODO our encoders don't have a built in get velocity. I can make a custom class
+                // that psits this out if its needed.
+                // ifOk(turnSpark, turnEncoder::getVelocity,
+                // (value) -> inputs.turnVelocityRadPerSec = value);
                 ifOk(turnSpark, new DoubleSupplier[] {turnSpark::getAppliedOutput,
                                 turnSpark::getBusVoltage},
                                 (values) -> inputs.turnAppliedVolts = values[0] * values[1]);
