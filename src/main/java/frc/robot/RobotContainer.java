@@ -236,9 +236,11 @@ public class RobotContainer {
         }
 
         private void configureDiagnostic() {
-                Diagnostics.putRequirements("Driver controller", () -> m_driveController.isConnected());
-                Diagnostics.putRequirements("Copilot controller", () -> m_copilotController.isConnected());
-                Diagnostics.putRequirements("LEDs", () -> m_leds.)
+                Diagnostics.putRequirements("Driver controller",
+                                () -> m_driveController.isConnected());
+                Diagnostics.putRequirements("Copilot controller",
+                                () -> m_copilotController.isConnected());
+                Diagnostics.putRequirements("Limelight", () -> m_vision.isConnected());
         }
 
         private void configureAlerts() {

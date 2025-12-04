@@ -208,6 +208,15 @@ public class Vision extends SubsystemBase {
     io[cameraIndex].resetPipeline();
   }
 
+  public boolean isConnected() {
+    for (int cameraIndex = 0; cameraIndex < io.length; cameraIndex++) {
+      if (!inputs[cameraIndex].connected) {
+        return true;
+      }
+    }
+    return false;
+  }
+
   @AutoLogOutput(key = "Vision/Tag-RelativePose")
   public Pose2d getTagRelativePose(int cameraIndex) {
     return io[cameraIndex].getTagRelativePose();
