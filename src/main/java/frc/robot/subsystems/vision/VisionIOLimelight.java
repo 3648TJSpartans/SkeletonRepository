@@ -94,6 +94,12 @@ public class VisionIOLimelight implements VisionIO {
     List<PoseObservation> poseObservations = new LinkedList<>();
 
     boolean doRejectUpdate = false;
+
+    LimelightHelpers.PoseEstimate mt1 = LimelightHelpers.getBotPoseEstimate_wpiBlue(name);
+    if (VisionConstants.usingMT1 && mt1.tagCount > 0) {
+      poseObservations.add(mt1.getAsObservartion());
+    }
+    
     LimelightHelpers.SetRobotOrientation(name, rotationSupplier.get().getDegrees(), 0, 0, 0, 0, 0);
     LimelightHelpers.PoseEstimate mt2 = LimelightHelpers.getBotPoseEstimate_wpiBlue_MegaTag2(name);
     if (mt2.tagCount == 0) {
@@ -104,10 +110,7 @@ public class VisionIOLimelight implements VisionIO {
       poseObservations.add(mt2.getAsObservartion());
     }
 
-    // LimelightHelpers.PoseEstimate mt1 = LimelightHelpers.getBotPoseEstimate_wpiBlue(name);
-    // if (mt1.tagCount > 1) {
-    // poseObservations.add(mt1.getAsObservartion());
-    // }
+    
     // Save pose observations to inputs object
     inputs.poseObservations = new PoseObservation[poseObservations.size()];
     for (int i = 0; i < poseObservations.size(); i++) {
