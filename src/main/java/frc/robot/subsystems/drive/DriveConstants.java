@@ -42,10 +42,10 @@ public class DriveConstants {
                                         new Translation2d(-trackWidth / 2.0, -wheelBase / 2.0)};
 
         // Zeroed rotation values for each module, see setup instructions
-        public static final Rotation2d frontLeftZeroRotation = new Rotation2d(-Math.PI / 2);
-        public static final Rotation2d frontRightZeroRotation = new Rotation2d(0);
-        public static final Rotation2d backLeftZeroRotation = new Rotation2d(Math.PI);
-        public static final Rotation2d backRightZeroRotation = new Rotation2d(Math.PI / 2);
+        public static final Rotation2d frontLeftZeroRotation = new Rotation2d(Math.PI / 4);
+        public static final Rotation2d frontRightZeroRotation = new Rotation2d(3 * Math.PI / 4);
+        public static final Rotation2d backLeftZeroRotation = new Rotation2d(7 * Math.PI / 4);
+        public static final Rotation2d backRightZeroRotation = new Rotation2d(5 * Math.PI / 4);
 
         // Device CAN IDs
         public static final int pigeonCanId = 9;
@@ -71,10 +71,15 @@ public class DriveConstants {
         public static final int frontRightTurnCanId = 1;
         public static final int backRightTurnCanId = 3;
 
-        public static final int frontLeftTurnEncoderId = 7;
-        public static final int backLeftTurnEncoderId = 5;
-        public static final int frontRightTurnEncoderId = 1;
-        public static final int backRightTurnEncoderId = 3;
+        public static final int frontLeftTurnEncoderId = 3;
+        public static final int backLeftTurnEncoderId = 2;
+        public static final int frontRightTurnEncoderId = 0;
+        public static final int backRightTurnEncoderId = 1;
+        // Encoder Offsets, Chassis 1
+        public static final double frontLeftExpectedZero = 1.73;
+        public static final double backLeftExpectedZero = 4.19;
+        public static final double frontRightExpectedZero = 6.283;
+        public static final double backRightExpectedZero = 4.18;
 
         // Drive motor configuration
         public static final int driveMotorCurrentLimit = 50;
@@ -117,12 +122,13 @@ public class DriveConstants {
                                                                                      // Rad/Sec
 
         // Turn PID configuration
-        public static final double turnKp = 2.0;
+        public static final double turnKp = 8.0;
         public static final double turnKd = 0.0;
         public static final double turnSimP = 8.0;
         public static final double turnSimD = 0.0;
-        public static final double turnPIDMinInput = 0; // Radians
-        public static final double turnPIDMaxInput = 2 * Math.PI; // Radians
+        public static final double turnPIDMinInput = -Math.PI; // Radians
+        public static final double turnPIDMaxInput = Math.PI; // Radians
+        public static final double turnTolerance = 0.01;
 
         // PathPlanner configuration
         public static final double robotMassKg = 45.3;

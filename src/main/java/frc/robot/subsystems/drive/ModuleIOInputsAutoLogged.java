@@ -5,9 +5,11 @@ import java.lang.Override;
 import org.littletonrobotics.junction.LogTable;
 import org.littletonrobotics.junction.inputs.LoggableInputs;
 
-public class ModuleIOInputsAutoLogged extends ModuleIO.ModuleIOInputs implements LoggableInputs, Cloneable {
+public class ModuleIOInputsAutoLogged extends ModuleIO.ModuleIOInputs
+    implements LoggableInputs, Cloneable {
   @Override
   public void toLog(LogTable table) {
+    table.put("TurnEncoder", turnEncoder);
     table.put("DriveConnected", driveConnected);
     table.put("DrivePositionRad", drivePositionRad);
     table.put("DriveVelocityRadPerSec", driveVelocityRadPerSec);
@@ -38,6 +40,7 @@ public class ModuleIOInputsAutoLogged extends ModuleIO.ModuleIOInputs implements
     odometryTimestamps = table.get("OdometryTimestamps", odometryTimestamps);
     odometryDrivePositionsRad = table.get("OdometryDrivePositionsRad", odometryDrivePositionsRad);
     odometryTurnPositions = table.get("OdometryTurnPositions", odometryTurnPositions);
+    turnEncoder = table.get("TurnEncoder", turnEncoder);
   }
 
   public ModuleIOInputsAutoLogged clone() {
@@ -55,6 +58,7 @@ public class ModuleIOInputsAutoLogged extends ModuleIO.ModuleIOInputs implements
     copy.odometryTimestamps = this.odometryTimestamps.clone();
     copy.odometryDrivePositionsRad = this.odometryDrivePositionsRad.clone();
     copy.odometryTurnPositions = this.odometryTurnPositions.clone();
+    copy.turnEncoder = this.turnEncoder;
     return copy;
   }
 }

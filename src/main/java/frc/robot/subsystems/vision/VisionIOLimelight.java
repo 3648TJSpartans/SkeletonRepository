@@ -96,7 +96,9 @@ public class VisionIOLimelight implements VisionIO {
     boolean doRejectUpdate = false;
     LimelightHelpers.SetRobotOrientation(name, rotationSupplier.get().getDegrees(), 0, 0, 0, 0, 0);
     LimelightHelpers.PoseEstimate mt2 = LimelightHelpers.getBotPoseEstimate_wpiBlue_MegaTag2(name);
-    if (mt2.tagCount == 0) {
+    if (mt2 == null) {
+      doRejectUpdate = true;
+    } else if (mt2.tagCount == 0) {
       doRejectUpdate = true;
     }
     if (!doRejectUpdate) {

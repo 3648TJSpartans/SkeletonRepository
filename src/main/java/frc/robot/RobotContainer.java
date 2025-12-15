@@ -168,11 +168,12 @@ public class RobotContainer {
                                                 new ModuleIOSim());
 
                                 m_vision = new Vision(m_drive::addVisionMeasurement,
-                                                m_drive::addTargetSpaceVisionMeasurement,
-                                                new VisionIOLimelight(VisionConstants.camera0Name,
-                                                                m_drive::getRotation),
-                                                new VisionIOLimelight(VisionConstants.camera1Name,
-                                                                m_drive::getRotation));
+                                                m_drive::addTargetSpaceVisionMeasurement
+                                // new VisionIOLimelight(VisionConstants.camera0Name,
+                                // m_drive::getRotation),
+                                // new VisionIOLimelight(VisionConstants.camera1Name,
+                                // m_drive::getRotation)
+                                );
                                 break;
 
                         default:

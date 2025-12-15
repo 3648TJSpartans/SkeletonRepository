@@ -31,11 +31,14 @@ import com.revrobotics.spark.config.ClosedLoopConfig.FeedbackSensor;
 import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
 import com.revrobotics.spark.config.SparkMaxConfig;
 import edu.wpi.first.math.MathUtil;
+import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.filter.Debouncer;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.AnalogEncoder;
 import java.util.Queue;
 import java.util.function.DoubleSupplier;
+import org.littletonrobotics.junction.Logger;
 
 /**
  * Module IO implementation for Spark Flex drive motor controller, Spark Max turn motor controller,
@@ -52,18 +55,21 @@ public class ModuleIOMK4Spark implements ModuleIO {
 
         // Closed loop controllers
         private final SparkClosedLoopController driveController;
-        private final SparkClosedLoopController turnController;
+        private final PIDController turnController;
 
         // Queue inputs from odometry thread
         private final Queue<Double> timestampQueue;
         private final Queue<Double> drivePositionQueue;
         private final Queue<Double> turnPositionQueue;
 
+        private final int module;
+
         // Connection debouncers
         private final Debouncer driveConnectedDebounce = new Debouncer(0.5);
         private final Debouncer turnConnectedDebounce = new Debouncer(0.5);
 
         public ModuleIOMK4Spark(int module) {
+                this.module = module;
                 zeroRotation = switch (module) {
                         case 0 -> frontLeftZeroRotation;
                         case 1 -> frontRightZeroRotation;
@@ -93,9 +99,17 @@ public class ModuleIOMK4Spark implements ModuleIO {
                         case 2 -> backLeftTurnEncoderId;
                         case 3 -> backRightTurnEncoderId;
                         default -> 0;
-                }, 2 * Math.PI, 0.0);
+                }, 2 * Math.PI, switch (module) {
+                        case 0 -> frontLeftExpectedZero;
+                        case 1 -> frontRightExpectedZero;
+                        case 2 -> backLeftExpectedZero;
+                        case 3 -> backRightExpectedZero;
+                        default -> 0.0;
+                });
                 driveController = driveSpark.getClosedLoopController();
-                turnController = turnSpark.getClosedLoopController();
+                turnController = new PIDController(turnKp, 0.0, turnKd);
+                turnController.enableContinuousInput(turnPIDMinInput, turnPIDMaxInput);
+
 
                 // Configure drive motor
                 var driveConfig = new SparkMaxConfig();
@@ -123,10 +137,6 @@ public class ModuleIOMK4Spark implements ModuleIO {
                                 .positionConversionFactor(turnEncoderPositionFactor)
                                 .velocityConversionFactor(turnEncoderVelocityFactor)
                                 .averageDepth(2);
-                turnConfig.closedLoop.feedbackSensor(FeedbackSensor.kAbsoluteEncoder)
-                                .positionWrappingEnabled(true)
-                                .positionWrappingInputRange(turnPIDMinInput, turnPIDMaxInput)
-                                .pidf(turnKp, 0.0, turnKd, 0.0);
                 turnConfig.signals.absoluteEncoderPositionAlwaysOn(true)
                                 .absoluteEncoderPositionPeriodMs((int) (1000.0 / odometryFrequency))
                                 .absoluteEncoderVelocityAlwaysOn(true)
@@ -162,6 +172,8 @@ public class ModuleIOMK4Spark implements ModuleIO {
                 sparkStickyFault = false;
                 ifOk(turnSpark, turnEncoder::get, (value) -> inputs.turnPosition =
                                 new Rotation2d(value).minus(zeroRotation));
+                ifOk(turnSpark, turnEncoder::get,
+                                (value) -> inputs.turnEncoder = new Rotation2d(value));
                 // TODO our encoders don't have a built in get velocity. I can make a custom class
                 // that psits this out if its needed.
                 // ifOk(turnSpark, turnEncoder::getVelocity,
@@ -206,8 +218,11 @@ public class ModuleIOMK4Spark implements ModuleIO {
 
         @Override
         public void setTurnPosition(Rotation2d rotation) {
+                // rotation = new Rotation2d(Math.PI / 2);
                 double setpoint = MathUtil.inputModulus(rotation.plus(zeroRotation).getRadians(),
                                 turnPIDMinInput, turnPIDMaxInput);
-                turnController.setReference(setpoint, ControlType.kPosition);
+                Logger.recordOutput("SwerveTestSetpoint/" + module, setpoint);
+                turnSpark.setVoltage(turnController.calculate(setpoint, turnEncoder.get()));
+
         }
 }
