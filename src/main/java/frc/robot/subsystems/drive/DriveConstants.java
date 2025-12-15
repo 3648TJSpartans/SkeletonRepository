@@ -19,6 +19,7 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.math.util.Units;
+import frc.robot.util.TunableNumber;
 
 public class DriveConstants {
         public static final double fieldRelativeMaxInputPercent = 1; // value between 0+ and 1,
@@ -75,11 +76,41 @@ public class DriveConstants {
         public static final int backLeftTurnEncoderId = 2;
         public static final int frontRightTurnEncoderId = 0;
         public static final int backRightTurnEncoderId = 1;
-        // Encoder Offsets, Chassis 1
-        public static final double frontLeftExpectedZero = 1.73;
-        public static final double backLeftExpectedZero = 4.19;
-        public static final double frontRightExpectedZero = 6.283;
-        public static final double backRightExpectedZero = 4.18;
+        // Encoder Offsets
+
+        /*
+         * Chassis Numbers 0- Tuning 1-Walter 2- 3-
+         * 
+         */
+        public static int chasNum = (int) new TunableNumber("Drive/ChassisNumber").get();
+        public static final double frontLeftExpectedZero = switch (chasNum) {
+                case 0 -> 0.0;
+                case 1 -> 1.73;
+                case 2 -> 0.0;
+                case 3 -> 0.0;
+                default -> 0.0;
+        };
+        public static final double backLeftExpectedZero = switch (chasNum) {
+                case 0 -> 0.0;
+                case 1 -> 4.19;
+                case 2 -> 0.0;
+                case 3 -> 0.0;
+                default -> 0.0;
+        };
+        public static final double frontRightExpectedZero = switch (chasNum) {
+                case 0 -> 0.0;
+                case 1 -> 6.283;
+                case 2 -> 0.0;
+                case 3 -> 0.0;
+                default -> 0.0;
+        };
+        public static final double backRightExpectedZero = switch (chasNum) {
+                case 0 -> 0.0;
+                case 1 -> 4.18;
+                case 2 -> 0.0;
+                case 3 -> 0.0;
+                default -> 0.0;
+        };
 
         // Drive motor configuration
         public static final int driveMotorCurrentLimit = 50;
