@@ -51,7 +51,7 @@ public class ModuleIOMK4Spark implements ModuleIO {
         private final SparkBase driveSpark;
         private final SparkBase turnSpark;
         private final RelativeEncoder driveEncoder;
-        private final AnalogEncoder turnEncoder;
+        private final LoggedAnalogEncoder turnEncoder;
 
         // Closed loop controllers
         private final SparkClosedLoopController driveController;
@@ -93,7 +93,13 @@ public class ModuleIOMK4Spark implements ModuleIO {
                 }, MotorType.kBrushless);
                 driveEncoder = driveSpark.getEncoder();
                 // turnEncoder = turnSpark.getAbsoluteEncoder();
-                turnEncoder = new AnalogEncoder(switch (module) {
+                turnEncoder = new LoggedAnalogEncoder(switch (module) {
+                        case 0 -> "Drive/modules/frontLeft(0)";
+                        case 1 -> "Drive/modules/frontRight(1)";
+                        case 2 -> "Drive/modules/backLeft(2)";
+                        case 3 -> "Drive/modules/backRight(3)";
+                        default -> "default";
+                }, switch (module) {
                         case 0 -> frontLeftTurnEncoderId;
                         case 1 -> frontRightTurnEncoderId;
                         case 2 -> backLeftTurnEncoderId;

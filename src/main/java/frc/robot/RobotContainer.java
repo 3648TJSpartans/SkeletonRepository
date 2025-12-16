@@ -50,6 +50,7 @@ import frc.robot.commands.simpleMotorCommands.SimpleMotorCmd;
 import frc.robot.subsystems.drive.Drive;
 import frc.robot.subsystems.drive.GyroIO;
 import frc.robot.subsystems.drive.GyroIONavX;
+import frc.robot.subsystems.drive.LoggedAnalogEncoder;
 import frc.robot.subsystems.drive.ModuleIO;
 import frc.robot.subsystems.drive.ModuleIOMK4Spark;
 import frc.robot.subsystems.drive.ModuleIOSim;
@@ -225,6 +226,7 @@ public class RobotContainer {
                 new Trigger(DriverStation::isEnabled).onTrue(new InstantCommand(() -> {
                         MotorIO.reconfigureMotors();
                         goToConstants.configurePID();
+                        LoggedAnalogEncoder.updateZeros();
                 }));
 
 
