@@ -279,12 +279,10 @@ public class RobotContainer {
 
         public void configureAutoChooser() {
 
-                // autoChooser.addOption(
-                // "Drive Wheel Radius Characterization",
-                // DriveCommands.wheelRadiusCharacterization(m_drive));
-                // autoChooser.addOption(
-                // "Drive Simple FF Characterization",
-                // DriveCommands.feedforwardCharacterization(m_drive));
+                autoChooser.addOption("Drive Wheel Radius Characterization",
+                                DriveCommands.wheelRadiusCharacterization(m_drive));
+                autoChooser.addOption("Drive Simple FF Characterization",
+                                DriveCommands.feedforwardCharacterization(m_drive));
                 autoChooser.addOption("Drive SysId (Quasistatic Forward)",
                                 m_drive.sysIdQuasistatic(SysIdRoutine.Direction.kForward));
                 autoChooser.addOption("Drive SysId (Quasistatic Reverse)",

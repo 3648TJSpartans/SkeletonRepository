@@ -82,31 +82,31 @@ public class DriveConstants {
          * Chassis Numbers 0- Tuning 1-Walter 2- 3-
          * 
          */
-        public static int chasNum = (int) new TunableNumber("Drive/ChassisNumber").get();
+        public static int chasNum = (int) new TunableNumber("Drive/ChassisNumber", 1.0).get();
         public static final double frontLeftExpectedZero = switch (chasNum) {
                 case 0 -> 0.0;
-                case 1 -> 1.73;
+                case 1 -> 1.757;
                 case 2 -> 0.0;
                 case 3 -> 0.0;
                 default -> 0.0;
         };
         public static final double backLeftExpectedZero = switch (chasNum) {
                 case 0 -> 0.0;
-                case 1 -> 4.19;
+                case 1 -> 4.21;
                 case 2 -> 0.0;
                 case 3 -> 0.0;
                 default -> 0.0;
         };
         public static final double frontRightExpectedZero = switch (chasNum) {
                 case 0 -> 0.0;
-                case 1 -> 6.283;
+                case 1 -> 3.05;
                 case 2 -> 0.0;
                 case 3 -> 0.0;
                 default -> 0.0;
         };
         public static final double backRightExpectedZero = switch (chasNum) {
                 case 0 -> 0.0;
-                case 1 -> 4.18;
+                case 1 -> 4.23;
                 case 2 -> 0.0;
                 case 3 -> 0.0;
                 default -> 0.0;
@@ -133,8 +133,8 @@ public class DriveConstants {
         // Drive PID configuration
         public static final double driveKp = 0.0;
         public static final double driveKd = 0.0;
-        public static final double driveKs = 0.14381;
-        public static final double driveKv = 0.10033;
+        public static final double driveKs = 0.11241;
+        public static final double driveKv = 0.13496;
         public static final double driveSimP = 0.05;
         public static final double driveSimD = 0.0;
         public static final double driveSimKs = 0.0;
