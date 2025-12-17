@@ -219,15 +219,14 @@ public class RobotContainer {
                 configureSimpleMotor();
                 configureDrive();
                 // configureExampleSubsystem();
-
-                m_copilotController.rightTrigger()
-                                .onTrue(new InstantCommand(() -> toggleOverride()));
-
-                new Trigger(DriverStation::isEnabled).onTrue(new InstantCommand(() -> {
+                Command updateCommand = new InstantCommand(() -> {
                         MotorIO.reconfigureMotors();
                         goToConstants.configurePID();
                         LoggedAnalogEncoder.updateZeros();
-                }));
+                }).ignoringDisable(true);
+                m_copilotController.rightTrigger().onTrue(updateCommand);
+
+                new Trigger(DriverStation::isEnabled).onTrue(updateCommand);
 
 
                 /*
