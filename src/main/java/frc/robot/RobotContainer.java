@@ -328,10 +328,7 @@ public class RobotContainer {
                                 () -> -m_driveController.getLeftY(),
                                 () -> -m_driveController.getLeftX(),
                                 () -> -m_driveController.getRightX(),
-                                m_driveController.leftBumper(),
-                                () -> m_vision.getTargetX(0).getDegrees(),
-                                m_driveController.leftBumper(), m_driveController.rightBumper(),
-                                () -> !endgameClosed));
+                                m_driveController.leftBumper()));
 
                 // Lock to 0° when A button is held
                 // m_driveController
