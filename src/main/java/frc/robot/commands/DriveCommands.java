@@ -78,35 +78,9 @@ public class DriveCommands {
       DoubleSupplier xSupplier,
       DoubleSupplier ySupplier,
       DoubleSupplier omegaSupplier,
-      BooleanSupplier robotRelativeSupplier,
-      DoubleSupplier visionTx,
-      BooleanSupplier leftAlign,
-      BooleanSupplier rightAlign,
-      BooleanSupplier slowDown) {
+      BooleanSupplier robotRelativeSupplier) {
     return Commands.run(
         () -> {
-
-          // if (leftAlign.getAsBoolean()) {
-          // double tx = visionTx.getAsDouble();
-          // if (tx != 0.0) {
-          // drive.runVelocity(new ChassisSpeeds(
-          // MathUtil.applyDeadband(ySupplier.getAsDouble(), DEADBAND)
-          // * DriveConstants.robotRelativeMaxInputPercent,
-          // tx * -.02,
-          // MathUtil.applyDeadband(omegaSupplier.getAsDouble(), DEADBAND)
-          // * DriveConstants.robotRelativeMaxInputPercent / 2));
-          // }
-          // } else if (rightAlign.getAsBoolean()) {
-          // double tx = visionTx.getAsDouble();
-          // if (tx != 0.0) {
-          // drive.runVelocity(new ChassisSpeeds(
-          // MathUtil.applyDeadband(ySupplier.getAsDouble(), DEADBAND)
-          // * DriveConstants.robotRelativeMaxInputPercent,
-          // tx * .02,
-          // MathUtil.applyDeadband(omegaSupplier.getAsDouble(), DEADBAND)
-          // * DriveConstants.robotRelativeMaxInputPercent / 2));
-          // }
-          // } else
           if (robotRelativeSupplier.getAsBoolean()) {
             drive.runVelocity(new ChassisSpeeds(
 
