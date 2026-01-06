@@ -99,14 +99,14 @@ public class DriveConstants {
         };
         public static final double frontRightExpectedZero = switch (chasNum) {
                 case 0 -> 0.0;
-                case 1 -> 3.27;
+                case 1 -> 4.08;
                 case 2 -> 0.0;
                 case 3 -> 0.0;
                 default -> 0.0;
         };
         public static final double backRightExpectedZero = switch (chasNum) {
                 case 0 -> 0.0;
-                case 1 -> 4.23;
+                case 1 -> 4.16;
                 case 2 -> 0.0;
                 case 3 -> 0.0;
                 default -> 0.0;
@@ -153,7 +153,7 @@ public class DriveConstants {
                                                                                      // Rad/Sec
 
         // Turn PID configuration
-        public static final double turnKp = 8.0;
+        public static final double turnKp = 6.0;
         public static final double turnKd = 0.0;
         public static final double turnSimP = 8.0;
         public static final double turnSimD = 0.0;

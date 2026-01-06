@@ -224,10 +224,8 @@ public class ModuleIOMK4Spark implements ModuleIO {
 
         @Override
         public void setTurnPosition(Rotation2d rotation) {
-                // rotation = new Rotation2d(Math.PI / 2);
                 double setpoint = MathUtil.inputModulus(rotation.plus(zeroRotation).getRadians(),
                                 turnPIDMinInput, turnPIDMaxInput);
-                Logger.recordOutput("SwerveTestSetpoint/" + module, setpoint);
                 turnSpark.setVoltage(turnController.calculate(setpoint, turnEncoder.get()));
 
         }
