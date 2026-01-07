@@ -19,7 +19,7 @@ import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.geometry.Transform3d;
 
 public class VisionConstants {
-        public static final boolean usingMT1 = false;
+        public static final boolean usingMT1 = true;
 
         // AprilTag layout
         public static AprilTagFieldLayout aprilTagLayout =

@@ -105,7 +105,7 @@ public class VisionIOLimelight implements VisionIO {
 
       poseObservations.add(mt2.getAsObservartion());
     }
-
+    doRejectUpdate = false;
     if (VisionConstants.usingMT1) {
       LimelightHelpers.PoseEstimate mt1 = LimelightHelpers.getBotPoseEstimate_wpiBlue(name);
       if (mt1 == null) {
@@ -117,7 +117,6 @@ public class VisionIOLimelight implements VisionIO {
 
         poseObservations.add(mt1.getAsObservartion());
       }
-      poseObservations.add(mt1.getAsObservartion());
     }
     // Save pose observations to inputs object
     inputs.poseObservations = new PoseObservation[poseObservations.size()];
