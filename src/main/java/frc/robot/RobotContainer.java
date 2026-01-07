@@ -155,9 +155,9 @@ public class RobotContainer {
                                 m_vision = new Vision(m_drive::addVisionMeasurement,
                                                 m_drive::addTargetSpaceVisionMeasurement,
                                                 // new
-                                                // VisionIOLimelight(VisionConstants.camera0Name,
+                                                // VisionIOLimelight(VisionConstants.camera1Name,
                                                 // m_drive::getRotation),
-                                                new VisionIOLimelight(VisionConstants.camera1Name,
+                                                new VisionIOLimelight(VisionConstants.camera0Name,
                                                                 m_drive::getRotation));
                                 break;
 
@@ -186,8 +186,6 @@ public class RobotContainer {
                                 m_vision = new Vision(m_drive::addVisionMeasurement,
                                                 m_drive::addTargetSpaceVisionMeasurement,
                                                 new VisionIOLimelight(VisionConstants.camera0Name,
-                                                                m_drive::getRotation),
-                                                new VisionIOLimelight(VisionConstants.camera1Name,
                                                                 m_drive::getRotation));
                                 break;
                 }
@@ -370,7 +368,8 @@ public class RobotContainer {
                                 () -> new Pose2d(1.5, 0.5, new Rotation2d(Math.PI)))
                                                 .alongWith(new InstantCommand(() -> goToConstants
                                                                 .configurePID())));
-                // m_driveController.leftTrigger().whileTrue(alignToTagLeft);
+                m_driveController.leftTrigger().whileTrue(
+                                new DriveTo(m_drive, () -> new Pose2d(0.0, 0.0, new Rotation2d())));
 
         }
 
