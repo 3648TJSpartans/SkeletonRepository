@@ -34,13 +34,10 @@ public class Module {
   public Module(ModuleIO io, int index) {
     this.io = io;
     this.index = index;
-    driveDisconnectedAlert =
-        new Alert(
-            "Disconnected drive motor on module " + Integer.toString(index) + ".",
-            AlertType.kError);
-    turnDisconnectedAlert =
-        new Alert(
-            "Disconnected turn motor on module " + Integer.toString(index) + ".", AlertType.kError);
+    driveDisconnectedAlert = new Alert(
+        "Disconnected drive motor on module " + Integer.toString(index) + ".", AlertType.kError);
+    turnDisconnectedAlert = new Alert(
+        "Disconnected turn motor on module " + Integer.toString(index) + ".", AlertType.kError);
   }
 
   public void periodic() {
@@ -49,6 +46,7 @@ public class Module {
 
     // Calculate positions for odometry
     int sampleCount = inputs.odometryTimestamps.length; // All signals are sampled together
+    Logger.recordOutput("Debug/Module52:SampleCount/" + index, sampleCount);
     odometryPositions = new SwerveModulePosition[sampleCount];
     for (int i = 0; i < sampleCount; i++) {
       double positionMeters = inputs.odometryDrivePositionsRad[i] * wheelRadiusMeters;

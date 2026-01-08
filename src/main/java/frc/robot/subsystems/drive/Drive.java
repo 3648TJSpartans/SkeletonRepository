@@ -143,6 +143,13 @@ public class Drive extends SubsystemBase {
     // Update odometry
     double[] sampleTimestamps = modules[0].getOdometryTimestamps(); // All signals are sampled
                                                                     // together
+    Logger.recordOutput("Debug/SampleTimeStamps", sampleTimestamps.length);
+    if (sampleTimestamps.length > 0) {
+      Logger.recordOutput("Debug/OdometryTs", sampleTimestamps[0]);
+      Logger.recordOutput("Debug/FPGATs", Timer.getFPGATimestamp());
+      Logger.recordOutput("Debug/TsDiff", sampleTimestamps[0] - Timer.getFPGATimestamp());
+    }
+
     int sampleCount = sampleTimestamps.length;
     for (int i = 0; i < sampleCount; i++) {
       // Read wheel positions and deltas from each module
@@ -314,7 +321,6 @@ public class Drive extends SubsystemBase {
   /** Adds a new timestamped vision measurement. */
   public void addVisionMeasurement(Pose2d visionRobotPoseMeters, double timestampSeconds,
       Matrix<N3, N1> visionMeasurementStdDevs) {
-    poseEstimator.resetPose(new Pose2d(1, 1, new Rotation2d(Math.PI / 6)));
     Logger.recordOutput("Odometry/visionMesurment/pose", visionRobotPoseMeters);
     Logger.recordOutput("Odometry/visionMesurment/poseBefore",
         poseEstimator.getEstimatedPosition());
@@ -322,10 +328,7 @@ public class Drive extends SubsystemBase {
         visionMeasurementStdDevs.transpose().getData());
     Logger.recordOutput("Odometry/visionMesurment/timestamp", timestampSeconds);
     Logger.recordOutput("Odometry/visionMesurment/FPGATime", Timer.getFPGATimestamp());
-    double currentTime = Utils.fpgaToCurrentTime(timestampSeconds);
-    Logger.recordOutput("Odometry/visionMeasurement/timestampDelaySeconds",
-        Timer.getFPGATimestamp() - timestampSeconds);
-    poseEstimator.addVisionMeasurement(visionRobotPoseMeters, currentTime,
+    poseEstimator.addVisionMeasurement(visionRobotPoseMeters, timestampSeconds,
         visionMeasurementStdDevs);
     Logger.recordOutput("Odometry/visionMesurment/poseAfter", poseEstimator.getEstimatedPosition());
   }

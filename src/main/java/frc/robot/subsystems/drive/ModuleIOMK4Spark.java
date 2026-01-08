@@ -194,6 +194,8 @@ public class ModuleIOMK4Spark implements ModuleIO {
                 // Update odometry inputs
                 inputs.odometryTimestamps = timestampQueue.stream()
                                 .mapToDouble((Double value) -> value).toArray();
+                Logger.recordOutput("Debug/outputStream", timestampQueue.stream()
+                                .mapToDouble((Double value) -> value).toArray());
                 inputs.odometryDrivePositionsRad = drivePositionQueue.stream()
                                 .mapToDouble((Double value) -> value).toArray();
                 inputs.odometryTurnPositions = turnPositionQueue.stream()
