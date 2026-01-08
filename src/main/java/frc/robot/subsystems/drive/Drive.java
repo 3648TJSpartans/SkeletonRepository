@@ -15,7 +15,7 @@ package frc.robot.subsystems.drive;
 
 import static edu.wpi.first.units.Units.*;
 import static frc.robot.subsystems.drive.DriveConstants.*;
-
+import com.ctre.phoenix6.Utils;
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.config.PIDConstants;
 import com.pathplanner.lib.controllers.PPHolonomicDriveController;
@@ -318,9 +318,14 @@ public class Drive extends SubsystemBase {
     Logger.recordOutput("Odometry/visionMesurment/pose", visionRobotPoseMeters);
     Logger.recordOutput("Odometry/visionMesurment/poseBefore",
         poseEstimator.getEstimatedPosition());
-    Logger.recordOutput("Odometry/visionMesurment/stdDevs", visionMeasurementStdDevs);
-
-    poseEstimator.addVisionMeasurement(visionRobotPoseMeters, timestampSeconds,
+    Logger.recordOutput("Odometry/visionMesurment/stdDevs",
+        visionMeasurementStdDevs.transpose().getData());
+    Logger.recordOutput("Odometry/visionMesurment/timestamp", timestampSeconds);
+    Logger.recordOutput("Odometry/visionMesurment/FPGATime", Timer.getFPGATimestamp());
+    double currentTime = Utils.fpgaToCurrentTime(timestampSeconds);
+    Logger.recordOutput("Odometry/visionMeasurement/timestampDelaySeconds",
+        Timer.getFPGATimestamp() - timestampSeconds);
+    poseEstimator.addVisionMeasurement(visionRobotPoseMeters, currentTime,
         visionMeasurementStdDevs);
     Logger.recordOutput("Odometry/visionMesurment/poseAfter", poseEstimator.getEstimatedPosition());
   }
