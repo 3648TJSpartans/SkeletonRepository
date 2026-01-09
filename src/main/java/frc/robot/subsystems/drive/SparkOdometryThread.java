@@ -117,7 +117,9 @@ public class SparkOdometryThread {
       for (int i = 0; i < sparkSignals.size(); i++) {
         sparkValues[i] = sparkSignals.get(i).getAsDouble();
         if (sparks.get(i).getLastError() != REVLibError.kOk) {
-          // isValid = false;
+          Logger.recordOutput("Debug/SparkOdometry/errors/" + sparks.get(i).getDeviceId(),
+              sparks.get(i).getLastError().toString());
+          isValid = false;
         }
       }
       Logger.recordOutput("Debug/SparkOdometry/sparkSignalValid", isValid);
