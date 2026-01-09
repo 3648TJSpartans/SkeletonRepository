@@ -13,7 +13,7 @@ import edu.wpi.first.wpilibj2.command.Subsystem;
 
 public class FFCharacterizationCmd extends Command {
     private static final double FF_START_DELAY = 2.0; // Secs
-    private static final double FF_RAMP_RATE = 0.1; // Volts/Sec
+    private static final double FF_RAMP_RATE = 0.5; // Volts/Sec
 
     public static Command characterizeSystem(Subsystem system, Consumer<Double> runCharacterization,
             Supplier<Double> getFFCharacterizationVelocity) {

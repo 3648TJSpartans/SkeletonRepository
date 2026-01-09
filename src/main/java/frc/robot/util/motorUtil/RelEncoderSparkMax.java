@@ -108,6 +108,7 @@ public class RelEncoderSparkMax extends MotorIO {
 
 
     public void runFFVelocity(double velocityRadPerSec) {
+        super.setSpeed(velocityRadPerSec);
         double ffVolts = m_Ks * Math.signum(velocityRadPerSec) + m_Kv * velocityRadPerSec;
         motorController.setReference(velocityRadPerSec, ControlType.kVelocity,
                 ClosedLoopSlot.kSlot0, ffVolts, ArbFFUnits.kVoltage);

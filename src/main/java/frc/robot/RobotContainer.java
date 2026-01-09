@@ -142,6 +142,7 @@ public class RobotContainer {
                 // CAN 10
                 m_exampleFlywheel = new RelEncoderSparkMax(
                                 new MotorConfig("Flywheel").motorCan(10).Ks(0.0).Kv(0.0));
+                                new MotorConfig("Flywheel").motorCan(2).Ks(0.0).Kv(0.0));
                 Logger.recordOutput("Poses/shouldFlip", AllianceFlipUtil.shouldFlip());
                 Logger.recordOutput("Override", override);
                 override = false;
@@ -305,9 +306,11 @@ public class RobotContainer {
         }
 
         public void configureFlywheel() {
-                TunableNumber flywheelSpeed = new TunableNumber("MotorIOs/Flywheel/commandSpeed");
+
+                TunableNumber flywheelSpeed =
+                                new TunableNumber("MotorIOs/Flywheel/commandSpeed", -1000.0);
                 m_copilotController.rightBumper().onTrue(Commands.runOnce(
-                                () -> m_exampleFlywheel.setSpeed(flywheelSpeed.get()),
+                                () -> m_exampleFlywheel.runFFVelocity(flywheelSpeed.get()),
                                 m_exampleFlywheel))
                                 .onFalse(Commands.runOnce(() -> m_exampleFlywheel.stop(),
                                                 m_exampleFlywheel));
