@@ -32,7 +32,6 @@ import org.littletonrobotics.junction.Logger;
  * measurements in the sample are valid.
  */
 public class SparkOdometryThread {
-  private int debugRunning = 0;
 
   private final List<SparkBase> sparks = new ArrayList<>();
   private final List<DoubleSupplier> sparkSignals = new ArrayList<>();
@@ -97,13 +96,10 @@ public class SparkOdometryThread {
     } finally {
       Drive.odometryLock.unlock();
     }
-    Logger.recordOutput("Debug/SparkOdometry/Length", timestampQueues.size());
     return queue;
   }
 
   private void run() {
-    debugRunning++;
-    Logger.recordOutput("Debug/SparkOdometry/running", debugRunning);
     // Save new data to queues
     Drive.odometryLock.lock();
     try {
@@ -112,17 +108,24 @@ public class SparkOdometryThread {
 
       // Read Spark values, mark invalid in case of error
       double[] sparkValues = new double[sparkSignals.size()];
-      Logger.recordOutput("Debug/SparkOdometry/sparkSignalSize", sparkSignals.size());
       boolean isValid = true;
       for (int i = 0; i < sparkSignals.size(); i++) {
         sparkValues[i] = sparkSignals.get(i).getAsDouble();
         if (sparks.get(i).getLastError() != REVLibError.kOk) {
+          /*
+           * Hi, if you're here, like me, you just went through hell to find an error with our pose
+           * estimator. It all boils down to this single line of code. If a drive CAN is throwing an
+           * error, it means we don't do odometry updates, leading to no Vision updates, leading to
+           * everything failing. This will print out the broken can and error for you. Best, Micah
+           * Gruenwald
+           */
           Logger.recordOutput("Debug/SparkOdometry/errors/" + sparks.get(i).getDeviceId(),
               sparks.get(i).getLastError().toString());
+          Logger.recordOutput("Debug/SparkOdometry/errors/" + sparks.get(i).getDeviceId(),
+              "See SparkOdometryThread.Java, line 115 to learn more about this error. ");
           isValid = false;
         }
       }
-      Logger.recordOutput("Debug/SparkOdometry/sparkSignalValid", isValid);
       // If valid, add values to queues
       if (isValid) {
         for (int i = 0; i < sparkSignals.size(); i++) {

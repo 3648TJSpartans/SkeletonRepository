@@ -153,8 +153,6 @@ public class ModuleIOMK4Spark implements ModuleIO {
 
                 // Create odometry queues
                 timestampQueue = SparkOdometryThread.getInstance().makeTimestampQueue();
-                Logger.recordOutput("Debug/Module/" + module + "/inittimestampQueue", timestampQueue
-                                .stream().mapToDouble((Double value) -> value).toArray());
                 drivePositionQueue = SparkOdometryThread.getInstance().registerSignal(driveSpark,
                                 driveEncoder::getPosition);
                 turnPositionQueue = SparkOdometryThread.getInstance().registerSignal(turnSpark,
@@ -196,9 +194,6 @@ public class ModuleIOMK4Spark implements ModuleIO {
                 // Update odometry inputs
                 inputs.odometryTimestamps = timestampQueue.stream()
                                 .mapToDouble((Double value) -> value).toArray();
-                Logger.recordOutput("Debug/Module/" + module + "/activeTimestampQueue",
-                                timestampQueue.stream().mapToDouble((Double value) -> value)
-                                                .toArray());
                 inputs.odometryDrivePositionsRad = drivePositionQueue.stream()
                                 .mapToDouble((Double value) -> value).toArray();
                 inputs.odometryTurnPositions = turnPositionQueue.stream()

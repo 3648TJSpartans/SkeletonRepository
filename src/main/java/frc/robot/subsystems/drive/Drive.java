@@ -145,12 +145,6 @@ public class Drive extends SubsystemBase {
     double[] sampleTimestamps = modules[0].getOdometryTimestamps();
     // // All signals are sampled
     // together
-    Logger.recordOutput("Debug/SampleTimeStamps", sampleTimestamps.length);
-    if (sampleTimestamps.length > 0) {
-      Logger.recordOutput("Debug/OdometryTs", sampleTimestamps[0]);
-      Logger.recordOutput("Debug/FPGATs", Timer.getFPGATimestamp());
-      Logger.recordOutput("Debug/TsDiff", sampleTimestamps[0] - Timer.getFPGATimestamp());
-    }
     int sampleCount = sampleTimestamps.length;
     for (int i = 0; i < sampleCount; i++) {
       // Read wheel positions and deltas from each module

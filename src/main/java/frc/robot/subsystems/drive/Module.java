@@ -46,7 +46,6 @@ public class Module {
 
     // Calculate positions for odometry
     int sampleCount = inputs.odometryTimestamps.length; // All signals are sampled together
-    Logger.recordOutput("Debug/Modules:SampleCount/" + index, sampleCount);
     odometryPositions = new SwerveModulePosition[sampleCount];
     for (int i = 0; i < sampleCount; i++) {
       double positionMeters = inputs.odometryDrivePositionsRad[i] * wheelRadiusMeters;
