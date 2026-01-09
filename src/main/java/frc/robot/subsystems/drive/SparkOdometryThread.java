@@ -22,17 +22,18 @@ import java.util.List;
 import java.util.Queue;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.function.DoubleSupplier;
+import org.littletonrobotics.junction.Logger;
 
 /**
- * Provides an interface for asynchronously reading high-frequency measurements
- * to a set of queues.
+ * Provides an interface for asynchronously reading high-frequency measurements to a set of queues.
  *
  * <p>
- * This version includes an overload for Spark signals, which checks for errors
- * to ensure that
- * all measurements in the sample are valid.
+ * This version includes an overload for Spark signals, which checks for errors to ensure that all
+ * measurements in the sample are valid.
  */
 public class SparkOdometryThread {
+  private int debugRunning = 0;
+
   private final List<SparkBase> sparks = new ArrayList<>();
   private final List<DoubleSupplier> sparkSignals = new ArrayList<>();
   private final List<DoubleSupplier> genericSignals = new ArrayList<>();
@@ -96,10 +97,13 @@ public class SparkOdometryThread {
     } finally {
       Drive.odometryLock.unlock();
     }
+    Logger.recordOutput("Debug/SparkOdometry/Length", timestampQueues.size());
     return queue;
   }
 
   private void run() {
+    debugRunning++;
+    Logger.recordOutput("Debug/SparkOdometry/running", debugRunning);
     // Save new data to queues
     Drive.odometryLock.lock();
     try {
@@ -108,14 +112,15 @@ public class SparkOdometryThread {
 
       // Read Spark values, mark invalid in case of error
       double[] sparkValues = new double[sparkSignals.size()];
+      Logger.recordOutput("Debug/SparkOdometry/sparkSignalSize", sparkSignals.size());
       boolean isValid = true;
       for (int i = 0; i < sparkSignals.size(); i++) {
         sparkValues[i] = sparkSignals.get(i).getAsDouble();
         if (sparks.get(i).getLastError() != REVLibError.kOk) {
-          isValid = false;
+          // isValid = false;
         }
       }
-
+      Logger.recordOutput("Debug/SparkOdometry/sparkSignalValid", isValid);
       // If valid, add values to queues
       if (isValid) {
         for (int i = 0; i < sparkSignals.size(); i++) {

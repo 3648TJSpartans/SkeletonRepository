@@ -25,6 +25,7 @@ import edu.wpi.first.hal.FRCNetComm.tInstances;
 import edu.wpi.first.hal.FRCNetComm.tResourceType;
 import edu.wpi.first.hal.HAL;
 import edu.wpi.first.math.Matrix;
+import edu.wpi.first.math.estimator.PoseEstimator;
 import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -141,15 +142,15 @@ public class Drive extends SubsystemBase {
     }
 
     // Update odometry
-    double[] sampleTimestamps = modules[0].getOdometryTimestamps(); // All signals are sampled
-                                                                    // together
+    double[] sampleTimestamps = modules[0].getOdometryTimestamps();
+    // // All signals are sampled
+    // together
     Logger.recordOutput("Debug/SampleTimeStamps", sampleTimestamps.length);
     if (sampleTimestamps.length > 0) {
       Logger.recordOutput("Debug/OdometryTs", sampleTimestamps[0]);
       Logger.recordOutput("Debug/FPGATs", Timer.getFPGATimestamp());
       Logger.recordOutput("Debug/TsDiff", sampleTimestamps[0] - Timer.getFPGATimestamp());
     }
-
     int sampleCount = sampleTimestamps.length;
     for (int i = 0; i < sampleCount; i++) {
       // Read wheel positions and deltas from each module
