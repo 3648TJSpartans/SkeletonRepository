@@ -62,6 +62,7 @@ public abstract class MotorIO extends SubsystemBase {
 
     public final void stop() {
         setPower(0.0);
+        m_speedSetpoint = 0.0;
     }
 
     public final String getName() {

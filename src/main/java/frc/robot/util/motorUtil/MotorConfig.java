@@ -14,6 +14,10 @@ public class MotorConfig {
     private static final double DEFAULT_MAX_POWER = 1.0;
     private static final double DEFAULT_ODOMETRY_FREQUENCY = 100;
     private static final IdleMode DEFAULT_IDLE_MODE = IdleMode.kBrake;
+    private static final double DEFAULT_Ks = 0.0;
+    private static final double DEFAULT_Kv = 0.0;
+
+
     private String m_loggingName = "defaultMotor";
     private int m_motorCan = 1;
 
@@ -26,6 +30,8 @@ public class MotorConfig {
     private TunableNumber m_FF;
     private TunableNumber m_minPower;
     private TunableNumber m_maxPower;
+    private TunableNumber m_Ks;
+    private TunableNumber m_Kv;
     private IdleMode m_IdleMode = DEFAULT_IDLE_MODE;
     private double m_encoderOdometryFrequency = DEFAULT_ODOMETRY_FREQUENCY;
     private boolean m_isInverted = false;
@@ -96,6 +102,17 @@ public class MotorConfig {
         m_IdleMode = idleMode;
         return this;
     }
+
+    public MotorConfig Ks(double Ks) {
+        m_Ks = new TunableNumber(m_loggingName + "/FF/Ks", Ks);
+        return this;
+    }
+
+    public MotorConfig Kv(double Kv) {
+        m_Kv = new TunableNumber(m_loggingName + "/FF/Kv", Kv);
+        return this;
+    }
+
 
     // Not Tunable
     // TODO change with Tunable Boolean if you want to.
@@ -170,6 +187,20 @@ public class MotorConfig {
 
     public IdleMode idleMode() {
         return m_IdleMode;
+    }
+
+    public double Ks() {
+        if (m_Ks == null) {
+            return DEFAULT_Ks;
+        }
+        return m_Ks.get();
+    }
+
+    public double Kv() {
+        if (m_Kv == null) {
+            return DEFAULT_Kv;
+        }
+        return m_Kv.get();
     }
 
     public double encoderOdometryFrequency() {

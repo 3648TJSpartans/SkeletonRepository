@@ -14,6 +14,7 @@ import com.revrobotics.spark.SparkLowLevel.MotorType;
 import frc.robot.util.TunableNumber;
 
 import com.revrobotics.spark.SparkClosedLoopController;
+import com.revrobotics.spark.SparkClosedLoopController.ArbFFUnits;
 
 public class RelEncoderSparkMax extends MotorIO {
 
@@ -24,6 +25,9 @@ public class RelEncoderSparkMax extends MotorIO {
     private double m_positionTolerance;
     private double m_speedTolerance;
     private MotorConfig m_motorConfig;
+    private double m_Ks;
+    private double m_Kv;
+
 
     public RelEncoderSparkMax(MotorConfig motorConfig) {
         super(motorConfig.name());
@@ -44,7 +48,7 @@ public class RelEncoderSparkMax extends MotorIO {
 
     @Override
     public void setSpeed(double speed) {
-        super.setPosition(speed);
+        super.setSpeed(speed);
         motorController.setReference(speed, ControlType.kVelocity, ClosedLoopSlot.kSlot0);
     }
 
@@ -90,14 +94,34 @@ public class RelEncoderSparkMax extends MotorIO {
                 .absoluteEncoderVelocityAlwaysOn(true).absoluteEncoderVelocityPeriodMs(20)
                 .appliedOutputPeriodMs(20).busVoltagePeriodMs(20).outputCurrentPeriodMs(20);
         motor.configure(config, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
-
         m_positionTolerance = m_motorConfig.positionTolerance();
         m_speedTolerance = m_motorConfig.speedTolerance();
+        m_Ks = m_motorConfig.Ks();
+        m_Kv = m_motorConfig.Kv();
+
     }
 
     public void configureMotor(MotorConfig motorConfig) {
         m_motorConfig = motorConfig;
         configureMotor();
+    }
+
+
+    public void runFFVelocity(double velocityRadPerSec) {
+        super.setSpeed(velocityRadPerSec);
+        double ffVolts = m_Ks * Math.signum(velocityRadPerSec) + m_Kv * velocityRadPerSec;
+        motorController.setReference(velocityRadPerSec, ControlType.kVelocity,
+                ClosedLoopSlot.kSlot0, ffVolts, ArbFFUnits.kVoltage);
+    }
+
+    /** Returns the module velocity in rad/sec. */
+    public double getFFCharacterizationVelocity() {
+        return encoder.getVelocity();
+    }
+
+    // Runs specified voltage.
+    public void runCharacterization(double output) {
+        motor.setVoltage(output);
     }
 }
 

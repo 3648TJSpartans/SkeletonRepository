@@ -38,6 +38,7 @@ import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.commands.DriveCommands;
+import frc.robot.commands.FFCharacterizationCmd;
 import frc.robot.commands.exampleSubsystemCommands.ExampleMotorCmd;
 import frc.robot.commands.goToCommands.goToConstants.PoseConstants;
 import frc.robot.commands.goToCommands.DriveTo;
@@ -101,6 +102,7 @@ public class RobotContainer {
         private final LedSubsystem m_leds;
         private final Vision m_vision;
         private final ExampleMotorSubsystem m_exampleMotorSubsystem;
+        private final RelEncoderSparkMax m_exampleFlywheel;
         private boolean override;
         private boolean endgameClosed = true;
 
@@ -130,6 +132,9 @@ public class RobotContainer {
                 m_simpleMotor = new SimpleMotor(new SimpleMotorSparkMax());
                 m_leds = new LedSubsystem();
                 m_exampleMotorSubsystem = new ExampleMotorSubsystem();
+                // CAN 10
+                m_exampleFlywheel = new RelEncoderSparkMax(
+                                new MotorConfig("Flywheel").motorCan(10).Ks(0.0).Kv(0.0));
                 Logger.recordOutput("Poses/shouldFlip", AllianceFlipUtil.shouldFlip());
                 Logger.recordOutput("Override", override);
                 override = false;
@@ -207,6 +212,7 @@ public class RobotContainer {
                 configureAutoChooser();
                 configureSimpleMotor();
                 configureDrive();
+                configureFlywheel();
                 // configureExampleSubsystem();
                 Command updateCommand = new InstantCommand(() -> {
                         MotorIO.reconfigureMotors();
@@ -281,18 +287,32 @@ public class RobotContainer {
                                 m_drive.sysIdDynamic(SysIdRoutine.Direction.kForward));
                 autoChooser.addOption("Drive SysId (Dynamic Reverse)",
                                 m_drive.sysIdDynamic(SysIdRoutine.Direction.kReverse));
-                autoChooser.addOption("Micah's test", AutoBuilder
-                                .buildAuto("src\\main\\deploy\\pathplanner\\autos\\test.auto"));
+                autoChooser.addOption("Flywheel simple FF IDentification",
+                                FFCharacterizationCmd.characterizeSystem(m_exampleFlywheel,
+                                                speed -> m_exampleFlywheel
+                                                                .runCharacterization(speed),
+                                                m_exampleFlywheel::getFFCharacterizationVelocity));
+        }
+
+        public void configureFlywheel() {
+
+                TunableNumber flywheelSpeed =
+                                new TunableNumber("MotorIOs/Flywheel/commandSpeed", -1000.0);
+                m_copilotController.rightBumper().onTrue(Commands.runOnce(
+                                () -> m_exampleFlywheel.runFFVelocity(flywheelSpeed.get()),
+                                m_exampleFlywheel))
+                                .onFalse(Commands.runOnce(() -> m_exampleFlywheel.stop(),
+                                                m_exampleFlywheel));
         }
 
         public void configureSimpleMotor() {
-                Command simpleForward =
-                                new SimpleMotorCmd(m_simpleMotor, SimpleMotorConstants.speed1);
-                Command simpleBackward =
-                                new SimpleMotorCmd(m_simpleMotor, -SimpleMotorConstants.speed1);
+                // Command simpleForward =
+                // new SimpleMotorCmd(m_simpleMotor, SimpleMotorConstants.speed1);
+                // Command simpleBackward =
+                // new SimpleMotorCmd(m_simpleMotor, -SimpleMotorConstants.speed1);
 
-                m_copilotController.leftBumper().whileTrue(simpleBackward);
-                m_copilotController.rightBumper().whileTrue(simpleForward);
+                // m_copilotController.leftBumper().whileTrue(simpleBackward);
+                // m_copilotController.rightBumper().whileTrue(simpleForward);
         }
 
         public void configureLeds() {
