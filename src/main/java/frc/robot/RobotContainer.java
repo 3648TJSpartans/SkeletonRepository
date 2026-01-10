@@ -76,15 +76,6 @@ import com.pathplanner.lib.path.Waypoint;
 import com.revrobotics.AbsoluteEncoder;
 import com.pathplanner.lib.path.GoalEndState;
 import com.pathplanner.lib.path.PathConstraints;
-
-// import frc.robot.subsystems.coralSubsystems.coralIntake.CoralIntake;
-// import frc.robot.subsystems.coralSubsystems.coralIntake.CoralIntakeIO;
-// import frc.robot.subsystems.coralSubsystems.coralIntake.CoralIntakeIOSparkMax;
-// import frc.robot.subsystems.coralSubsystems.elevator.Elevator;
-// import frc.robot.subsystems.coralSubsystems.CoralConstants;
-// import frc.robot.subsystems.coralSubsystems.elevator.ElevatorIO;
-// import frc.robot.subsystems.coralSubsystems.elevator.ElevatorIOSparkMax;
-
 import org.littletonrobotics.junction.AutoLogOutput;
 import org.littletonrobotics.junction.Logger;
 import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
