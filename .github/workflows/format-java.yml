@@ -33,7 +33,7 @@ jobs:
       # Step 4: Format Java files
       - name: Format Java files
         run: |
-          find . -name "*.java" -exec java -jar google-java-format.jar --replace {} +
+          find . -name "*.java" -exec java -jar google-java-format.jar --replace --aosp {} +
 
       # Step 5: Commit and push changes (if any)
       - name: Commit and push changes
