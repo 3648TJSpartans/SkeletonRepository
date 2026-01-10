@@ -21,3 +21,4 @@ jobs:
               with:
                 commit-message: "Format Java code"
                 args: --replace --aosp
+                version: 1.15.0
