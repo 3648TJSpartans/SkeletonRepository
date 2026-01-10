@@ -4,18 +4,14 @@ on:
   push:
     branches:
       - main
-  pull_request:
-    branches:
-      - main
 
 jobs:
   formatting:
     runs-on: ubuntu-latest
 
     steps:
-      # Step 1: Check out the repository
-      - name: Checkout repository
-        uses: actions/checkout@v4
+      # Step 1: Checkout repository
+      - uses: actions/checkout@v4
 
       # Step 2: Set up Java
       - name: Set up Java
