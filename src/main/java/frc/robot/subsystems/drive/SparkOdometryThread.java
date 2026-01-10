@@ -22,17 +22,17 @@ import java.util.List;
 import java.util.Queue;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.function.DoubleSupplier;
+import org.littletonrobotics.junction.Logger;
 
 /**
- * Provides an interface for asynchronously reading high-frequency measurements
- * to a set of queues.
+ * Provides an interface for asynchronously reading high-frequency measurements to a set of queues.
  *
  * <p>
- * This version includes an overload for Spark signals, which checks for errors
- * to ensure that
- * all measurements in the sample are valid.
+ * This version includes an overload for Spark signals, which checks for errors to ensure that all
+ * measurements in the sample are valid.
  */
 public class SparkOdometryThread {
+
   private final List<SparkBase> sparks = new ArrayList<>();
   private final List<DoubleSupplier> sparkSignals = new ArrayList<>();
   private final List<DoubleSupplier> genericSignals = new ArrayList<>();
@@ -112,10 +112,20 @@ public class SparkOdometryThread {
       for (int i = 0; i < sparkSignals.size(); i++) {
         sparkValues[i] = sparkSignals.get(i).getAsDouble();
         if (sparks.get(i).getLastError() != REVLibError.kOk) {
+          /*
+           * Hi, if you're here, like me, you just went through hell to find an error with our pose
+           * estimator. It all boils down to this single line of code. If a drive CAN is throwing an
+           * error, it means we don't do odometry updates, leading to no Vision updates, leading to
+           * everything failing. This will print out the broken can and error for you. Best, Micah
+           * Gruenwald
+           */
+          Logger.recordOutput("Debug/SparkOdometry/errors/" + sparks.get(i).getDeviceId(),
+              sparks.get(i).getLastError().toString());
+          Logger.recordOutput("Debug/SparkOdometry/errors/" + sparks.get(i).getDeviceId(),
+              "See SparkOdometryThread.Java, line 115 to learn more about this error. ");
           isValid = false;
         }
       }
-
       // If valid, add values to queues
       if (isValid) {
         for (int i = 0; i < sparkSignals.size(); i++) {

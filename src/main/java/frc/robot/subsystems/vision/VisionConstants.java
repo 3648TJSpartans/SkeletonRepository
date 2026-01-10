@@ -19,13 +19,15 @@ import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.geometry.Transform3d;
 
 public class VisionConstants {
+        public static final boolean usingMT1 = true;
+
         // AprilTag layout
         public static AprilTagFieldLayout aprilTagLayout =
                         AprilTagFieldLayout.loadField(AprilTagFields.kDefaultField);
 
         // Camera names, must match names configured on coprocessor
-        public static String camera0Name = "limelight-three";
-        public static String camera1Name = "limelight-twoplus";
+        public static String camera0Name = "limelight-fourone";
+        public static String camera1Name = "NA";
         public static int defualtPipeline = 0;
         // Robot to camera transforms
         // (Not used by Limelight, configure in web UI instead)
@@ -36,7 +38,7 @@ public class VisionConstants {
 
         // Basic filtering thresholds
         public static double maxAmbiguity = 0.3;
-        public static double maxZError = Double.MAX_VALUE;// 0.75; //TODO Updat this back
+        public static double maxZError = 0.75; // TODO Updat this back
 
         // Standard deviation baselines, for 1 meter distance and 1 tag
         // (Adjusted automatically based on distance and # of tags)
@@ -54,4 +56,6 @@ public class VisionConstants {
         public static double angularStdDevMegatag2Factor = Double.POSITIVE_INFINITY; // No rotation
                                                                                      // data
                                                                                      // available
+
+
 }

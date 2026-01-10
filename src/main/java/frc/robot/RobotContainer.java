@@ -50,7 +50,9 @@ import frc.robot.commands.simpleMotorCommands.SimpleMotorCmd;
 import frc.robot.subsystems.drive.Drive;
 import frc.robot.subsystems.drive.GyroIO;
 import frc.robot.subsystems.drive.GyroIONavX;
+import frc.robot.subsystems.drive.LoggedAnalogEncoder;
 import frc.robot.subsystems.drive.ModuleIO;
+import frc.robot.subsystems.drive.ModuleIOMK4Spark;
 import frc.robot.subsystems.drive.ModuleIOSim;
 import frc.robot.subsystems.drive.ModuleIOSpark;
 import frc.robot.subsystems.exampleMotorSubsystem.ExampleMotorSubsystem;
@@ -134,9 +136,9 @@ public class RobotContainer {
                 switch (Constants.currentMode) {
                         case REAL:
                                 // Real robot, instantiate hardware IO implementations
-                                m_drive = new Drive(new GyroIONavX(), new ModuleIOSpark(0),
-                                                new ModuleIOSpark(1), new ModuleIOSpark(2),
-                                                new ModuleIOSpark(3));
+                                m_drive = new Drive(new GyroIONavX(), new ModuleIOMK4Spark(0),
+                                                new ModuleIOMK4Spark(1), new ModuleIOMK4Spark(2),
+                                                new ModuleIOMK4Spark(3));
 
                                 // To change number of limelights, just add or delete IOs in the
                                 // parameters
@@ -144,9 +146,9 @@ public class RobotContainer {
                                 m_vision = new Vision(m_drive::addVisionMeasurement,
                                                 m_drive::addTargetSpaceVisionMeasurement,
                                                 // new
-                                                // VisionIOLimelight(VisionConstants.camera0Name,
+                                                // VisionIOLimelight(VisionConstants.camera1Name,
                                                 // m_drive::getRotation),
-                                                new VisionIOLimelight(VisionConstants.camera1Name,
+                                                new VisionIOLimelight(VisionConstants.camera0Name,
                                                                 m_drive::getRotation));
                                 break;
 
@@ -158,11 +160,12 @@ public class RobotContainer {
                                                 new ModuleIOSim());
 
                                 m_vision = new Vision(m_drive::addVisionMeasurement,
-                                                m_drive::addTargetSpaceVisionMeasurement,
-                                                new VisionIOLimelight(VisionConstants.camera0Name,
-                                                                m_drive::getRotation),
-                                                new VisionIOLimelight(VisionConstants.camera1Name,
-                                                                m_drive::getRotation));
+                                                m_drive::addTargetSpaceVisionMeasurement
+                                // new VisionIOLimelight(VisionConstants.camera0Name,
+                                // m_drive::getRotation),
+                                // new VisionIOLimelight(VisionConstants.camera1Name,
+                                // m_drive::getRotation)
+                                );
                                 break;
 
                         default:
@@ -174,8 +177,6 @@ public class RobotContainer {
                                 m_vision = new Vision(m_drive::addVisionMeasurement,
                                                 m_drive::addTargetSpaceVisionMeasurement,
                                                 new VisionIOLimelight(VisionConstants.camera0Name,
-                                                                m_drive::getRotation),
-                                                new VisionIOLimelight(VisionConstants.camera1Name,
                                                                 m_drive::getRotation));
                                 break;
                 }
@@ -207,14 +208,14 @@ public class RobotContainer {
                 configureSimpleMotor();
                 configureDrive();
                 // configureExampleSubsystem();
-
-                m_copilotController.rightTrigger()
-                                .onTrue(new InstantCommand(() -> toggleOverride()));
-
-                new Trigger(DriverStation::isEnabled).onTrue(new InstantCommand(() -> {
+                Command updateCommand = new InstantCommand(() -> {
                         MotorIO.reconfigureMotors();
                         goToConstants.configurePID();
-                }));
+                        LoggedAnalogEncoder.updateZeros();
+                }).ignoringDisable(true);
+                m_copilotController.rightTrigger().onTrue(updateCommand);
+
+                new Trigger(DriverStation::isEnabled).onTrue(updateCommand);
 
 
                 /*
@@ -268,12 +269,10 @@ public class RobotContainer {
 
         public void configureAutoChooser() {
 
-                // autoChooser.addOption(
-                // "Drive Wheel Radius Characterization",
-                // DriveCommands.wheelRadiusCharacterization(m_drive));
-                // autoChooser.addOption(
-                // "Drive Simple FF Characterization",
-                // DriveCommands.feedforwardCharacterization(m_drive));
+                autoChooser.addOption("Drive Wheel Radius Characterization",
+                                DriveCommands.wheelRadiusCharacterization(m_drive));
+                autoChooser.addOption("Drive Simple FF Characterization",
+                                DriveCommands.feedforwardCharacterization(m_drive));
                 autoChooser.addOption("Drive SysId (Quasistatic Forward)",
                                 m_drive.sysIdQuasistatic(SysIdRoutine.Direction.kForward));
                 autoChooser.addOption("Drive SysId (Quasistatic Reverse)",
@@ -357,7 +356,8 @@ public class RobotContainer {
                                 () -> new Pose2d(1.5, 0.5, new Rotation2d(Math.PI)))
                                                 .alongWith(new InstantCommand(() -> goToConstants
                                                                 .configurePID())));
-                // m_driveController.leftTrigger().whileTrue(alignToTagLeft);
+                m_driveController.leftTrigger().whileTrue(
+                                new DriveTo(m_drive, () -> new Pose2d(0.0, 0.0, new Rotation2d())));
 
         }
 

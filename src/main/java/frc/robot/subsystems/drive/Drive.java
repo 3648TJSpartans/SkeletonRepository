@@ -15,7 +15,7 @@ package frc.robot.subsystems.drive;
 
 import static edu.wpi.first.units.Units.*;
 import static frc.robot.subsystems.drive.DriveConstants.*;
-
+import com.ctre.phoenix6.Utils;
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.config.PIDConstants;
 import com.pathplanner.lib.controllers.PPHolonomicDriveController;
@@ -25,6 +25,7 @@ import edu.wpi.first.hal.FRCNetComm.tInstances;
 import edu.wpi.first.hal.FRCNetComm.tResourceType;
 import edu.wpi.first.hal.HAL;
 import edu.wpi.first.math.Matrix;
+import edu.wpi.first.math.estimator.PoseEstimator;
 import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -141,8 +142,9 @@ public class Drive extends SubsystemBase {
     }
 
     // Update odometry
-    double[] sampleTimestamps = modules[0].getOdometryTimestamps(); // All signals are sampled
-                                                                    // together
+    double[] sampleTimestamps = modules[0].getOdometryTimestamps();
+    // // All signals are sampled
+    // together
     int sampleCount = sampleTimestamps.length;
     for (int i = 0; i < sampleCount; i++) {
       // Read wheel positions and deltas from each module
@@ -314,8 +316,16 @@ public class Drive extends SubsystemBase {
   /** Adds a new timestamped vision measurement. */
   public void addVisionMeasurement(Pose2d visionRobotPoseMeters, double timestampSeconds,
       Matrix<N3, N1> visionMeasurementStdDevs) {
+    Logger.recordOutput("Odometry/visionMesurment/pose", visionRobotPoseMeters);
+    Logger.recordOutput("Odometry/visionMesurment/poseBefore",
+        poseEstimator.getEstimatedPosition());
+    Logger.recordOutput("Odometry/visionMesurment/stdDevs",
+        visionMeasurementStdDevs.transpose().getData());
+    Logger.recordOutput("Odometry/visionMesurment/timestamp", timestampSeconds);
+    Logger.recordOutput("Odometry/visionMesurment/FPGATime", Timer.getFPGATimestamp());
     poseEstimator.addVisionMeasurement(visionRobotPoseMeters, timestampSeconds,
         visionMeasurementStdDevs);
+    Logger.recordOutput("Odometry/visionMesurment/poseAfter", poseEstimator.getEstimatedPosition());
   }
 
   public void addTargetSpaceVisionMeasurement(Pose2d visionRobotPoseMeters,

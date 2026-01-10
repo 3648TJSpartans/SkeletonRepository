@@ -80,7 +80,6 @@ public class VisionIOLimelight implements VisionIO {
   @Override
   public Pose2d getTagRelativePose() {
     double[] tableValues = botpose_targetSpaceSubscriber.get();
-    Logger.recordOutput(outputName, tableValues);
     return new Pose2d(tableValues[2], -tableValues[0],
         new Rotation2d(Units.degreesToRadians(tableValues[4])));
   }
@@ -96,18 +95,28 @@ public class VisionIOLimelight implements VisionIO {
     boolean doRejectUpdate = false;
     LimelightHelpers.SetRobotOrientation(name, rotationSupplier.get().getDegrees(), 0, 0, 0, 0, 0);
     LimelightHelpers.PoseEstimate mt2 = LimelightHelpers.getBotPoseEstimate_wpiBlue_MegaTag2(name);
-    if (mt2.tagCount == 0) {
+    if (mt2 == null) {
+      doRejectUpdate = true;
+    } else if (mt2.tagCount == 0) {
       doRejectUpdate = true;
     }
     if (!doRejectUpdate) {
 
       poseObservations.add(mt2.getAsObservartion());
     }
+    doRejectUpdate = false;
+    if (VisionConstants.usingMT1) {
+      LimelightHelpers.PoseEstimate mt1 = LimelightHelpers.getBotPoseEstimate_wpiBlue(name);
+      if (mt1 == null) {
+        doRejectUpdate = true;
+      } else if (mt1.tagCount == 0) {
+        doRejectUpdate = true;
+      }
+      if (!doRejectUpdate) {
 
-    // LimelightHelpers.PoseEstimate mt1 = LimelightHelpers.getBotPoseEstimate_wpiBlue(name);
-    // if (mt1.tagCount > 1) {
-    // poseObservations.add(mt1.getAsObservartion());
-    // }
+        poseObservations.add(mt1.getAsObservartion());
+      }
+    }
     // Save pose observations to inputs object
     inputs.poseObservations = new PoseObservation[poseObservations.size()];
     for (int i = 0; i < poseObservations.size(); i++) {
