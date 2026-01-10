@@ -1,0 +1,19 @@
+name: Format
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+    formatting:
+        runs-on: ubuntu-latest
+        steps:
+            - uses: actions/checkout@v4
+            - uses: axel-op/googlejavaformat-action@v4
+              with:
+                commit-message: "Format Java code"
+                args: --replace --aosp
