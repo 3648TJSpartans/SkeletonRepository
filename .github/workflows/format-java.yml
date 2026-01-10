@@ -22,3 +22,4 @@ jobs:
                 commit-message: "Format Java code"
                 args: --replace --aosp
                 release-name: v1.28.0
+                files: '**/RobotContainer.java'
