@@ -15,10 +15,9 @@ jobs:
             - uses: actions/checkout@v4
             - uses: actions/setup-java@v4
               with:
-                distribution: 'temurin'
                 java-version: '17'
             - uses: axel-op/googlejavaformat-action@v4
               with:
                 commit-message: "Format Java code"
                 args: --replace --aosp
-                release-name: v1.25.2
+                release-name: v1.28.0
