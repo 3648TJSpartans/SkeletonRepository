@@ -37,6 +37,13 @@ public final class Constants {
     REPLAY
   }
 
+  public static enum Status {
+    OK,
+    WARNING,
+    ERROR,
+    UNKNOWN
+  }
+
   public static class OperatorConstants {
 
   }
