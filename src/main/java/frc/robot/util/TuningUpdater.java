@@ -1,26 +1,43 @@
 package frc.robot.util;
 
-import org.littletonrobotics.junction.Logger;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
+import java.util.HashSet;
+import java.util.Set;
+import org.littletonrobotics.junction.Logger;
 
 public class TuningUpdater extends SubsystemBase {
-    /** If true, TunableNumbers are on, else, they can't be changed. */
-    public static boolean TUNING_MODE = true;
-    public static final String TABLE_KEY = "TunableNumbers";
-    public static final String dashBoardKey = "TuningOn";
+  /** If true, TunableNumbers are on, else, they can't be changed. */
+  public static boolean TUNING_MODE = true;
 
-    private final String key = TABLE_KEY + "/" + dashBoardKey;
+  public static final String TABLE_KEY = "TunableNumbers";
+  public static final String dashBoardKey = "TuningOn";
 
-    public TuningUpdater() {
-        SmartDashboard.putBoolean(key,
-                SmartDashboard.getBoolean(key, Constants.DEFAULT_TUNING_MODE));
+  private static Set<Tunable<?>> autoUpdaters = new HashSet<>();
+
+  private final String key = TABLE_KEY + "/" + dashBoardKey;
+
+  public TuningUpdater() {
+    SmartDashboard.putBoolean(key, SmartDashboard.getBoolean(key, Constants.DEFAULT_TUNING_MODE));
+  }
+
+  public static void addAutoUpdater(Tunable<?> tunable) {
+    autoUpdaters.add(tunable);
+  }
+
+  public static void removeAutoUpdater(Tunable<?> tunable) {
+    autoUpdaters.remove(tunable);
+  }
+
+  @Override
+  public void periodic() {
+    TUNING_MODE = SmartDashboard.getBoolean(key, Constants.DEFAULT_TUNING_MODE);
+    Logger.recordOutput(key, TUNING_MODE);
+    if (TUNING_MODE) {
+      for (Tunable<?> tunable : autoUpdaters) {
+        tunable.update();
+      }
     }
-
-    @Override
-    public void periodic() {
-        TUNING_MODE = SmartDashboard.getBoolean(key, Constants.DEFAULT_TUNING_MODE);
-        Logger.recordOutput(key, TUNING_MODE);
-    }
+  }
 }

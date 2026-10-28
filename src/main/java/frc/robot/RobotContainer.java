@@ -13,41 +13,36 @@
 
 package frc.robot;
 
-import com.pathplanner.lib.auto.AutoBuilder;
-import com.pathplanner.lib.auto.NamedCommands;
-import com.pathplanner.lib.commands.PathPlannerAuto;
+import org.littletonrobotics.junction.Logger;
+import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
+import org.littletonrobotics.junction.networktables.LoggedNetworkNumber;
 
-import edu.wpi.first.math.MathUtil;
+import com.pathplanner.lib.auto.AutoBuilder;
+
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
-import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.GenericHID.RumbleType;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.Commands;
-import edu.wpi.first.wpilibj2.command.ConditionalCommand;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
-import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
-import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
+import frc.robot.Constants.Status;
 import frc.robot.commands.DriveCommands;
 import frc.robot.commands.FFCharacterizationCmd;
 import frc.robot.commands.exampleSubsystemCommands.ExampleMotorCmd;
-import frc.robot.commands.goToCommands.goToConstants.PoseConstants;
 import frc.robot.commands.goToCommands.DriveTo;
 import frc.robot.commands.goToCommands.DriveToTag;
 import frc.robot.commands.goToCommands.goToConstants;
-import frc.robot.commands.goToCommands.goToConstants.PoseConstants.AutonState;
+import frc.robot.commands.goToCommands.goToConstants.PoseConstants;
 import frc.robot.commands.ledCommands.AutoLEDCommand;
 import frc.robot.commands.ledCommands.TeleopLEDCommand;
-import frc.robot.commands.simpleMotorCommands.SimpleMotorCmd;
 import frc.robot.subsystems.drive.Drive;
 import frc.robot.subsystems.drive.GyroIO;
 import frc.robot.subsystems.drive.GyroIONavX;
@@ -55,39 +50,21 @@ import frc.robot.subsystems.drive.LoggedAnalogEncoder;
 import frc.robot.subsystems.drive.ModuleIO;
 import frc.robot.subsystems.drive.ModuleIOMK4Spark;
 import frc.robot.subsystems.drive.ModuleIOSim;
-import frc.robot.subsystems.drive.ModuleIOSpark;
 import frc.robot.subsystems.exampleMotorSubsystem.ExampleMotorSubsystem;
 import frc.robot.subsystems.exampleMotorSubsystem.ExampleMotorSubsystemConstants;
 import frc.robot.subsystems.leds.LedSubsystem;
 import frc.robot.subsystems.simpleMotor.SimpleMotor;
-import frc.robot.subsystems.simpleMotor.SimpleMotorConstants;
-import frc.robot.subsystems.simpleMotor.SimpleMotorIO;
 import frc.robot.subsystems.simpleMotor.SimpleMotorSparkMax;
 import frc.robot.subsystems.vision.Vision;
 import frc.robot.subsystems.vision.VisionConstants;
 import frc.robot.subsystems.vision.VisionIOLimelight;
 import frc.robot.util.AllianceFlipUtil;
+import frc.robot.util.TunableNumber;
+import frc.robot.util.motorUtil.MotorConfig;
 import frc.robot.util.motorUtil.MotorIO;
 import frc.robot.util.motorUtil.RelEncoderSparkMax;
-import frc.robot.util.TunableNumber;
-import frc.robot.util.motorUtil.AbsEncoderSparkMax;
-import frc.robot.util.motorUtil.MotorConfig;
-import frc.robot.util.TunableNumber;
-
-import com.pathplanner.lib.path.PathPlannerPath;
-import com.pathplanner.lib.path.Waypoint;
-import com.revrobotics.AbsoluteEncoder;
-import com.pathplanner.lib.path.GoalEndState;
-import com.pathplanner.lib.path.PathConstraints;
-import org.littletonrobotics.junction.AutoLogOutput;
-import org.littletonrobotics.junction.Logger;
-import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
-import org.littletonrobotics.junction.networktables.LoggedNetworkNumber;
-
-import java.util.List;
-import java.util.function.BooleanSupplier;
-import java.util.function.Supplier;
-import org.littletonrobotics.junction.Logger;
+import frc.robot.util.statusableUtils.GenericStatusable;
+import frc.robot.util.statusableUtils.StatusLogger;
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
@@ -105,6 +82,9 @@ public class RobotContainer {
         private final RelEncoderSparkMax m_exampleFlywheel;
         private boolean override;
         private boolean endgameClosed = true;
+
+        private final StatusLogger m_statusLogger;
+        private final GenericStatusable m_batteryStatus;
 
         // Controller
         private final CommandXboxController m_driveController =
@@ -185,6 +165,26 @@ public class RobotContainer {
                                                                 m_drive::getRotation));
                                 break;
                 }
+
+        m_batteryStatus =
+                new GenericStatusable(
+                () -> {
+                double voltage = RobotController.getBatteryVoltage();
+                if (voltage > Constants.batteryGoodThreshold) {
+
+                        return Status.OK;
+                }
+                if (voltage > Constants.batteryWarningThreshold) {
+                        Logger.recordOutput("Debug/Battery/voltage", voltage);
+                        return Status.WARNING;
+                }
+                Logger.recordOutput("Debug/Battery/voltage", voltage);
+                return Status.ERROR;
+                },
+                "Battery",
+                10);
+
+                m_statusLogger = new StatusLogger(m_batteryStatus);
 
                 configureAutos();
 

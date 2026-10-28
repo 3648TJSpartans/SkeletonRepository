@@ -21,6 +21,7 @@ import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.math.util.Units;
 import frc.robot.util.TunableNumber;
+import frc.robot.util.miscTunables.TunableInteger;
 
 public class DriveConstants {
         public static final NavXComType navXComType = NavXComType.kUSB1;
@@ -85,7 +86,7 @@ public class DriveConstants {
          * Chassis Numbers 0- Tuning 1-Walter 2- 3-
          * 
          */
-        public static int chasNum = (int) new TunableNumber("Drive/ChassisNumber", 1.0).get();
+        public static int chasNum = new TunableInteger("Drive/ChassisNumber", 1).get();
         public static final double frontLeftExpectedZero = switch (chasNum) {
                 case 0 -> 0.0;
                 case 1 -> 1.757;
