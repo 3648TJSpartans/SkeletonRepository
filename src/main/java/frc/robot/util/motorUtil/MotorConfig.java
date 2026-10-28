@@ -2,6 +2,7 @@ package frc.robot.util.motorUtil;
 
 import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
 import frc.robot.util.TunableNumber;
+import frc.robot.util.miscTunables.TunableInteger;
 
 public class MotorConfig {
     private static final double DEFAULT_POSITION_TOLERANCE = 0.0;
@@ -46,7 +47,7 @@ public class MotorConfig {
     }
 
     public MotorConfig motorCan(int motorCAN) {
-        m_motorCan = (int) new TunableNumber(m_loggingName + "/motorCAN", motorCAN).get();
+        m_motorCan = (int) new TunableInteger(m_loggingName + "/motorCAN", motorCAN).get();
         return this;
     }
 
