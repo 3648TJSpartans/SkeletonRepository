@@ -568,7 +568,7 @@ public class LimelightHelpers {
             this.isMegaTag2 = isMegaTag2;
         }
 
-        public PoseObservation getAsObservartion() {
+        public PoseObservation getAsObservation() {
             return new PoseObservation(timestampSeconds, new Pose3d(pose),
                     rawFiducials.length > 0 ? 0.0 : rawFiducials[0].ambiguity, tagCount, avgTagDist,
                     isMegaTag2 ? PoseObservationType.MEGATAG_2 : PoseObservationType.MEGATAG_1);
@@ -627,7 +627,7 @@ public class LimelightHelpers {
     /**
      * Takes a 6-length array of pose data and converts it to a Pose3d object. Array format: [x, y,
      * z, roll, pitch, yaw] where angles are in degrees.
-     * 
+     *
      * @param inData Array containing pose data [x, y, z, roll, pitch, yaw]
      * @return Pose3d object representing the pose, or empty Pose3d if invalid data
      */
@@ -645,7 +645,7 @@ public class LimelightHelpers {
      * Takes a 6-length array of pose data and converts it to a Pose2d object. Uses only x, y, and
      * yaw components, ignoring z, roll, and pitch. Array format: [x, y, z, roll, pitch, yaw] where
      * angles are in degrees.
-     * 
+     *
      * @param inData Array containing pose data [x, y, z, roll, pitch, yaw]
      * @return Pose2d object representing the pose, or empty Pose2d if invalid data
      */
@@ -662,7 +662,7 @@ public class LimelightHelpers {
     /**
      * Converts a Pose3d object to an array of doubles in the format [x, y, z, roll, pitch, yaw].
      * Translation components are in meters, rotation components are in degrees.
-     * 
+     *
      * @param pose The Pose3d object to convert
      * @return A 6-element array containing [x, y, z, roll, pitch, yaw]
      */
@@ -681,7 +681,7 @@ public class LimelightHelpers {
      * Converts a Pose2d object to an array of doubles in the format [x, y, z, roll, pitch, yaw].
      * Translation components are in meters, rotation components are in degrees. Note: z, roll, and
      * pitch will be 0 since Pose2d only contains x, y, and yaw.
-     * 
+     *
      * @param pose The Pose2d object to convert
      * @return A 6-element array containing [x, y, 0, 0, 0, yaw]
      */
@@ -754,7 +754,7 @@ public class LimelightHelpers {
 
     /**
      * Gets the latest raw fiducial/AprilTag detection results from NetworkTables.
-     * 
+     *
      * @param limelightName Name/identifier of the Limelight
      * @return Array of RawFiducial objects containing detection details
      */
@@ -935,7 +935,7 @@ public class LimelightHelpers {
 
     /**
      * Does the Limelight have a valid target?
-     * 
+     *
      * @param limelightName Name of the Limelight camera ("" for default)
      * @return True if a valid target is present, false otherwise
      */
@@ -945,7 +945,7 @@ public class LimelightHelpers {
 
     /**
      * Gets the horizontal offset from the crosshair to the target in degrees.
-     * 
+     *
      * @param limelightName Name of the Limelight camera ("" for default)
      * @return Horizontal offset angle in degrees
      */
@@ -955,7 +955,7 @@ public class LimelightHelpers {
 
     /**
      * Gets the vertical offset from the crosshair to the target in degrees.
-     * 
+     *
      * @param limelightName Name of the Limelight camera ("" for default)
      * @return Vertical offset angle in degrees
      */
@@ -967,7 +967,7 @@ public class LimelightHelpers {
      * Gets the horizontal offset from the principal pixel/point to the target in degrees. This is
      * the most accurate 2d metric if you are using a calibrated camera and you don't need
      * adjustable crosshair functionality.
-     * 
+     *
      * @param limelightName Name of the Limelight camera ("" for default)
      * @return Horizontal offset angle in degrees
      */
@@ -979,7 +979,7 @@ public class LimelightHelpers {
      * Gets the vertical offset from the principal pixel/point to the target in degrees. This is the
      * most accurate 2d metric if you are using a calibrated camera and you don't need adjustable
      * crosshair functionality.
-     * 
+     *
      * @param limelightName Name of the Limelight camera ("" for default)
      * @return Vertical offset angle in degrees
      */
@@ -989,7 +989,7 @@ public class LimelightHelpers {
 
     /**
      * Gets the target area as a percentage of the image (0-100%).
-     * 
+     *
      * @param limelightName Name of the Limelight camera ("" for default)
      * @return Target area percentage (0-100)
      */
@@ -999,7 +999,7 @@ public class LimelightHelpers {
 
     /**
      * T2D is an array that contains several targeting metrcis
-     * 
+     *
      * @param limelightName Name of the Limelight camera
      * @return Array containing [targetValid, targetCount, targetLatency, captureLatency, tx, ty,
      *         txnc, tync, ta, tid, targetClassIndexDetector, targetClassIndexClassifier,
@@ -1012,7 +1012,7 @@ public class LimelightHelpers {
 
     /**
      * Gets the number of targets currently detected.
-     * 
+     *
      * @param limelightName Name of the Limelight camera
      * @return Number of detected targets
      */
@@ -1026,7 +1026,7 @@ public class LimelightHelpers {
 
     /**
      * Gets the classifier class index from the currently running neural classifier pipeline
-     * 
+     *
      * @param limelightName Name of the Limelight camera
      * @return Class index from classifier pipeline
      */
@@ -1041,7 +1041,7 @@ public class LimelightHelpers {
     /**
      * Gets the detector class index from the primary result of the currently running neural
      * detector pipeline.
-     * 
+     *
      * @param limelightName Name of the Limelight camera
      * @return Class index from detector pipeline
      */
@@ -1055,7 +1055,7 @@ public class LimelightHelpers {
 
     /**
      * Gets the current neural classifier result class name.
-     * 
+     *
      * @param limelightName Name of the Limelight camera
      * @return Class name string from classifier pipeline
      */
@@ -1065,7 +1065,7 @@ public class LimelightHelpers {
 
     /**
      * Gets the primary neural detector result class name.
-     * 
+     *
      * @param limelightName Name of the Limelight camera
      * @return Class name string from detector pipeline
      */
@@ -1075,7 +1075,7 @@ public class LimelightHelpers {
 
     /**
      * Gets the pipeline's processing latency contribution.
-     * 
+     *
      * @param limelightName Name of the Limelight camera
      * @return Pipeline latency in milliseconds
      */
@@ -1085,7 +1085,7 @@ public class LimelightHelpers {
 
     /**
      * Gets the capture latency.
-     * 
+     *
      * @param limelightName Name of the Limelight camera
      * @return Capture latency in milliseconds
      */
@@ -1095,7 +1095,7 @@ public class LimelightHelpers {
 
     /**
      * Gets the active pipeline index.
-     * 
+     *
      * @param limelightName Name of the Limelight camera
      * @return Current pipeline index (0-9)
      */
@@ -1105,7 +1105,7 @@ public class LimelightHelpers {
 
     /**
      * Gets the current pipeline type.
-     * 
+     *
      * @param limelightName Name of the Limelight camera
      * @return Pipeline type string (e.g. "retro", "apriltag", etc)
      */
@@ -1115,7 +1115,7 @@ public class LimelightHelpers {
 
     /**
      * Gets the full JSON results dump.
-     * 
+     *
      * @param limelightName Name of the Limelight camera
      * @return JSON string containing all current results
      */
@@ -1125,7 +1125,7 @@ public class LimelightHelpers {
 
     /**
      * Switch to getBotPose
-     * 
+     *
      * @param limelightName
      * @return
      */
@@ -1136,7 +1136,7 @@ public class LimelightHelpers {
 
     /**
      * Switch to getBotPose_wpiRed
-     * 
+     *
      * @param limelightName
      * @return
      */
@@ -1147,7 +1147,7 @@ public class LimelightHelpers {
 
     /**
      * Switch to getBotPose_wpiBlue
-     * 
+     *
      * @param limelightName
      * @return
      */
@@ -1210,7 +1210,7 @@ public class LimelightHelpers {
 
     /**
      * (Not Recommended) Gets the robot's 3D pose in the WPILib Red Alliance Coordinate System.
-     * 
+     *
      * @param limelightName Name/identifier of the Limelight
      * @return Pose3d object representing the robot's position and orientation in Red Alliance field
      *         space
@@ -1222,7 +1222,7 @@ public class LimelightHelpers {
 
     /**
      * (Recommended) Gets the robot's 3D pose in the WPILib Blue Alliance Coordinate System.
-     * 
+     *
      * @param limelightName Name/identifier of the Limelight
      * @return Pose3d object representing the robot's position and orientation in Blue Alliance
      *         field space
@@ -1234,7 +1234,7 @@ public class LimelightHelpers {
 
     /**
      * Gets the robot's 3D pose with respect to the currently tracked target's coordinate system.
-     * 
+     *
      * @param limelightName Name/identifier of the Limelight
      * @return Pose3d object representing the robot's position and orientation relative to the
      *         target
@@ -1246,7 +1246,7 @@ public class LimelightHelpers {
 
     /**
      * Gets the camera's 3D pose with respect to the currently tracked target's coordinate system.
-     * 
+     *
      * @param limelightName Name/identifier of the Limelight
      * @return Pose3d object representing the camera's position and orientation relative to the
      *         target
@@ -1258,7 +1258,7 @@ public class LimelightHelpers {
 
     /**
      * Gets the target's 3D pose with respect to the camera's coordinate system.
-     * 
+     *
      * @param limelightName Name/identifier of the Limelight
      * @return Pose3d object representing the target's position and orientation relative to the
      *         camera
@@ -1270,7 +1270,7 @@ public class LimelightHelpers {
 
     /**
      * Gets the target's 3D pose with respect to the robot's coordinate system.
-     * 
+     *
      * @param limelightName Name/identifier of the Limelight
      * @return Pose3d object representing the target's position and orientation relative to the
      *         robot
@@ -1282,7 +1282,7 @@ public class LimelightHelpers {
 
     /**
      * Gets the camera's 3D pose with respect to the robot's coordinate system.
-     * 
+     *
      * @param limelightName Name/identifier of the Limelight
      * @return Pose3d object representing the camera's position and orientation relative to the
      *         robot
@@ -1294,7 +1294,7 @@ public class LimelightHelpers {
 
     /**
      * Gets the Pose2d for easy use with Odometry vision pose estimator (addVisionMeasurement)
-     * 
+     *
      * @param limelightName
      * @return
      */
@@ -1307,7 +1307,7 @@ public class LimelightHelpers {
     /**
      * Gets the MegaTag1 Pose2d and timestamp for use with WPILib pose estimator
      * (addVisionMeasurement) in the WPILib Blue alliance coordinate system.
-     * 
+     *
      * @param limelightName
      * @return
      */
@@ -1319,7 +1319,7 @@ public class LimelightHelpers {
      * Gets the MegaTag2 Pose2d and timestamp for use with WPILib pose estimator
      * (addVisionMeasurement) in the WPILib Blue alliance coordinate system. Make sure you are
      * calling setRobotOrientation() before calling this method.
-     * 
+     *
      * @param limelightName
      * @return
      */
@@ -1329,7 +1329,7 @@ public class LimelightHelpers {
 
     /**
      * Gets the Pose2d for easy use with Odometry vision pose estimator (addVisionMeasurement)
-     * 
+     *
      * @param limelightName
      * @return
      */
@@ -1343,7 +1343,7 @@ public class LimelightHelpers {
     /**
      * Gets the Pose2d and timestamp for use with WPILib pose estimator (addVisionMeasurement) when
      * you are on the RED alliance
-     * 
+     *
      * @param limelightName
      * @return
      */
@@ -1354,7 +1354,7 @@ public class LimelightHelpers {
     /**
      * Gets the Pose2d and timestamp for use with WPILib pose estimator (addVisionMeasurement) when
      * you are on the RED alliance
-     * 
+     *
      * @param limelightName
      * @return
      */
@@ -1364,7 +1364,7 @@ public class LimelightHelpers {
 
     /**
      * Gets the Pose2d for easy use with Odometry vision pose estimator (addVisionMeasurement)
-     * 
+     *
      * @param limelightName
      * @return
      */
@@ -1379,7 +1379,7 @@ public class LimelightHelpers {
      * Gets the current IMU data from NetworkTables. IMU data is formatted as [robotYaw, Roll,
      * Pitch, Yaw, gyroX, gyroY, gyroZ, accelX, accelY, accelZ]. Returns all zeros if data is
      * invalid or unavailable.
-     * 
+     *
      * @param limelightName Name/identifier of the Limelight
      * @return IMUData object containing all current IMU data
      */
@@ -1405,7 +1405,7 @@ public class LimelightHelpers {
 
     /**
      * Sets LED mode to be controlled by the current pipeline.
-     * 
+     *
      * @param limelightName Name of the Limelight camera
      */
     public static void setLEDMode_PipelineControl(String limelightName) {
@@ -1426,7 +1426,7 @@ public class LimelightHelpers {
 
     /**
      * Enables standard side-by-side stream mode.
-     * 
+     *
      * @param limelightName Name of the Limelight camera
      */
     public static void setStreamMode_Standard(String limelightName) {
@@ -1435,7 +1435,7 @@ public class LimelightHelpers {
 
     /**
      * Enables Picture-in-Picture mode with secondary stream in the corner.
-     * 
+     *
      * @param limelightName Name of the Limelight camera
      */
     public static void setStreamMode_PiPMain(String limelightName) {
@@ -1444,7 +1444,7 @@ public class LimelightHelpers {
 
     /**
      * Enables Picture-in-Picture mode with primary stream in the corner.
-     * 
+     *
      * @param limelightName Name of the Limelight camera
      */
     public static void setStreamMode_PiPSecondary(String limelightName) {
@@ -1454,7 +1454,7 @@ public class LimelightHelpers {
 
     /**
      * Sets the crop window for the camera. The crop window in the UI must be completely open.
-     * 
+     *
      * @param limelightName Name of the Limelight camera
      * @param cropXMin Minimum X value (-1 to 1)
      * @param cropXMax Maximum X value (-1 to 1)
@@ -1485,7 +1485,7 @@ public class LimelightHelpers {
 
     /**
      * Sets robot orientation values used by MegaTag2 localization algorithm.
-     * 
+     *
      * @param limelightName Name/identifier of the Limelight
      * @param yaw Robot yaw in degrees. 0 = robot facing red alliance wall in FRC
      * @param yawRate (Unnecessary) Angular velocity of robot yaw in degrees per second
@@ -1525,7 +1525,7 @@ public class LimelightHelpers {
 
     /**
      * Configures the IMU mode for MegaTag2 Localization
-     * 
+     *
      * @param limelightName Name/identifier of the Limelight
      * @param mode IMU mode.
      */
@@ -1569,7 +1569,7 @@ public class LimelightHelpers {
     /**
      * Sets the downscaling factor for AprilTag detection. Increasing downscale can improve
      * performance at the cost of potentially reduced detection range.
-     * 
+     *
      * @param limelightName Name/identifier of the Limelight
      * @param downscale Downscale factor. Valid values: 1.0 (no downscale), 1.5, 2.0, 3.0, 4.0. Set
      *        to 0 for pipeline control.
@@ -1596,7 +1596,7 @@ public class LimelightHelpers {
 
     /**
      * Sets the camera pose relative to the robot.
-     * 
+     *
      * @param limelightName Name of the Limelight camera
      * @param forward Forward offset in meters
      * @param side Side offset in meters
@@ -1663,7 +1663,7 @@ public class LimelightHelpers {
 
     /**
      * Gets the latest JSON results output and returns a LimelightResults object.
-     * 
+     *
      * @param limelightName Name of the Limelight camera
      * @return LimelightResults object containing all current target data
      */
