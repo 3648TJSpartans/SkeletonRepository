@@ -6,22 +6,16 @@ package frc.robot.util;
 
 import static frc.robot.util.TuningUpdater.*;
 
-import org.littletonrobotics.junction.Logger;
-
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import java.util.function.Consumer;
+import java.util.function.DoubleSupplier;
+import org.littletonrobotics.junction.Logger;
 
 /**
  * Class for a tunable number. Gets value from dashboard in tuning mode, returns default if not or
  * value not in dashboard.
  */
-public class TunableNumber {
-
-  private static TuningUpdater updater = new TuningUpdater();
-
-  private String key;
-  private double defaultValue;
-  private double lastHasChangedValue = defaultValue;
+public class TunableNumber extends Tunable<Double> implements DoubleSupplier {
 
   /**
    * Create a new TunableNumber
@@ -29,66 +23,49 @@ public class TunableNumber {
    * @param dashboardKey Key on dashboard
    */
   public TunableNumber(String dashboardKey) {
-    this.key = TABLE_KEY + "/" + dashboardKey;
+    super(dashboardKey);
   }
 
   /**
    * Create a new TunableNumber with the default value
    *
-   * @param dashboardKey Key on dashboard
-   * @param defaultValue Default value
+   * @param dashboardKey Slash-delimited key path on dashboard/networktables
+   * @param defaultValue Default value number is instantiated with.
    */
   public TunableNumber(String dashboardKey, double defaultValue) {
-    this(dashboardKey);
-    setDefault(defaultValue);
+    super(dashboardKey, defaultValue);
   }
 
-  /**
-   * Get the default value for the number that has been set
-   *
-   * @return The default value
-   */
-  public double getDefault() {
-    return defaultValue;
+  public TunableNumber(String dashboardKey, double defaultValue, Runnable update) {
+    super(dashboardKey, defaultValue, update);
   }
 
-  /**
-   * Set the default value of the number
-   *
-   * @param defaultValue The default value
-   */
-  public void setDefault(double defaultValue) {
-    this.defaultValue = defaultValue;
-    if (TUNING_MODE) {
-      // This makes sure the data is on NetworkTables but will not change it
-      SmartDashboard.putNumber(key, SmartDashboard.getNumber(key, defaultValue));
-    }
+  public TunableNumber(String dashboardKey, double defaultValue, Consumer<Double> updateConsumer) {
+    super(dashboardKey, defaultValue, updateConsumer);
   }
 
-  /**
-   * Get the current value, from dashboard if available and in tuning mode
-   *
-   * @return The current value
-   */
-  public double get() {
-    Logger.recordOutput(key,
-        TUNING_MODE ? SmartDashboard.getNumber(key, defaultValue) : defaultValue);
+  public TunableNumber(
+      String dashboardKey, double defaultValue, Runnable update, Consumer<Double> updateConsumer) {
+    super(dashboardKey, defaultValue, update, updateConsumer);
+  }
+
+  public double getAsDouble() {
+    return get();
+  }
+
+  @Override
+  protected void putDashboardValue(String key, Double defaultValue) {
+    SmartDashboard.putNumber(key, SmartDashboard.getNumber(key, defaultValue));
+  }
+
+  @Override
+  protected Double getDashboardValue(String key, Double defaultValue) {
     return TUNING_MODE ? SmartDashboard.getNumber(key, defaultValue) : defaultValue;
   }
 
-  /**
-   * Checks whether the number has changed since our last check
-   *
-   * @return True if the number has changed since the last time this method was called, false
-   *         otherwise
-   */
-  public boolean hasChanged() {
-    double currentValue = get();
-    if (currentValue != lastHasChangedValue) {
-      lastHasChangedValue = currentValue;
-      return true;
-    }
-
-    return false;
+  @Override
+  protected void logValue(String key, boolean TUNING_MODE, Double value, Double defaultValue) {
+    Logger.recordOutput(
+        key, TUNING_MODE ? SmartDashboard.getNumber(key, defaultValue) : defaultValue);
   }
 }
