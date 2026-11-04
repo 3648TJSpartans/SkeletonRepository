@@ -36,20 +36,24 @@ import edu.wpi.first.math.numbers.N3;
 import edu.wpi.first.wpilibj.Alert;
 import edu.wpi.first.wpilibj.Alert.AlertType;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.Constants.Status;
 import frc.robot.subsystems.vision.VisionIO.PoseObservationType;
+import frc.robot.util.statusableUtils.Statusable;
 
-public class Vision extends SubsystemBase {
+public class Vision extends SubsystemBase implements Statusable {
   private final VisionConsumer consumer;
   private final TimelessVisionConsumer targetSpaceConsumer;
   private final VisionIO[] io;
   private final VisionIOInputsAutoLogged[] inputs;
   private final Alert[] disconnectedAlerts;
+  private boolean hasAcceptedTarget;
 
   public Vision(VisionConsumer consumer, TimelessVisionConsumer targetSpaceConsumer,
       VisionIO... io) {
     this.consumer = consumer;
     this.targetSpaceConsumer = targetSpaceConsumer;
     this.io = io;
+    hasAcceptedTarget = false;
 
     // Initialize inputs
     this.inputs = new VisionIOInputsAutoLogged[io.length];
@@ -128,6 +132,7 @@ public class Vision extends SubsystemBase {
           robotPosesRejected.add(observation.pose());
         } else {
           robotPosesAccepted.add(observation.pose());
+          hasAcceptedTarget = true;
         }
 
         // Skip if rejected
@@ -188,6 +193,26 @@ public class Vision extends SubsystemBase {
         allRobotPosesAccepted.toArray(new Pose3d[allRobotPosesAccepted.size()]));
     Logger.recordOutput("Vision/Summary/RobotPosesRejected",
         allRobotPosesRejected.toArray(new Pose3d[allRobotPosesRejected.size()]));
+  }
+
+  @Override
+  public Status getStatus() {
+    for (VisionIOInputsAutoLogged camera : inputs) {
+      if (!camera.connected) {
+        Logger.recordOutput("Debug/Subsystems/Vision/error", "cameraDisconnected");
+        return Status.ERROR;
+      }
+    }
+    for (VisionIOInputsAutoLogged camera : inputs) {
+      if (camera.hasSeenTarget) {
+        return Status.OK;
+      }
+    }
+    if (!hasAcceptedTarget) {
+      Logger.recordOutput("Debug/Subsystems/Vision/warning", "Has Not Accepted Target");
+      return Status.WARNING;
+    }
+    return Status.WARNING;
   }
 
   @FunctionalInterface
