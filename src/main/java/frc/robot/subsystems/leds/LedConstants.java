@@ -17,6 +17,8 @@ public final class LedConstants {
         public static final int buffer3EndLeft = 44;
         public static final int buffer4StartLeft = 45;
         public static final int buffer4EndLeft = 59;
+
+        public static int statusCheckOffset = 0;
         // right side
         public static final int buffer1StartRight = 60;
         public static final int buffer1EndRight = 74;
