@@ -1,7 +1,5 @@
 package frc.robot.util;
 
-import org.littletonrobotics.junction.AutoLogOutput;
-
 // Copyright (c) 2025 FRC 6328
 // http://github.com/Mechanical-Advantage
 //
@@ -17,7 +15,6 @@ import edu.wpi.first.wpilibj.DriverStation;
 //import org.littletonrobotics.vehicletrajectoryservice.VehicleTrajectoryServiceOuterClass.ModuleForce;
 //import org.littletonrobotics.vehicletrajectoryservice.VehicleTrajectoryServiceOuterClass.VehicleState;
 import frc.robot.commands.goToCommands.goToConstants.PoseConstants;
-import frc.robot.subsystems.drive.Drive;
 
 public class AllianceFlipUtil {
     public static double applyX(double x) {

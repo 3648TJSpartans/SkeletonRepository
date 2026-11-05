@@ -125,4 +125,8 @@ public class Module {
   public double getFFCharacterizationVelocity() {
     return inputs.driveVelocityRadPerSec;
   }
+
+  public boolean getDisconnected() {
+      return driveDisconnectedAlert.get() || turnDisconnectedAlert.get();
+  }
 }
