@@ -516,7 +516,6 @@ public class Drive extends SubsystemBase implements Statusable {
             );
             return Status.ERROR;
         }
-        if (DriverStation.is)
         return Status.OK;
     }
 }

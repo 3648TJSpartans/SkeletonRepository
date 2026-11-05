@@ -181,8 +181,7 @@ public class RobotContainer {
                 "Battery",
                 10);
 
-                m_statusLogger = new StatusLogger(m_batteryStatus);
-
+                m_statusLogger = new StatusLogger(m_batteryStatus, m_drive);
                 configureAutos();
 
                 // Set up auto routines
