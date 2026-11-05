@@ -9,12 +9,12 @@ import frc.robot.util.statusableUtils.Statusable;
 import java.util.function.BooleanSupplier;
 import org.littletonrobotics.junction.Logger;
 
-public class GeneralLEDCommand extends Command {
+public class StatusableLEDCommands extends Command {
   private final Statusable[] m_statuses;
   private final LedSubsystem m_leds;
   // private final BooleanSupplier shooting;
 
-  public GeneralLEDCommand(
+  public StatusableLEDCommands(
       LedSubsystem leds,
       // BooleanSupplier shooting,
       Statusable... statuses) {
