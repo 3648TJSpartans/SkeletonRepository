@@ -80,10 +80,9 @@ public class RobotContainer {
         private final Vision m_vision;
         private final ExampleMotorSubsystem m_exampleMotorSubsystem;
         private final RelEncoderSparkMax m_exampleFlywheel;
-        private boolean override;
-        private boolean endgameClosed = true;
-
         private final StatusLogger m_statusLogger;
+        private boolean override;
+
         private final GenericStatusable m_batteryStatus;
 
         // Controller
@@ -170,15 +169,13 @@ public class RobotContainer {
                 new GenericStatusable(
                 () -> {
                 double voltage = RobotController.getBatteryVoltage();
+                Logger.recordOutput("Debug/Battery/voltage", voltage);
                 if (voltage > Constants.batteryGoodThreshold) {
-
                         return Status.OK;
                 }
                 if (voltage > Constants.batteryWarningThreshold) {
-                        Logger.recordOutput("Debug/Battery/voltage", voltage);
                         return Status.WARNING;
                 }
-                Logger.recordOutput("Debug/Battery/voltage", voltage);
                 return Status.ERROR;
                 },
                 "Battery",
