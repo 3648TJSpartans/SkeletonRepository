@@ -108,9 +108,26 @@ public class LedSubsystem extends SubsystemBase {
 
     }
 
-    // left or right
+    /**
+     * Sets the entire LED strip to a given pattern, overwriting any previous data on the strip.
+     *
+     * @param pattern - The pattern to set the LEDs to.
+    */
     public void setGlobalPattern(LEDPattern pattern) {
         pattern.applyTo(ledBuffer);
+        led.setData(ledBuffer);
+    }
+
+    /**
+        * Sets a single LED to a given RGB value.
+        *
+        * @param r - The red value (0-255).
+        * @param g - The green value (0-255).
+        * @param b - The blue value (0-255).
+        * @param i - The index of the LED to set.
+    */
+    public void setSingleLed(int r, int g, int b, int i) {
+        ledBuffer.setRGB(i, r, g, b);
         led.setData(ledBuffer);
     }
 }
