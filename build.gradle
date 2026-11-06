@@ -30,7 +30,7 @@ spotless {
         target 'src/**/*.java'
 
         // Exclude auto generated version file
-        // Including it causes build errors 
+        // Including it causes build errors
         targetExclude '**/BuildConstants.java'
         googleJavaFormat()
         trimTrailingWhitespace()
@@ -138,5 +138,3 @@ tasks.withType(JavaCompile) {
 
     options.compilerArgs.add '-XDstringConcat=inline'
 }
-
-
