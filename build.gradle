@@ -35,6 +35,9 @@ spotless {
         googleJavaFormat()
         trimTrailingWhitespace()
         endWithNewline()
+
+        // If in the future we want to remove unused imports
+        // removeUnusedImports()
     }
 }
 
