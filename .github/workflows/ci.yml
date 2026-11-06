@@ -1,0 +1,15 @@
+name: CI Pipeline
+
+# This controls github action checks
+on:
+  pull_request:
+    branches: [ "main" ]
+
+  # Allow Manual Testing
+  workflow_dispatch:
+jobs:
+  formatting:
+    uses: ./.github/workflows/formatting.yml
+  gradle:
+    needs: formatting
+    uses: ./.github/workflows/gradle.yml
