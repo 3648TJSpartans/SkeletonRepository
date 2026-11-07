@@ -8,5 +8,7 @@ on:
   # Allow Manual Testing
   workflow_dispatch:
 jobs:
-  gradle:
+  formatting:
+    uses: ./.github/workflows/formatting.yml
+  build:
     uses: ./.github/workflows/gradle.yml
