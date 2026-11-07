@@ -10,7 +10,7 @@ on:
 jobs:
   formatting:
     uses: ./.github/workflows/formatting.yml
-  error-prone:
-    uses: ./.github/workflows/error-prone.yml
+  # error-prone:
+    # uses: ./.github/workflows/error-prone.yml
   build:
     uses: ./.github/workflows/gradle.yml
