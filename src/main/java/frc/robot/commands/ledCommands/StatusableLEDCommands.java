@@ -1,28 +1,27 @@
 package frc.robot.commands.ledCommands;
 
 import edu.wpi.first.wpilibj.DriverStation;
-import edu.wpi.first.wpilibj.LEDPattern;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.leds.LedConstants;
 import frc.robot.subsystems.leds.LedSubsystem;
 import frc.robot.util.statusableUtils.Statusable;
-import java.util.function.BooleanSupplier;
 import org.littletonrobotics.junction.Logger;
 
 public class StatusableLEDCommands extends Command {
   private final Statusable[] m_statuses;
   private final LedSubsystem m_leds;
+
   // private final BooleanSupplier shooting;
 
   public StatusableLEDCommands(
       LedSubsystem leds,
       // BooleanSupplier shooting,
       Statusable... statuses) {
-        m_statuses = statuses;
-        m_leds = leds;
-        // this.shooting = shooting;
-        addRequirements(leds);
-      }
+    m_statuses = statuses;
+    m_leds = leds;
+    // this.shooting = shooting;
+    addRequirements(leds);
+  }
 
   @Override
   public void initialize() {
@@ -32,7 +31,7 @@ public class StatusableLEDCommands extends Command {
   @Override
   public void execute() {
     if (DriverStation.isEnabled()) {
-    
+
       return;
     } else {
       for (int i = 0; i < LedConstants.ledLength; i++) {
