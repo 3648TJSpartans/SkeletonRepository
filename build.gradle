@@ -2,7 +2,8 @@ plugins {
     id "java"
     id "edu.wpi.first.GradleRIO" version "2025.2.1"
     id "com.peterabeles.gversion" version "1.10"
-    id 'com.diffplug.spotless' version '6.25.0'
+    id "com.diffplug.spotless" version '6.25.0'
+    id "net.ltgt.errorprone" version "5.2.0"
 }
 
 java {
@@ -106,6 +107,8 @@ dependencies {
 
     testImplementation 'org.junit.jupiter:junit-jupiter:5.10.1'
     testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+
+    errorprone 'com.google.errorprone:error_prone_core:2.31.0'
 }
 
 test {
@@ -137,5 +140,15 @@ tasks.withType(JavaCompile) {
     // Automatically formats on build
     dependsOn 'spotlessApply'
 
+    // Google's Error Scanner
+    options.errorprone {
+
+        // Just so builds pass, at some point I'd like to work out all errorprone catches so make our code bulletproof
+        allErrorsAsWarnings = true 
+
+        disableWarningsInGeneratedCode = true
+    } 
+
     options.compilerArgs.add '-XDstringConcat=inline'
 }
+
