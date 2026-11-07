@@ -1,0 +1,31 @@
+name: Error Prone
+
+on:
+  workflow_call:
+
+jobs:
+  error-prone-check:
+    name: Error Prone Static Analysis
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v5
+
+      - name: Set up JDK
+        uses: actions/setup-java@v5
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+
+      - name: Setup Gradle
+        uses: gradle/actions/setup-gradle@v5
+
+      - name: Make Gradle wrapper executable
+        run: chmod +x gradlew
+
+      - name: Run Error Prone
+        continue-on-error: true
+        run: ./gradlew compileJava -x test

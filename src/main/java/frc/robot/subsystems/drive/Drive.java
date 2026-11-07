@@ -144,13 +144,15 @@ public class Drive extends SubsystemBase implements Statusable {
   @Override
   public void periodic() {
     odometryLock.lock(); // Prevents odometry updates while reading data
-    gyroIO.updateInputs(gyroInputs);
-    Logger.processInputs("Drive/Gyro", gyroInputs);
-    for (var module : modules) {
-      module.periodic();
+    try {
+      gyroIO.updateInputs(gyroInputs);
+      Logger.processInputs("Drive/Gyro", gyroInputs);
+      for (var module : modules) {
+        module.periodic();
+      }
+    } finally {
+      odometryLock.unlock();
     }
-    odometryLock.unlock();
-
     // Stop moving when disabled
     if (DriverStation.isDisabled()) {
       for (var module : modules) {
