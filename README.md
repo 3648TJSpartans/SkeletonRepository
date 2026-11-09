@@ -1,0 +1,4 @@
+# 3648 Skeleton Repository
+This is our team's template repository for future First Robotics Competitions. It contains most of the basics for our swerve drive bots, including AprilTag localization, Swerve, LEDs, Vision, and networking.
+
+**Java 21 Must Be Used to Build**

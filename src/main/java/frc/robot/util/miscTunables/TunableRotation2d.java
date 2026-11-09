@@ -49,8 +49,7 @@ public class TunableRotation2d extends Tunable<Rotation2d> {
   @Override
   protected Rotation2d getDashboardValue(String key, Rotation2d defaultValue) {
     return TUNING_MODE
-        ? new Rotation2d(
-            SmartDashboard.getNumber(key + "/radians", defaultValue.getRadians()))
+        ? new Rotation2d(SmartDashboard.getNumber(key + "/radians", defaultValue.getRadians()))
         : defaultValue;
   }
 

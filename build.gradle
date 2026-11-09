@@ -1,6 +1,7 @@
 plugins {
     id "java"
     id "edu.wpi.first.GradleRIO" version "2026.2.1"
+    id 'com.diffplug.spotless' version '6.25.0'
 }
 
 java {
@@ -8,7 +9,29 @@ java {
     targetCompatibility = JavaVersion.VERSION_17
 }
 
+// Spotless Google Formatting
+
+// Run 'gradlew spotlessCheck' to list formatting errors
+// Run 'gradlew spotlessApply' to fix those errors
+spotless {
+    java {
+        // Formats all Java files in src/
+        target 'src/**/*.java'
+
+        // Exclude auto generated version file
+        // Including it causes build errors
+        targetExclude '**/BuildConstants.java'
+        googleJavaFormat()
+        trimTrailingWhitespace()
+        endWithNewline()
+
+        // If in the future we want to remove unused imports
+        // removeUnusedImports()
+    }
+}
+
 def ROBOT_MAIN_CLASS = "frc.robot.Main"
+
 
 // Define my targets (RoboRIO) and artifacts (deployable files)
 // This is added by GradleRIO's backing project DeployUtils.
@@ -103,5 +126,8 @@ wpi.java.configureTestTasks(test)
 
 // Configure string concat to always inline compile
 tasks.withType(JavaCompile) {
+    // Automatically formats on build
+    dependsOn 'spotlessApply'
+
     options.compilerArgs.add '-XDstringConcat=inline'
 }
