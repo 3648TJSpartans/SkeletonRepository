@@ -1,4 +1,5 @@
 // LimelightHelpers v1.11 (REQUIRES LLOS 2025.0 OR LATER)
+// Licensed under the MIT License.
 
 package frc.robot.util;
 

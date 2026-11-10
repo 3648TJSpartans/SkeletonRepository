@@ -1,5 +1,6 @@
 // Copyright 2021-2025 FRC 6328
 // http://github.com/Mechanical-Advantage
+// Copyright (c) 2025-2026 First Robotics Competition Team 3648.
 //
 // This program is free software; you can redistribute it and/or
 // modify it under the terms of the GNU General Public License
@@ -10,6 +11,8 @@
 // but WITHOUT ANY WARRANTY; without even the implied warranty of
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
 // GNU General Public License for more details.
+//
+// Modified by FRC Team 3648 to add and change functionality as needed for our robot.
 
 package frc.robot.commands;
 
