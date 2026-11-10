@@ -24,14 +24,36 @@ gversion {
 
 // Run 'gradlew spotlessCheck' to list formatting errors
 // Run 'gradlew spotlessApply' to fix those errors
+def gplHeader = '''// Copyright (c) 2025-2026 First Robotics Competition Team 3648.
+//
+// This program is free software; you can redistribute it and/or
+// modify it under the terms of the GNU General Public License
+// version 3 as published by the Free Software Foundation or
+// available in the root directory of this project.
+//
+// This program is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+// GNU General Public License for more details.'''
+
 spotless {
     java {
         // Formats all Java files in src/
         target 'src/**/*.java'
 
-        // Exclude auto generated version file
-        // Including it causes build errors
-        targetExclude '**/BuildConstants.java'
+        // Exclude auto generated version and AdvantageKit files
+        // Including them causes build errors
+        targetExclude '**/BuildConstants.java', '**/*AutoLogged.java'
+
+        // Only add license header if missing to avoid overwriting existing headers.
+        custom 'addLicenseIfMissing', { String content ->
+            String trimmed = content.trim()
+            if (!trimmed.startsWith('//') && !trimmed.startsWith('/*') && !content.contains('Copyright') && !content.contains('mjansen4857') && !content.contains('AutoLogged')) {
+                return gplHeader + '\n\n' + content
+            }
+            return content
+        }
+
         googleJavaFormat()
         trimTrailingWhitespace()
         endWithNewline()
