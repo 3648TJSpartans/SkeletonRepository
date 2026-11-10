@@ -1,6 +1,4 @@
-/*
- * Initially from https://github.com/Mechanical-Advantage/SwerveDevelopment
- */
+// Initially from https://github.com/Mechanical-Advantage/SwerveDevelopment
 
 package frc.robot.util;
 

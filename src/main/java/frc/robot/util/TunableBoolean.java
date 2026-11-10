@@ -1,6 +1,14 @@
-/*
- * Initially from https://github.com/Mechanical-Advantage/SwerveDevelopment
- */
+// Copyright (c) 2025-2026 First Robotics Competition Team 3648.
+//
+// This program is free software; you can redistribute it and/or
+// modify it under the terms of the GNU General Public License
+// version 3 as published by the Free Software Foundation or
+// available in the root directory of this project.
+//
+// This program is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+// GNU General Public License for more details.
 
 package frc.robot.util;
 
@@ -11,10 +19,6 @@ import java.util.function.BooleanSupplier;
 import java.util.function.Consumer;
 import org.littletonrobotics.junction.Logger;
 
-/**
- * Class for a tunable number. Gets value from dashboard in tuning mode, returns default if not or
- * value not in dashboard.
- */
 public class TunableBoolean extends Tunable<Boolean> implements BooleanSupplier {
 
   /**
