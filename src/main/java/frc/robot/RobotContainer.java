@@ -222,11 +222,10 @@ public class RobotContainer {
     configureFlywheel();
     // configureExampleSubsystem();
 
-    /*
-     * m_led.setLedPattern(LedConstants.elevatorHeight, m_led.elevatorBuffer);
-     * m_led.setLedPattern(LedConstants.teal, m_led.leftGuideBuffer);
-     * m_led.setLedPattern(LedConstants.yellow, m_led.rightGuideBuffer);
-     */
+    m_testController // TODO, this code cuases a huge loop overrun, there is an issue.
+        .povUp()
+        .onTrue(new InstantCommand(() -> LoggedAnalogEncoder.updateZeros()).ignoringDisable(true));
+
   }
 
   private void configureAlerts() {
