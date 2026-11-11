@@ -38,7 +38,7 @@ import frc.robot.commands.exampleSubsystemCommands.ExampleMotorCmd;
 import frc.robot.commands.goToCommands.DriveTo;
 import frc.robot.commands.goToCommands.DriveToTag;
 import frc.robot.commands.goToCommands.goToConstants;
-import frc.robot.commands.goToCommands.goToConstants.PoseConstants;
+import frc.robot.PoseConstants;
 import frc.robot.commands.ledCommands.AutoLEDCommand;
 import frc.robot.commands.ledCommands.TeleopLEDCommand;
 import frc.robot.subsystems.drive.Drive;
@@ -221,17 +221,6 @@ public class RobotContainer {
     configureDrive();
     configureFlywheel();
     // configureExampleSubsystem();
-    Command updateCommand =
-        new InstantCommand(
-                () -> {
-                  MotorIO.reconfigureMotors();
-                  goToConstants.configurePID();
-                  LoggedAnalogEncoder.updateZeros();
-                })
-            .ignoringDisable(true);
-    m_copilotController.rightTrigger().onTrue(updateCommand);
-
-    new Trigger(DriverStation::isEnabled).onTrue(updateCommand);
 
     /*
      * m_led.setLedPattern(LedConstants.elevatorHeight, m_led.elevatorBuffer);
@@ -404,7 +393,7 @@ public class RobotContainer {
                                 m_drive.getPose().getTranslation(), new Rotation2d(Math.PI))),
                     m_drive)
                 .ignoringDisable(true));
-    Command driveTest = new DriveTo(m_drive, () -> PoseConstants.examplePose);
+    Command driveTest = new DriveTo(m_drive, () -> PoseConstants.testPose);
     Pose2d alignOffsetRight = new Pose2d(new Translation2d(-.75, -.17), new Rotation2d(0));
     Pose2d alignOffsetLeft = new Pose2d(new Translation2d(-.75, .17), new Rotation2d(0));
     Command alignToTagRight =
@@ -414,8 +403,7 @@ public class RobotContainer {
     m_driveController
         .rightTrigger()
         .whileTrue(
-            new DriveTo(m_drive, () -> new Pose2d(1.5, 0.5, new Rotation2d(Math.PI)))
-                .alongWith(new InstantCommand(() -> goToConstants.configurePID())));
+            new DriveTo(m_drive, () -> new Pose2d(1.5, 0.5, new Rotation2d(Math.PI))));
     m_driveController
         .leftTrigger()
         .whileTrue(new DriveTo(m_drive, () -> new Pose2d(0.0, 0.0, new Rotation2d())));

@@ -1,0 +1,42 @@
+package frc.robot.util;
+
+import edu.wpi.first.math.geometry.Pose2d;
+import frc.robot.PoseConstants;
+
+public class RangeCalc {
+  public static boolean inShootingRange(Pose2d robotPose) {
+    return AllianceFlipUtil.apply(robotPose).getX() < PoseConstants.shootCutoff;
+  }
+
+  /*
+   * zone 0 is right,
+   * zone 1 middle,
+   * zone 2 left
+   */
+  public static int zoneCalc(Pose2d robotPose) {
+    double x = AllianceFlipUtil.applyY(robotPose.getY());
+    if (x < 4.021) {
+      return 0;
+    }
+    return 1;
+  }
+
+  public static boolean inField(Pose2d robotPose) {
+    double x = robotPose.getX();
+    if (x < 0.3429) {
+      return false;
+    }
+    if (x > PoseConstants.fieldLength - 0.3429) {
+      return false;
+    }
+    double y = robotPose.getY();
+    if (y < 0.3429) {
+      return false;
+    }
+    if (y > PoseConstants.fieldWidth - 0.3429) {
+      return false;
+    }
+
+    return true;
+  }
+}

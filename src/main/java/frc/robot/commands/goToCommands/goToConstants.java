@@ -1,24 +1,10 @@
-// Copyright (c) 2025-2026 First Robotics Competition Team 3648.
-//
-// This program is free software; you can redistribute it and/or
-// modify it under the terms of the GNU General Public License
-// version 3 as published by the Free Software Foundation or
-// available in the root directory of this project.
-//
-// This program is distributed in the hope that it will be useful,
-// but WITHOUT ANY WARRANTY; without even the implied warranty of
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-// GNU General Public License for more details.
-
 package frc.robot.commands.goToCommands;
 
 import edu.wpi.first.math.controller.ProfiledPIDController;
-import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.math.util.Units;
-import frc.robot.util.AllianceFlipUtil;
-import frc.robot.util.TunableNumber;
+import frc.robot.util.TunableBoolean;
+import frc.robot.util.miscTunables.TunableProfiledPIDController;
 
 public class goToConstants {
 
@@ -28,89 +14,49 @@ public class goToConstants {
   public static final double thetakP = 5.0;
   public static final double thetakI = 0.0;
   public static final double thetakD = 0.0;
-  public static final double driveMaxVelocity = 4.0;
-  public static final double driveMaxAcceleration = 4.0;
-  public static final double thetaMaxVelocity = 360;
-  public static final double thetaMaxAcceleration = 720;
-  public static final double driveTolerance = 0.005;
-  public static final double thetaTolerance = 1; // degree
-  public static final double ffMinRadius = 0.2;
-  public static final double ffMaxRadius = 0.6;
+  private static final double driveMaxVelocity = 0.25;
+  private static final double driveMaxAcceleration = 1.0;
+  private static final double thetaMaxVelocity = Units.degreesToRadians(360);
+  private static final double thetaMaxAcceleration = Units.degreesToRadians(720);
+  private static final double driveTolerance = 0.005;
+  private static final double thetaTolerance = Units.degreesToRadians(1);
+  private static final double ffMinRadius = 0.2;
+  private static final double ffMaxRadius = 0.6;
 
-  public static final TunableNumber tunableDriveP =
-      new TunableNumber("Commands/DriveTo/drive/P", drivekP);
-  public static final TunableNumber tunableDriveI =
-      new TunableNumber("Commands/DriveTo/drive/I", drivekI);
-  public static final TunableNumber tunableDriveD =
-      new TunableNumber("Commands/DriveTo/drive/D", drivekD);
-  public static final TunableNumber tunableThetaP =
-      new TunableNumber("Commands/DriveTo/theta/P", thetakP);
-  public static final TunableNumber tunableThetaI =
-      new TunableNumber("Commands/DriveTo/theta/I", thetakI);
-  public static final TunableNumber tunableThetaD =
-      new TunableNumber("Commands/DriveTo/theta/D", thetakD);
-  public static final TunableNumber tunableDriveMaxVelocity =
-      new TunableNumber("Commands/DriveTo/drive/maxVelocity", driveMaxVelocity);
-  public static final TunableNumber tunableDriveMaxAcceleration =
-      new TunableNumber("Commands/DriveTo/drive/maxAcceleration", driveMaxAcceleration);
-  public static final TunableNumber tunableThetaMaxVelocity =
-      new TunableNumber("Commands/DriveTo/theta/maxVelocity(degrees)", thetaMaxVelocity);
-  public static final TunableNumber tunableThetaMaxAcceleration =
-      new TunableNumber("Commands/DriveTo/theta/maxAcceleration(degrees)", thetaMaxAcceleration);
-  public static final TunableNumber tunableDriveTolerance =
-      new TunableNumber("Commands/DriveTo/drive/Tolerance", driveTolerance);
-  public static final TunableNumber tunableThetaTolerance =
-      new TunableNumber("Commands/DriveTo/theta/Tolerance(degrees)", thetaTolerance);
+  public static final TunableBoolean inFieldConstraint =
+      new TunableBoolean("Commands/DriveTo/inFieldConstraint", false);
 
-  public static ProfiledPIDController driveController;
-
-  public static ProfiledPIDController thetaController;
-
-  public static void configurePID() {
-    driveController =
+  private static ProfiledPIDController getDriveController() {
+    ProfiledPIDController driveController =
         new ProfiledPIDController(
-            tunableDriveP.get(),
-            tunableDriveI.get(),
-            tunableDriveD.get(),
-            new TrapezoidProfile.Constraints(
-                tunableDriveMaxVelocity.get(), tunableDriveMaxAcceleration.get()),
+            drivekP,
+            drivekI,
+            drivekD,
+            new TrapezoidProfile.Constraints(driveMaxVelocity, driveMaxAcceleration),
             0.02);
-
-    thetaController =
-        new ProfiledPIDController(
-            tunableThetaP.get(),
-            tunableThetaI.get(),
-            tunableThetaD.get(),
-            new TrapezoidProfile.Constraints(
-                Units.degreesToRadians(tunableThetaMaxVelocity.get()),
-                Units.degreesToRadians(tunableThetaMaxAcceleration.get())),
-            0.02);
-    driveController.setTolerance(tunableDriveTolerance.get());
-    thetaController.setTolerance(Units.degreesToRadians(tunableThetaTolerance.get()));
-    thetaController.enableContinuousInput(-Math.PI, Math.PI);
+    driveController.setTolerance(driveTolerance);
     driveController.setGoal(0.0);
+    return driveController;
+  }
+
+  private static ProfiledPIDController getThetaController() {
+    ProfiledPIDController thetaController =
+        new ProfiledPIDController(
+            thetakP,
+            thetakI,
+            thetakD,
+            new TrapezoidProfile.Constraints(thetaMaxVelocity, thetaMaxAcceleration),
+            0.02);
+    thetaController.setTolerance(thetaTolerance);
     thetaController.setGoal(0.0);
+    thetaController.enableContinuousInput(-Math.PI, Math.PI);
+    return thetaController;
   }
 
-  public static class PoseConstants {
-    public static final Pose2d examplePose = new Pose2d(3.57, 2.75, Rotation2d.fromDegrees(60));
-    public static final Pose2d examplePose2 = new Pose2d(1, 1, Rotation2d.fromDegrees(90));
-    public static final double fieldLength = 17.548;
-    public static final double fieldWidth = 8.042;
-
-    private static Pose2d[] examplePoseListBlue =
-        new Pose2d[] {
-          new Pose2d(2, 2, Rotation2d.fromDegrees(180)),
-          new Pose2d(3, 3, Rotation2d.fromDegrees(270))
-        };
-
-    public static final Pose2d[] examplePoseList = AllianceFlipUtil.apply(examplePoseListBlue);
-
-    public static enum AutonState {
-      EXAMPLE1,
-      EXAMPLE2,
-      EXAMPLE3,
-      DEFAULT
-    }
-  }
+  public static final TunableProfiledPIDController tunableDriveController =
+      new TunableProfiledPIDController(
+          "Commands/DriveTo/driveController", goToConstants.getDriveController());
+  public static final TunableProfiledPIDController tunableThetaController =
+      new TunableProfiledPIDController(
+          "Commands/DriveTo/thetaController", goToConstants.getThetaController());
 }
