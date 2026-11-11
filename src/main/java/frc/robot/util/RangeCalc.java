@@ -4,9 +4,6 @@ import edu.wpi.first.math.geometry.Pose2d;
 import frc.robot.PoseConstants;
 
 public class RangeCalc {
-  public static boolean inShootingRange(Pose2d robotPose) {
-    return AllianceFlipUtil.apply(robotPose).getX() < PoseConstants.shootCutoff;
-  }
 
   /*
    * zone 0 is right,
