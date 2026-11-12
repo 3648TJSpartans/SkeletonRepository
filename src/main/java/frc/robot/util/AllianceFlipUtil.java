@@ -1,7 +1,3 @@
-package frc.robot.util;
-
-import org.littletonrobotics.junction.AutoLogOutput;
-
 // Copyright (c) 2025 FRC 6328
 // http://github.com/Mechanical-Advantage
 //
@@ -9,17 +5,13 @@ import org.littletonrobotics.junction.AutoLogOutput;
 // license that can be found in the LICENSE file at
 // the root directory of this project.
 
-// package org.littletonrobotics.frc2025.util;
+package frc.robot.util;
 
 import edu.wpi.first.math.geometry.*;
 import edu.wpi.first.wpilibj.DriverStation;
-// import org.littletonrobotics.frc2025.FieldConstants;
-// import
-// org.littletonrobotics.vehicletrajectoryservice.VehicleTrajectoryServiceOuterClass.ModuleForce;
-// import
-// org.littletonrobotics.vehicletrajectoryservice.VehicleTrajectoryServiceOuterClass.VehicleState;
 import frc.robot.PoseConstants;
 import frc.robot.util.zoneCalc.Polygon;
+import org.littletonrobotics.junction.AutoLogOutput;
 
 public class AllianceFlipUtil {
   public static double applyX(double x) {

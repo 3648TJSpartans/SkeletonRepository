@@ -1,14 +1,21 @@
+// Copyright (c) 2025-2026 First Robotics Competition Team 3648.
+//
+// This program is free software; you can redistribute it and/or
+// modify it under the terms of the GNU General Public License
+// version 3 as published by the Free Software Foundation or
+// available in the root directory of this project.
+//
+// This program is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+// GNU General Public License for more details.
+
 package frc.robot;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.geometry.Translation2d;
-import edu.wpi.first.math.geometry.Translation3d;
-import edu.wpi.first.math.util.Units;
 import frc.robot.util.AllianceFlipUtil;
-import frc.robot.util.miscTunables.TunableRotation3d;
-import frc.robot.util.miscTunables.TunableTranslation3d;
 import frc.robot.util.zoneCalc.Polygon;
 import frc.robot.util.zoneCalc.Rectangle;
 

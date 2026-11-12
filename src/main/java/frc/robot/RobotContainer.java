@@ -37,8 +37,6 @@ import frc.robot.commands.FFCharacterizationCmd;
 import frc.robot.commands.exampleSubsystemCommands.ExampleMotorCmd;
 import frc.robot.commands.goToCommands.DriveTo;
 import frc.robot.commands.goToCommands.DriveToTag;
-import frc.robot.commands.goToCommands.goToConstants;
-import frc.robot.PoseConstants;
 import frc.robot.commands.ledCommands.AutoLEDCommand;
 import frc.robot.commands.ledCommands.TeleopLEDCommand;
 import frc.robot.subsystems.drive.Drive;
@@ -59,7 +57,6 @@ import frc.robot.subsystems.vision.VisionIOLimelight;
 import frc.robot.util.AllianceFlipUtil;
 import frc.robot.util.TunableNumber;
 import frc.robot.util.motorUtil.MotorConfig;
-import frc.robot.util.motorUtil.MotorIO;
 import frc.robot.util.motorUtil.RelEncoderSparkMax;
 import frc.robot.util.statusableUtils.GenericStatusable;
 import frc.robot.util.statusableUtils.StatusLogger;
@@ -225,7 +222,6 @@ public class RobotContainer {
     m_testController // TODO, this code cuases a huge loop overrun, there is an issue.
         .povUp()
         .onTrue(new InstantCommand(() -> LoggedAnalogEncoder.updateZeros()).ignoringDisable(true));
-
   }
 
   private void configureAlerts() {
@@ -401,8 +397,7 @@ public class RobotContainer {
         new DriveToTag(m_drive, m_drive::getTargetSpacePose, () -> alignOffsetLeft);
     m_driveController
         .rightTrigger()
-        .whileTrue(
-            new DriveTo(m_drive, () -> new Pose2d(1.5, 0.5, new Rotation2d(Math.PI))));
+        .whileTrue(new DriveTo(m_drive, () -> new Pose2d(1.5, 0.5, new Rotation2d(Math.PI))));
     m_driveController
         .leftTrigger()
         .whileTrue(new DriveTo(m_drive, () -> new Pose2d(0.0, 0.0, new Rotation2d())));
