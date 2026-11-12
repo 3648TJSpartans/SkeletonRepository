@@ -142,7 +142,9 @@ public class ModuleIOMK4Spark implements ModuleIO {
     driveConfig
         .closedLoop
         .feedbackSensor(FeedbackSensor.kPrimaryEncoder)
-        .pidf(driveKp, 0.0, driveKd, 0.0);
+        .p(driveKp)
+        .i(0.0)
+        .d(driveKd);
     driveConfig
         .signals
         .primaryEncoderPositionAlwaysOn(true)
