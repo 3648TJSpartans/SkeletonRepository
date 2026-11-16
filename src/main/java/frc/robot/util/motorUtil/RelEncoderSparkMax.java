@@ -96,8 +96,11 @@ public class RelEncoderSparkMax extends MotorIO {
     config
         .closedLoop
         .feedbackSensor(FeedbackSensor.kPrimaryEncoder)
-        .pidf(m_motorConfig.p(), m_motorConfig.i(), m_motorConfig.d(), m_motorConfig.ff())
+        .p(m_motorConfig.p())
+        .i(m_motorConfig.i())
+        .d(m_motorConfig.d())
         .outputRange(m_motorConfig.minPower(), m_motorConfig.maxPower());
+    config.closedLoop.feedForward.kV(m_motorConfig.ff());
     config
         .signals
         .absoluteEncoderPositionAlwaysOn(true)
