@@ -64,7 +64,9 @@ public class DriveCommands {
 
     // Square magnitude for more precise control
     linearMagnitude =
-        linearMagnitude * linearMagnitude * DriveConstants.fieldRelativeMaxInputPercent;
+        linearMagnitude
+            * linearMagnitude
+            * DriveConstants.fieldRelativeMaxInputPercent.getAsDouble();
 
     // Return new linear velocity
     return new Pose2d(new Translation2d(), linearDirection)
@@ -87,11 +89,14 @@ public class DriveCommands {
             drive.runVelocity(
                 new ChassisSpeeds(
                     MathUtil.applyDeadband(xSupplier.getAsDouble(), DEADBAND)
-                        * DriveConstants.robotRelativeMaxInputPercent,
+                        * DriveConstants.robotRelativeMaxTranslationPercent.getAsDouble()
+                        * DriveConstants.maxSpeedMetersPerSec,
                     MathUtil.applyDeadband(ySupplier.getAsDouble(), DEADBAND)
-                        * DriveConstants.robotRelativeMaxInputPercent,
+                        * DriveConstants.robotRelativeMaxTranslationPercent.getAsDouble()
+                        * DriveConstants.maxSpeedMetersPerSec,
                     MathUtil.applyDeadband(omegaSupplier.getAsDouble(), DEADBAND)
-                        * DriveConstants.robotRelativeMaxInputPercent));
+                        * DriveConstants.robotRelativeMaxRotationPercent.getAsDouble()
+                        * drive.getMaxAngularSpeedRadPerSec()));
           } else {
             // Get linear velocity
             Translation2d linearVelocity =
@@ -102,7 +107,8 @@ public class DriveCommands {
 
             // Square rotation value for more precise control
             omega =
-                Math.copySign(omega * omega, omega) * DriveConstants.fieldRelativeMaxInputPercent;
+                Math.copySign(omega * omega, omega)
+                    * DriveConstants.fieldRelativeMaxInputPercent.getAsDouble();
 
             // Convert to field relative speeds & send command
             ChassisSpeeds speeds =
