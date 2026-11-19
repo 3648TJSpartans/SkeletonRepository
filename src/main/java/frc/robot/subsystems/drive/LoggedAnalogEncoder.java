@@ -12,7 +12,7 @@
 
 package frc.robot.subsystems.drive;
 
-import edu.wpi.first.wpilibj.AnalogEncoder;
+import org.wpilib.wpilibj.AnalogEncoder;
 import frc.robot.util.TunableNumber;
 import java.util.ArrayList;
 

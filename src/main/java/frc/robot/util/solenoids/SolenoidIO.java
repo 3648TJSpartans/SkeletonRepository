@@ -12,7 +12,7 @@
 
 package frc.robot.util.solenoids;
 
-import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import org.wpilib.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.Status;
 import frc.robot.util.statusableUtils.Statusable;
 import org.littletonrobotics.junction.Logger;

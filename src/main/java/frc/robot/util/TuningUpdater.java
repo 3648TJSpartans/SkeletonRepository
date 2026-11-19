@@ -12,8 +12,8 @@
 
 package frc.robot.util;
 
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import org.wpilib.wpilibj.smartdashboard.SmartDashboard;
+import org.wpilib.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import java.util.HashSet;
 import java.util.Set;

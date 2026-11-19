@@ -14,7 +14,7 @@ package frc.robot.util.miscTunables;
 
 import static frc.robot.util.TuningUpdater.*;
 
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import org.wpilib.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.util.Tunable;
 import java.util.function.IntSupplier;
 import org.littletonrobotics.junction.Logger;

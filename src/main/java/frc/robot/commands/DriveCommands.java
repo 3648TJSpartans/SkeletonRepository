@@ -16,21 +16,21 @@
 
 package frc.robot.commands;
 
-import edu.wpi.first.math.MathUtil;
-import edu.wpi.first.math.controller.ProfiledPIDController;
-import edu.wpi.first.math.filter.SlewRateLimiter;
-import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.math.geometry.Transform2d;
-import edu.wpi.first.math.geometry.Translation2d;
-import edu.wpi.first.math.kinematics.ChassisSpeeds;
-import edu.wpi.first.math.trajectory.TrapezoidProfile;
-import edu.wpi.first.math.util.Units;
-import edu.wpi.first.wpilibj.DriverStation;
-import edu.wpi.first.wpilibj.DriverStation.Alliance;
-import edu.wpi.first.wpilibj.Timer;
-import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.Commands;
+import org.wpilib.math.MathUtil;
+import org.wpilib.math.controller.ProfiledPIDController;
+import org.wpilib.math.filter.SlewRateLimiter;
+import org.wpilib.math.geometry.Pose2d;
+import org.wpilib.math.geometry.Rotation2d;
+import org.wpilib.math.geometry.Transform2d;
+import org.wpilib.math.geometry.Translation2d;
+import org.wpilib.math.kinematics.ChassisVelocities;
+import org.wpilib.math.trajectory.TrapezoidProfile;
+import org.wpilib.math.util.Units;
+import org.wpilib.wpilibj.DriverStation;
+import org.wpilib.wpilibj.Alliance;
+import org.wpilib.wpilibj.Timer;
+import org.wpilib.wpilibj2.command.Command;
+import org.wpilib.wpilibj2.command.Commands;
 import frc.robot.subsystems.drive.Drive;
 import frc.robot.subsystems.drive.DriveConstants;
 import java.text.DecimalFormat;
@@ -85,7 +85,7 @@ public class DriveCommands {
         () -> {
           if (robotRelativeSupplier.getAsBoolean()) {
             drive.runVelocity(
-                new ChassisSpeeds(
+                new ChassisVelocities(
                     MathUtil.applyDeadband(xSupplier.getAsDouble(), DEADBAND)
                         * DriveConstants.robotRelativeMaxInputPercent,
                     MathUtil.applyDeadband(ySupplier.getAsDouble(), DEADBAND)
@@ -105,16 +105,16 @@ public class DriveCommands {
                 Math.copySign(omega * omega, omega) * DriveConstants.fieldRelativeMaxInputPercent;
 
             // Convert to field relative speeds & send command
-            ChassisSpeeds speeds =
-                new ChassisSpeeds(
+            ChassisVelocities speeds =
+                new ChassisVelocities(
                     linearVelocity.getX() * drive.getMaxLinearSpeedMetersPerSec(),
                     linearVelocity.getY() * drive.getMaxLinearSpeedMetersPerSec(),
                     omega * drive.getMaxAngularSpeedRadPerSec());
             boolean isFlipped =
-                DriverStation.getAlliance().isPresent()
-                    && DriverStation.getAlliance().get() == Alliance.Red;
+                MatchState.getAlliance().isPresent()
+                    && MatchState.getAlliance().get() == Alliance.RED;
             drive.runVelocity(
-                ChassisSpeeds.fromFieldRelativeSpeeds(
+                ChassisVelocities.fromFieldRelativeSpeeds(
                     speeds,
                     isFlipped
                         ? drive.getRotation().plus(new Rotation2d(Math.PI))
@@ -157,16 +157,16 @@ public class DriveCommands {
                       drive.getRotation().getRadians(), rotationSupplier.get().getRadians());
 
               // Convert to field relative speeds & send command
-              ChassisSpeeds speeds =
-                  new ChassisSpeeds(
+              ChassisVelocities speeds =
+                  new ChassisVelocities(
                       linearVelocity.getX() * drive.getMaxLinearSpeedMetersPerSec(),
                       linearVelocity.getY() * drive.getMaxLinearSpeedMetersPerSec(),
                       omega);
               boolean isFlipped =
-                  DriverStation.getAlliance().isPresent()
-                      && DriverStation.getAlliance().get() == Alliance.Red;
+                  MatchState.getAlliance().isPresent()
+                      && MatchState.getAlliance().get() == Alliance.RED;
               drive.runVelocity(
-                  ChassisSpeeds.fromFieldRelativeSpeeds(
+                  ChassisVelocities.fromFieldRelativeSpeeds(
                       speeds,
                       isFlipped
                           ? drive.getRotation().plus(new Rotation2d(Math.PI))
@@ -259,7 +259,7 @@ public class DriveCommands {
             Commands.run(
                 () -> {
                   double speed = limiter.calculate(WHEEL_RADIUS_MAX_VELOCITY);
-                  drive.runVelocity(new ChassisSpeeds(0.0, 0.0, speed));
+                  drive.runVelocity(new ChassisVelocities(0.0, 0.0, speed));
                 },
                 drive)),
 

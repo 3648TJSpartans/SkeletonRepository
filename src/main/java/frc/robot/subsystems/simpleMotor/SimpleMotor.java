@@ -12,7 +12,7 @@
 
 package frc.robot.subsystems.simpleMotor;
 
-import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import org.wpilib.wpilibj2.command.SubsystemBase;
 import org.littletonrobotics.junction.Logger;
 
 /*

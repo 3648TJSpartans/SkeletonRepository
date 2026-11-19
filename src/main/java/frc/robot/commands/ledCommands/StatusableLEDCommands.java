@@ -12,8 +12,8 @@
 
 package frc.robot.commands.ledCommands;
 
-import edu.wpi.first.wpilibj.DriverStation;
-import edu.wpi.first.wpilibj2.command.Command;
+import org.wpilib.wpilibj.DriverStation;
+import org.wpilib.wpilibj2.command.Command;
 import frc.robot.subsystems.leds.LedConstants;
 import frc.robot.subsystems.leds.LedSubsystem;
 import frc.robot.util.statusableUtils.Statusable;
@@ -42,7 +42,7 @@ public class StatusableLEDCommands extends Command {
 
   @Override
   public void execute() {
-    if (DriverStation.isEnabled()) {
+    if (RobotState.isEnabled()) {
 
       return;
     } else {

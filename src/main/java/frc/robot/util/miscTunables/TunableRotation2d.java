@@ -14,8 +14,8 @@ package frc.robot.util.miscTunables;
 
 import static frc.robot.util.TuningUpdater.*;
 
-import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import org.wpilib.math.geometry.Rotation2d;
+import org.wpilib.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.util.Tunable;
 import org.littletonrobotics.junction.Logger;
 

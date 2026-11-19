@@ -12,7 +12,7 @@
 
 package frc.robot.util.motorUtil;
 
-import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import org.wpilib.wpilibj2.command.SubsystemBase;
 import java.util.ArrayList;
 import java.util.List;
 import org.littletonrobotics.junction.Logger;

@@ -12,9 +12,9 @@
 
 package frc.robot.util.solenoids;
 
-import edu.wpi.first.wpilibj.Compressor;
-import edu.wpi.first.wpilibj.PneumaticsModuleType;
-import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import org.wpilib.wpilibj.Compressor;
+import org.wpilib.wpilibj.PneumaticsModuleType;
+import org.wpilib.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.Status;
 import frc.robot.util.statusableUtils.Statusable;
 import org.littletonrobotics.junction.Logger;
@@ -25,7 +25,7 @@ public class CompressorIO extends SubsystemBase implements Statusable {
   private String name;
 
   public CompressorIO(String name) {
-    m_compressor = new Compressor(PneumaticsModuleType.REVPH);
+    m_compressor = new Compressor(PneumaticsModuleType.REV_PH);
     this.name = name;
   }
 

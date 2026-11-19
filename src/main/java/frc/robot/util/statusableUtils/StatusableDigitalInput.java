@@ -12,7 +12,7 @@
 
 package frc.robot.util.statusableUtils;
 
-import edu.wpi.first.wpilibj.DigitalInput;
+import org.wpilib.wpilibj.DigitalInput;
 import frc.robot.Constants.Status;
 import org.littletonrobotics.junction.Logger;
 

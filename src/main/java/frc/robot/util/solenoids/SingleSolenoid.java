@@ -12,8 +12,8 @@
 
 package frc.robot.util.solenoids;
 
-import edu.wpi.first.wpilibj.PneumaticsModuleType;
-import edu.wpi.first.wpilibj.Solenoid;
+import org.wpilib.wpilibj.PneumaticsModuleType;
+import org.wpilib.wpilibj.Solenoid;
 import frc.robot.Constants.Status;
 import org.littletonrobotics.junction.Logger;
 
@@ -23,7 +23,7 @@ public class SingleSolenoid extends SolenoidIO {
 
   public SingleSolenoid(int channel, String name) {
     super(name);
-    m_solenoid = new Solenoid(PneumaticsModuleType.REVPH, channel);
+    m_solenoid = new Solenoid(PneumaticsModuleType.REV_PH, channel);
   }
 
   public void setSolenoid(boolean on) {

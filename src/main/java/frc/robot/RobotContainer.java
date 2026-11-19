@@ -17,20 +17,20 @@
 package frc.robot;
 
 import com.pathplanner.lib.auto.AutoBuilder;
-import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.math.geometry.Translation2d;
-import edu.wpi.first.wpilibj.DriverStation;
-import edu.wpi.first.wpilibj.GenericHID;
-import edu.wpi.first.wpilibj.GenericHID.RumbleType;
-import edu.wpi.first.wpilibj.RobotController;
-import edu.wpi.first.wpilibj.XboxController;
-import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.Commands;
-import edu.wpi.first.wpilibj2.command.InstantCommand;
-import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
-import edu.wpi.first.wpilibj2.command.button.Trigger;
-import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
+import org.wpilib.math.geometry.Pose2d;
+import org.wpilib.math.geometry.Rotation2d;
+import org.wpilib.math.geometry.Translation2d;
+import org.wpilib.wpilibj.DriverStation;
+import org.wpilib.wpilibj.GenericHID;
+import org.wpilib.wpilibj.GenericHID.RumbleType;
+import org.wpilib.wpilibj.RobotController;
+import org.wpilib.wpilibj.XboxController;
+import org.wpilib.wpilibj2.command.Command;
+import org.wpilib.wpilibj2.command.Commands;
+import org.wpilib.wpilibj2.command.InstantCommand;
+import org.wpilib.wpilibj2.command.button.CommandXboxController;
+import org.wpilib.wpilibj2.command.button.Trigger;
+import org.wpilib.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.Constants.Status;
 import frc.robot.commands.DriveCommands;
 import frc.robot.commands.FFCharacterizationCmd;
@@ -207,8 +207,8 @@ public class RobotContainer {
   /**
    * Use this method to define your button->command mappings. Buttons can be created by
    * instantiating a {@link GenericHID} or one of its subclasses ({@link
-   * edu.wpi.first.wpilibj.Joystick} or {@link XboxController}), and then passing it to a {@link
-   * edu.wpi.first.wpilibj2.command.button.JoystickButton}.
+   * org.wpilib.wpilibj.Joystick} or {@link XboxController}), and then passing it to a {@link
+   * org.wpilib.wpilibj2.command.button.JoystickButton}.
    */
   private void configureAutos() {}
 
@@ -243,9 +243,9 @@ public class RobotContainer {
   private void configureAlerts() {
     new Trigger(
             () ->
-                DriverStation.isTeleopEnabled()
-                    && DriverStation.getMatchTime() > 0
-                    && DriverStation.getMatchTime() <= Math.round(endgameAlert1.get()))
+                RobotState.isTeleopEnabled()
+                    && MatchState.getMatchTime() > 0
+                    && MatchState.getMatchTime() <= Math.round(endgameAlert1.get()))
         .onTrue(
             controllerRumbleCommand()
                 .withTimeout(0.5)
@@ -258,9 +258,9 @@ public class RobotContainer {
             );
     new Trigger(
             () ->
-                DriverStation.isTeleopEnabled()
-                    && DriverStation.getMatchTime() > 0
-                    && DriverStation.getMatchTime() <= Math.round(endgameAlert2.get()))
+                RobotState.isTeleopEnabled()
+                    && MatchState.getMatchTime() > 0
+                    && MatchState.getMatchTime() <= Math.round(endgameAlert2.get()))
         .onTrue(
             controllerRumbleCommand()
                 .withTimeout(0.1)
@@ -272,9 +272,9 @@ public class RobotContainer {
             );
     new Trigger(
             () ->
-                DriverStation.isTeleopEnabled()
-                    && DriverStation.getMatchTime() > 0
-                    && DriverStation.getMatchTime() <= Math.round(endgameAlert2.get()))
+                RobotState.isTeleopEnabled()
+                    && MatchState.getMatchTime() > 0
+                    && MatchState.getMatchTime() <= Math.round(endgameAlert2.get()))
         .onTrue(
             controllerRumbleCommand()
                 .withTimeout(0.2)
@@ -287,9 +287,9 @@ public class RobotContainer {
     // Countdown
     new Trigger(
             () ->
-                DriverStation.isTeleopEnabled()
-                    && DriverStation.getMatchTime() > 0
-                    && DriverStation.getMatchTime() <= Math.round(endgameAlert3.get()))
+                RobotState.isTeleopEnabled()
+                    && MatchState.getMatchTime() > 0
+                    && MatchState.getMatchTime() <= Math.round(endgameAlert3.get()))
         .onTrue(
             controllerRumbleCommand()
                 .withTimeout(0.8)
@@ -354,8 +354,8 @@ public class RobotContainer {
     Command AutoLED = new AutoLEDCommand(m_leds);
     Command TeleopLED = new TeleopLEDCommand(m_leds);
 
-    Trigger autonomous = new Trigger(() -> DriverStation.isAutonomousEnabled());
-    Trigger teleop = new Trigger(() -> DriverStation.isTeleopEnabled());
+    Trigger autonomous = new Trigger(() -> RobotState.isAutonomousEnabled());
+    Trigger teleop = new Trigger(() -> RobotState.isTeleopEnabled());
 
     autonomous.onTrue(AutoLED);
     teleop.onTrue(TeleopLED);

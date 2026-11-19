@@ -12,9 +12,9 @@
 
 package frc.robot.util.solenoids;
 
-import edu.wpi.first.wpilibj.DoubleSolenoid;
-import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
-import edu.wpi.first.wpilibj.PneumaticsModuleType;
+import org.wpilib.wpilibj.DoubleSolenoid;
+import org.wpilib.wpilibj.DoubleSolenoid.Value;
+import org.wpilib.wpilibj.PneumaticsModuleType;
 import frc.robot.Constants.Status;
 import org.littletonrobotics.junction.Logger;
 
@@ -24,19 +24,19 @@ public class DoubleSolenoidIO extends SolenoidIO {
 
   public DoubleSolenoidIO(int solenoidChannel1, int solenoidChannel2, String name) {
     super(name);
-    m_solenoid = new DoubleSolenoid(PneumaticsModuleType.REVPH, solenoidChannel1, solenoidChannel2);
+    m_solenoid = new DoubleSolenoid(PneumaticsModuleType.REV_PH, solenoidChannel1, solenoidChannel2);
   }
 
   public void setSolenoidForward() {
-    m_solenoid.set(DoubleSolenoid.Value.kForward);
+    m_solenoid.set(DoubleSolenoid.Value.FORWARD);
   }
 
   public void setSolenoidReverse() {
-    m_solenoid.set(DoubleSolenoid.Value.kReverse);
+    m_solenoid.set(DoubleSolenoid.Value.REVERSE);
   }
 
   public void setSolenoidOff() {
-    m_solenoid.set(DoubleSolenoid.Value.kOff);
+    m_solenoid.set(DoubleSolenoid.Value.OFF);
   }
 
   public void toggleSolenoid() {

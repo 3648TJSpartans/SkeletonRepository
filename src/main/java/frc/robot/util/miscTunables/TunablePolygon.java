@@ -12,7 +12,7 @@
 
 package frc.robot.util.miscTunables;
 
-import edu.wpi.first.math.geometry.Translation2d;
+import org.wpilib.math.geometry.Translation2d;
 import frc.robot.util.Tunable;
 import frc.robot.util.TuningUpdater;
 import frc.robot.util.zoneCalc.Polygon;

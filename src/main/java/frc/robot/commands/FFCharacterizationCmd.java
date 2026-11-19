@@ -12,10 +12,10 @@
 
 package frc.robot.commands;
 
-import edu.wpi.first.wpilibj.Timer;
-import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.Commands;
-import edu.wpi.first.wpilibj2.command.Subsystem;
+import org.wpilib.wpilibj.Timer;
+import org.wpilib.wpilibj2.command.Command;
+import org.wpilib.wpilibj2.command.Commands;
+import org.wpilib.wpilibj2.command.Subsystem;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.util.LinkedList;

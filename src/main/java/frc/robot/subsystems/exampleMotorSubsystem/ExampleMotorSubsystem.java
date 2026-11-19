@@ -12,7 +12,7 @@
 
 package frc.robot.subsystems.exampleMotorSubsystem;
 
-import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import org.wpilib.wpilibj2.command.SubsystemBase;
 import frc.robot.util.motorUtil.MotorIO;
 
 public class ExampleMotorSubsystem extends SubsystemBase {

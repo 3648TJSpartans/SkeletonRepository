@@ -18,12 +18,12 @@ package frc.robot.subsystems.drive;
 
 import static frc.robot.subsystems.drive.DriveConstants.*;
 
-import edu.wpi.first.math.MathUtil;
-import edu.wpi.first.math.controller.PIDController;
-import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.math.system.plant.LinearSystemId;
-import edu.wpi.first.wpilibj.Timer;
-import edu.wpi.first.wpilibj.simulation.DCMotorSim;
+import org.wpilib.math.MathUtil;
+import org.wpilib.math.controller.PIDController;
+import org.wpilib.math.geometry.Rotation2d;
+import org.wpilib.math.system.plant.LinearSystemId;
+import org.wpilib.wpilibj.Timer;
+import org.wpilib.wpilibj.simulation.DCMotorSim;
 
 /** Physics sim implementation of module IO. */
 public class ModuleIOSim implements ModuleIO {
@@ -69,8 +69,8 @@ public class ModuleIOSim implements ModuleIO {
     }
 
     // Update simulation state
-    driveSim.setInputVoltage(MathUtil.clamp(driveAppliedVolts, -12.0, 12.0));
-    turnSim.setInputVoltage(MathUtil.clamp(turnAppliedVolts, -12.0, 12.0));
+    driveSim.setInputVoltage(Math.clamp(driveAppliedVolts, -12.0, 12.0));
+    turnSim.setInputVoltage(Math.clamp(turnAppliedVolts, -12.0, 12.0));
     driveSim.update(0.02);
     turnSim.update(0.02);
 
@@ -89,7 +89,7 @@ public class ModuleIOSim implements ModuleIO {
     inputs.turnCurrentAmps = Math.abs(turnSim.getCurrentDrawAmps());
 
     // Update odometry inputs (50Hz because high-frequency odometry in sim doesn't matter)
-    inputs.odometryTimestamps = new double[] {Timer.getFPGATimestamp()};
+    inputs.odometryTimestamps = new double[] {Timer.getTimestamp()};
     inputs.odometryDrivePositionsRad = new double[] {inputs.drivePositionRad};
     inputs.odometryTurnPositions = new Rotation2d[] {inputs.turnPosition};
   }

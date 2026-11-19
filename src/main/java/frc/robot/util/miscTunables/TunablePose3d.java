@@ -12,7 +12,7 @@
 
 package frc.robot.util.miscTunables;
 
-import edu.wpi.first.math.geometry.Pose3d;
+import org.wpilib.math.geometry.Pose3d;
 import frc.robot.util.Tunable;
 import frc.robot.util.TuningUpdater;
 import org.littletonrobotics.junction.Logger;

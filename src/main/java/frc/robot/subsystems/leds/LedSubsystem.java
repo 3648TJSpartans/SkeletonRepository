@@ -12,11 +12,11 @@
 
 package frc.robot.subsystems.leds;
 
-import edu.wpi.first.wpilibj.AddressableLED;
-import edu.wpi.first.wpilibj.AddressableLEDBuffer;
-import edu.wpi.first.wpilibj.AddressableLEDBufferView;
-import edu.wpi.first.wpilibj.LEDPattern;
-import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import org.wpilib.wpilibj.AddressableLED;
+import org.wpilib.wpilibj.AddressableLEDBuffer;
+import org.wpilib.wpilibj.AddressableLEDBufferView;
+import org.wpilib.wpilibj.LEDPattern;
+import org.wpilib.wpilibj2.command.SubsystemBase;
 
 public class LedSubsystem extends SubsystemBase {
 
