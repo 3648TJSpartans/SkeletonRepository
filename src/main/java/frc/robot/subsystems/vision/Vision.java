@@ -25,17 +25,6 @@ import static frc.robot.subsystems.vision.VisionConstants.linearStdDevMegatag2Fa
 import static frc.robot.subsystems.vision.VisionConstants.maxAmbiguity;
 import static frc.robot.subsystems.vision.VisionConstants.maxZError;
 
-import org.wpilib.math.Matrix;
-import org.wpilib.math.VecBuilder;
-import org.wpilib.math.geometry.Pose2d;
-import org.wpilib.math.geometry.Pose3d;
-import org.wpilib.math.geometry.Rotation2d;
-import org.wpilib.math.geometry.Translation2d;
-import org.wpilib.math.numbers.N1;
-import org.wpilib.math.numbers.N3;
-import org.wpilib.wpilibj.Alert;
-import org.wpilib.wpilibj.Alert.AlertType;
-import org.wpilib.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.Status;
 import frc.robot.subsystems.vision.VisionIO.PoseObservationType;
 import frc.robot.util.statusableUtils.Statusable;
@@ -43,6 +32,17 @@ import java.util.LinkedList;
 import java.util.List;
 import org.littletonrobotics.junction.AutoLogOutput;
 import org.littletonrobotics.junction.Logger;
+import org.wpilib.command2.SubsystemBase;
+import org.wpilib.math.geometry.Pose2d;
+import org.wpilib.math.geometry.Pose3d;
+import org.wpilib.math.geometry.Rotation2d;
+import org.wpilib.math.geometry.Translation2d;
+import org.wpilib.math.linalg.Matrix;
+import org.wpilib.math.linalg.VecBuilder;
+import org.wpilib.math.numbers.N1;
+import org.wpilib.math.numbers.N3;
+import org.wpilib.util.Alert;
+import org.wpilib.util.Alert.Level;
 
 public class Vision extends SubsystemBase implements Statusable {
   private final VisionConsumer consumer;
@@ -70,7 +70,7 @@ public class Vision extends SubsystemBase implements Statusable {
     for (int i = 0; i < inputs.length; i++) {
       disconnectedAlerts[i] =
           new Alert(
-              "Vision camera " + Integer.toString(i) + " is disconnected.", Level.MEDIUM);
+              "Vision", "Vision camera " + Integer.toString(i) + " is disconnected.", Level.MEDIUM);
     }
   }
 

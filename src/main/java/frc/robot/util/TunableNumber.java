@@ -4,7 +4,6 @@ package frc.robot.util;
 
 import static frc.robot.util.TuningUpdater.*;
 
-import org.wpilib.wpilibj.smartdashboard.SmartDashboard;
 import java.util.function.Consumer;
 import java.util.function.DoubleSupplier;
 import org.littletonrobotics.junction.Logger;
@@ -53,17 +52,17 @@ public class TunableNumber extends Tunable<Double> implements DoubleSupplier {
 
   @Override
   protected void putDashboardValue(String key, Double defaultValue) {
-    SmartDashboard.putNumber(key, SmartDashboard.getNumber(key, defaultValue));
+    DashboardUtil.putNumber(key, DashboardUtil.getNumber(key, defaultValue));
   }
 
   @Override
   protected Double getDashboardValue(String key, Double defaultValue) {
-    return TUNING_MODE ? SmartDashboard.getNumber(key, defaultValue) : defaultValue;
+    return TUNING_MODE ? DashboardUtil.getNumber(key, defaultValue) : defaultValue;
   }
 
   @Override
   protected void logValue(String key, boolean TUNING_MODE, Double value, Double defaultValue) {
     Logger.recordOutput(
-        key, TUNING_MODE ? SmartDashboard.getNumber(key, defaultValue) : defaultValue);
+        key, TUNING_MODE ? DashboardUtil.getNumber(key, defaultValue) : defaultValue);
   }
 }

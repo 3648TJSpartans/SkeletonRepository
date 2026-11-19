@@ -12,10 +12,10 @@
 
 package frc.robot.commands.simpleMotorCommands;
 
-import org.wpilib.wpilibj2.command.Command;
 import frc.robot.subsystems.simpleMotor.SimpleMotor;
 import java.util.function.Supplier;
 import org.littletonrobotics.junction.Logger;
+import org.wpilib.command2.Command;
 
 public class SimpleMotorAnalogCmd extends Command {
   private final SimpleMotor m_simpleMotor;

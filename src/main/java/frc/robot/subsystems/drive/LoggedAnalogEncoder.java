@@ -12,9 +12,9 @@
 
 package frc.robot.subsystems.drive;
 
-import org.wpilib.wpilibj.AnalogEncoder;
 import frc.robot.util.TunableNumber;
 import java.util.ArrayList;
+import org.wpilib.hardware.rotation.AnalogEncoder;
 
 public class LoggedAnalogEncoder {
   private static final ArrayList<LoggedAnalogEncoder> encoders = new ArrayList<>();

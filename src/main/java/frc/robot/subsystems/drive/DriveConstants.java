@@ -18,15 +18,15 @@ package frc.robot.subsystems.drive;
 
 import com.pathplanner.lib.config.ModuleConfig;
 import com.pathplanner.lib.config.RobotConfig;
-import com.studica.frc.AHRS.NavXComType;
+import com.studica.frc.UsbPort;
+import frc.robot.util.miscTunables.TunableInteger;
 import org.wpilib.math.geometry.Rotation2d;
 import org.wpilib.math.geometry.Translation2d;
-import org.wpilib.math.system.plant.DCMotor;
+import org.wpilib.math.system.DCMotor;
 import org.wpilib.math.util.Units;
-import frc.robot.util.miscTunables.TunableInteger;
 
 public class DriveConstants {
-  public static final NavXComType navXComType = NavXComType.kUSB1;
+  public static final UsbPort navXComType = UsbPort.USB1;
 
   public static final double fieldRelativeMaxInputPercent = 1; // value between 0+ and 1,
   // allowing control maximum

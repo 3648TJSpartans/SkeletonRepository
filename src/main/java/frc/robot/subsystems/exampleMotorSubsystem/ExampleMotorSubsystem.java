@@ -12,8 +12,8 @@
 
 package frc.robot.subsystems.exampleMotorSubsystem;
 
-import org.wpilib.wpilibj2.command.SubsystemBase;
 import frc.robot.util.motorUtil.MotorIO;
+import org.wpilib.command2.SubsystemBase;
 
 public class ExampleMotorSubsystem extends SubsystemBase {
   private final MotorIO m_motor1;

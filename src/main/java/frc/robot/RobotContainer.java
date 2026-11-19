@@ -17,20 +17,6 @@
 package frc.robot;
 
 import com.pathplanner.lib.auto.AutoBuilder;
-import org.wpilib.math.geometry.Pose2d;
-import org.wpilib.math.geometry.Rotation2d;
-import org.wpilib.math.geometry.Translation2d;
-import org.wpilib.wpilibj.DriverStation;
-import org.wpilib.wpilibj.GenericHID;
-import org.wpilib.wpilibj.GenericHID.RumbleType;
-import org.wpilib.wpilibj.RobotController;
-import org.wpilib.wpilibj.XboxController;
-import org.wpilib.wpilibj2.command.Command;
-import org.wpilib.wpilibj2.command.Commands;
-import org.wpilib.wpilibj2.command.InstantCommand;
-import org.wpilib.wpilibj2.command.button.CommandXboxController;
-import org.wpilib.wpilibj2.command.button.Trigger;
-import org.wpilib.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.Constants.Status;
 import frc.robot.commands.DriveCommands;
 import frc.robot.commands.FFCharacterizationCmd;
@@ -64,8 +50,23 @@ import frc.robot.util.motorUtil.RelEncoderSparkMax;
 import frc.robot.util.statusableUtils.GenericStatusable;
 import frc.robot.util.statusableUtils.StatusLogger;
 import org.littletonrobotics.junction.Logger;
-import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
+import org.littletonrobotics.junction.networktables.LoggedNetworkChooser;
 import org.littletonrobotics.junction.networktables.LoggedNetworkNumber;
+import org.wpilib.command2.Command;
+import org.wpilib.command2.Commands;
+import org.wpilib.command2.InstantCommand;
+import org.wpilib.command2.button.CommandXboxController;
+import org.wpilib.command2.button.Trigger;
+import org.wpilib.command2.sysid.SysIdRoutine;
+import org.wpilib.driverstation.GenericHID;
+import org.wpilib.driverstation.GenericHID.RumbleType;
+import org.wpilib.driverstation.MatchState;
+import org.wpilib.driverstation.RobotState;
+import org.wpilib.driverstation.XboxController;
+import org.wpilib.math.geometry.Pose2d;
+import org.wpilib.math.geometry.Rotation2d;
+import org.wpilib.math.geometry.Translation2d;
+import org.wpilib.system.RobotController;
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
@@ -94,7 +95,7 @@ public class RobotContainer {
   private final CommandXboxController m_testController =
       new CommandXboxController(Constants.kTestControllerPort);
   // Dashboard inputs
-  private final LoggedDashboardChooser<Command> autoChooser;
+  private final LoggedNetworkChooser<Command> autoChooser;
 
   // Alerts
   private final LoggedNetworkNumber endgameAlert1 =
@@ -198,7 +199,7 @@ public class RobotContainer {
     configureAutos();
 
     // Set up auto routines
-    autoChooser = new LoggedDashboardChooser<>("Auto Choices", AutoBuilder.buildAutoChooser());
+    autoChooser = new LoggedNetworkChooser<>("Auto Choices", AutoBuilder.buildAutoChooser());
     configureAutoChooser();
     // Configure the button bindings
     configureButtonBindings();
@@ -231,7 +232,7 @@ public class RobotContainer {
             .ignoringDisable(true);
     m_copilotController.rightTrigger().onTrue(updateCommand);
 
-    new Trigger(DriverStation::isEnabled).onTrue(updateCommand);
+    new Trigger(RobotState::isEnabled).onTrue(updateCommand);
 
     /*
      * m_led.setLedPattern(LedConstants.elevatorHeight, m_led.elevatorBuffer);
@@ -241,11 +242,10 @@ public class RobotContainer {
   }
 
   private void configureAlerts() {
-    new Trigger(
-            () ->
-                RobotState.isTeleopEnabled()
-                    && MatchState.getMatchTime() > 0
-                    && MatchState.getMatchTime() <= Math.round(endgameAlert1.get()))
+    new Trigger(() ->
+        RobotState.isTeleopEnabled()
+            && MatchState.getMatchTime() > 0
+            && MatchState.getMatchTime() <= Math.round(endgameAlert1.get()))
         .onTrue(
             controllerRumbleCommand()
                 .withTimeout(0.5)
@@ -256,11 +256,10 @@ public class RobotContainer {
             // .beforeStarting(() -> leds.endgameAlert = true)
             // .finallyDo(() -> leds.endgameAlert = false)
             );
-    new Trigger(
-            () ->
-                RobotState.isTeleopEnabled()
-                    && MatchState.getMatchTime() > 0
-                    && MatchState.getMatchTime() <= Math.round(endgameAlert2.get()))
+    new Trigger(() ->
+        RobotState.isTeleopEnabled()
+            && MatchState.getMatchTime() > 0
+            && MatchState.getMatchTime() <= Math.round(endgameAlert2.get()))
         .onTrue(
             controllerRumbleCommand()
                 .withTimeout(0.1)
@@ -270,11 +269,10 @@ public class RobotContainer {
             // .beforeStarting(() -> leds.endgameAlert = true)
             // .finallyDo(() -> leds.endgameAlert = false)
             );
-    new Trigger(
-            () ->
-                RobotState.isTeleopEnabled()
-                    && MatchState.getMatchTime() > 0
-                    && MatchState.getMatchTime() <= Math.round(endgameAlert2.get()))
+    new Trigger(() ->
+        RobotState.isTeleopEnabled()
+            && MatchState.getMatchTime() > 0
+            && MatchState.getMatchTime() <= Math.round(endgameAlert2.get()))
         .onTrue(
             controllerRumbleCommand()
                 .withTimeout(0.2)
@@ -285,11 +283,10 @@ public class RobotContainer {
             // .finallyDo(() -> leds.endgameAlert = false)
             );
     // Countdown
-    new Trigger(
-            () ->
-                RobotState.isTeleopEnabled()
-                    && MatchState.getMatchTime() > 0
-                    && MatchState.getMatchTime() <= Math.round(endgameAlert3.get()))
+    new Trigger(() ->
+        RobotState.isTeleopEnabled()
+            && MatchState.getMatchTime() > 0
+            && MatchState.getMatchTime() <= Math.round(endgameAlert3.get()))
         .onTrue(
             controllerRumbleCommand()
                 .withTimeout(0.8)
@@ -303,21 +300,21 @@ public class RobotContainer {
 
   public void configureAutoChooser() {
 
-    autoChooser.addOption(
+    autoChooser.add(
         "Drive Wheel Radius Characterization", DriveCommands.wheelRadiusCharacterization(m_drive));
-    autoChooser.addOption(
+    autoChooser.add(
         "Drive Simple FF Characterization", DriveCommands.feedforwardCharacterization(m_drive));
-    autoChooser.addOption(
+    autoChooser.add(
         "Drive SysId (Quasistatic Forward)",
-        m_drive.sysIdQuasistatic(SysIdRoutine.Direction.kForward));
-    autoChooser.addOption(
+        m_drive.sysIdQuasistatic(SysIdRoutine.Direction.FORWARD));
+    autoChooser.add(
         "Drive SysId (Quasistatic Reverse)",
-        m_drive.sysIdQuasistatic(SysIdRoutine.Direction.kReverse));
-    autoChooser.addOption(
-        "Drive SysId (Dynamic Forward)", m_drive.sysIdDynamic(SysIdRoutine.Direction.kForward));
-    autoChooser.addOption(
-        "Drive SysId (Dynamic Reverse)", m_drive.sysIdDynamic(SysIdRoutine.Direction.kReverse));
-    autoChooser.addOption(
+        m_drive.sysIdQuasistatic(SysIdRoutine.Direction.REVERSE));
+    autoChooser.add(
+        "Drive SysId (Dynamic Forward)", m_drive.sysIdDynamic(SysIdRoutine.Direction.FORWARD));
+    autoChooser.add(
+        "Drive SysId (Dynamic Reverse)", m_drive.sysIdDynamic(SysIdRoutine.Direction.REVERSE));
+    autoChooser.add(
         "Flywheel simple FF IDentification",
         FFCharacterizationCmd.characterizeSystem(
             m_exampleFlywheel,
@@ -441,12 +438,16 @@ public class RobotContainer {
   private Command controllerRumbleCommand() {
     return Commands.startEnd(
         () -> {
-          m_driveController.getHID().setRumble(RumbleType.kBothRumble, 1.0);
-          m_copilotController.getHID().setRumble(RumbleType.kBothRumble, 1.0);
+          m_driveController.getHID().setRumble(RumbleType.LEFT_RUMBLE, 1.0);
+          m_driveController.getHID().setRumble(RumbleType.RIGHT_RUMBLE, 1.0);
+          m_copilotController.getHID().setRumble(RumbleType.LEFT_RUMBLE, 1.0);
+          m_copilotController.getHID().setRumble(RumbleType.RIGHT_RUMBLE, 1.0);
         },
         () -> {
-          m_driveController.getHID().setRumble(RumbleType.kBothRumble, 0.0);
-          m_copilotController.getHID().setRumble(RumbleType.kBothRumble, 0.0);
+          m_driveController.getHID().setRumble(RumbleType.LEFT_RUMBLE, 0.0);
+          m_driveController.getHID().setRumble(RumbleType.RIGHT_RUMBLE, 0.0);
+          m_copilotController.getHID().setRumble(RumbleType.LEFT_RUMBLE, 0.0);
+          m_copilotController.getHID().setRumble(RumbleType.RIGHT_RUMBLE, 0.0);
         });
   }
 }

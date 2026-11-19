@@ -18,12 +18,12 @@ package frc.robot.subsystems.drive;
 
 import static frc.robot.subsystems.drive.DriveConstants.*;
 
+import org.littletonrobotics.junction.Logger;
 import org.wpilib.math.geometry.Rotation2d;
 import org.wpilib.math.kinematics.SwerveModulePosition;
-import org.wpilib.math.kinematics.SwerveModuleState;
-import org.wpilib.wpilibj.Alert;
-import org.wpilib.wpilibj.Alert.AlertType;
-import org.littletonrobotics.junction.Logger;
+import org.wpilib.math.kinematics.SwerveModuleVelocity;
+import org.wpilib.util.Alert;
+import org.wpilib.util.Alert.Level;
 
 public class Module {
   private final ModuleIO io;
@@ -39,11 +39,14 @@ public class Module {
     this.index = index;
     driveDisconnectedAlert =
         new Alert(
+            "Drive",
             "Disconnected drive motor on module " + Integer.toString(index) + ".",
             Level.HIGH);
     turnDisconnectedAlert =
         new Alert(
-            "Disconnected turn motor on module " + Integer.toString(index) + ".", Level.HIGH);
+            "Drive",
+            "Disconnected turn motor on module " + Integer.toString(index) + ".",
+            Level.HIGH);
   }
 
   public void periodic() {
@@ -65,10 +68,10 @@ public class Module {
   }
 
   /** Runs the module with the specified setpoint state. Mutates the state to optimize it. */
-  public void runSetpoint(SwerveModuleState state) {
+  public void runSetpoint(SwerveModuleVelocity state) {
     // Optimize velocity setpoint
-    state.optimize(getAngle());
-    state.cosineScale(inputs.turnPosition);
+    state = state.optimize(getAngle());
+    state = state.cosineScale(inputs.turnPosition);
 
     // Apply setpoints
     io.setDriveVelocity(state.velocity / wheelRadiusMeters);
@@ -108,8 +111,8 @@ public class Module {
   }
 
   /** Returns the module state (turn angle and drive velocity). */
-  public SwerveModuleState getState() {
-    return new SwerveModuleState(getVelocityMetersPerSec(), getAngle());
+  public SwerveModuleVelocity getState() {
+    return new SwerveModuleVelocity(getVelocityMetersPerSec(), getAngle());
   }
 
   /** Returns the module positions received this cycle. */

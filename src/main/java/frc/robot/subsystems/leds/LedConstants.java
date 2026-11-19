@@ -14,8 +14,8 @@ package frc.robot.subsystems.leds;
 
 import static org.wpilib.units.Units.*;
 
-import org.wpilib.wpilibj.LEDPattern;
-import org.wpilib.wpilibj.util.Color;
+import org.wpilib.hardware.led.LEDPattern;
+import org.wpilib.util.Color;
 
 public final class LedConstants {
 
@@ -55,10 +55,10 @@ public final class LedConstants {
   // Gradients
   public static LEDPattern rainbow = LEDPattern.rainbow(255, 128);
   public static LEDPattern purpleGradient =
-      LEDPattern.gradient(LEDPattern.GradientType.kDiscontinuous, Color.RED, Color.BLUE);
+      LEDPattern.gradient(LEDPattern.GradientType.DISCONTINUOUS, Color.RED, Color.BLUE);
   public static LEDPattern elevatorGradient =
       LEDPattern.gradient(
-          LEDPattern.GradientType.kDiscontinuous,
+          LEDPattern.GradientType.DISCONTINUOUS,
           Color.RED,
           Color.YELLOW,
           Color.GREEN,

@@ -16,8 +16,8 @@
 
 package frc.robot.subsystems.vision;
 
-import org.wpilib.apriltag.AprilTagFieldLayout;
-import org.wpilib.apriltag.AprilTagFields;
+import org.wpilib.fields.Field;
+import org.wpilib.fields.Fields;
 import org.wpilib.math.geometry.Rotation3d;
 import org.wpilib.math.geometry.Transform3d;
 
@@ -25,8 +25,7 @@ public class VisionConstants {
   public static final boolean usingMT1 = true;
 
   // AprilTag layout
-  public static AprilTagFieldLayout aprilTagLayout =
-      AprilTagFieldLayout.loadField(AprilTagFields.kDefaultField);
+  public static Field aprilTagLayout = Fields.DEFAULT_FIELD.loadField();
 
   // Camera names, must match names configured on coprocessor
   public static String camera0Name = "limelight-fourone";

@@ -14,10 +14,10 @@ package frc.robot.util.miscTunables;
 
 import static frc.robot.util.TuningUpdater.*;
 
-import org.wpilib.math.geometry.Rotation3d;
-import org.wpilib.wpilibj.smartdashboard.SmartDashboard;
+import frc.robot.util.DashboardUtil;
 import frc.robot.util.Tunable;
 import org.littletonrobotics.junction.Logger;
+import org.wpilib.math.geometry.Rotation3d;
 
 /**
  * Class for a tunable number. Gets value from dashboard in tuning mode, returns default if not or
@@ -50,21 +50,21 @@ public class TunableRotation3d extends Tunable<Rotation3d> {
 
   @Override
   protected void putDashboardValue(String key, Rotation3d defaultValue) {
-    SmartDashboard.putNumber(
-        key + "/pitch", SmartDashboard.getNumber(key + "/pitch", defaultValue.getX()));
-    SmartDashboard.putNumber(
-        key + "/yaw", SmartDashboard.getNumber(key + "/yaw", defaultValue.getY()));
-    SmartDashboard.putNumber(
-        key + "/roll", SmartDashboard.getNumber(key + "/roll", defaultValue.getZ()));
+    DashboardUtil.putNumber(
+        key + "/pitch", DashboardUtil.getNumber(key + "/pitch", defaultValue.getX()));
+    DashboardUtil.putNumber(
+        key + "/yaw", DashboardUtil.getNumber(key + "/yaw", defaultValue.getY()));
+    DashboardUtil.putNumber(
+        key + "/roll", DashboardUtil.getNumber(key + "/roll", defaultValue.getZ()));
   }
 
   @Override
   protected Rotation3d getDashboardValue(String key, Rotation3d defaultValue) {
     return TUNING_MODE
         ? new Rotation3d(
-            SmartDashboard.getNumber(key + "/pitch", defaultValue.getX()),
-            SmartDashboard.getNumber(key + "/yaw", defaultValue.getY()),
-            SmartDashboard.getNumber(key + "/roll", defaultValue.getZ()))
+            DashboardUtil.getNumber(key + "/pitch", defaultValue.getX()),
+            DashboardUtil.getNumber(key + "/yaw", defaultValue.getY()),
+            DashboardUtil.getNumber(key + "/roll", defaultValue.getZ()))
         : defaultValue;
   }
 

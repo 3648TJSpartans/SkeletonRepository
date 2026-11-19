@@ -12,9 +12,9 @@
 
 package frc.robot.commands.exampleSubsystemCommands;
 
-import org.wpilib.wpilibj2.command.Command;
 import frc.robot.subsystems.exampleMotorSubsystem.ExampleMotorSubsystem;
 import org.littletonrobotics.junction.Logger;
+import org.wpilib.command2.Command;
 
 public class ExampleMotorCmd extends Command {
   private final ExampleMotorSubsystem m_exampleMotorSubsystem;

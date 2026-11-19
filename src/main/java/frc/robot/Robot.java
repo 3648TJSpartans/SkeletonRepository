@@ -18,14 +18,15 @@
 
 package frc.robot;
 
-import org.wpilib.wpilibj2.command.Command;
-import org.wpilib.wpilibj2.command.CommandScheduler;
 import org.littletonrobotics.junction.LogFileUtil;
 import org.littletonrobotics.junction.LoggedRobot;
 import org.littletonrobotics.junction.Logger;
 import org.littletonrobotics.junction.networktables.NT4Publisher;
 import org.littletonrobotics.junction.wpilog.WPILOGReader;
 import org.littletonrobotics.junction.wpilog.WPILOGWriter;
+import org.wpilib.command2.Command;
+import org.wpilib.command2.CommandScheduler;
+
 // import org.littletonrobotics.urcl.URCL;
 
 /**

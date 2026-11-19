@@ -9,6 +9,17 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import frc.robot.subsystems.vision.VisionIO.PoseObservation;
+import frc.robot.subsystems.vision.VisionIO.PoseObservationType;
+import frc.robot.util.LimelightHelpers.LimelightResults;
+import frc.robot.util.LimelightHelpers.PoseEstimate;
+import java.io.IOException;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.util.Map;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ConcurrentHashMap;
 import org.wpilib.math.geometry.Pose2d;
 import org.wpilib.math.geometry.Pose3d;
 import org.wpilib.math.geometry.Rotation2d;
@@ -21,17 +32,6 @@ import org.wpilib.networktables.NetworkTable;
 import org.wpilib.networktables.NetworkTableEntry;
 import org.wpilib.networktables.NetworkTableInstance;
 import org.wpilib.networktables.TimestampedDoubleArray;
-import frc.robot.subsystems.vision.VisionIO.PoseObservation;
-import frc.robot.subsystems.vision.VisionIO.PoseObservationType;
-import frc.robot.util.LimelightHelpers.LimelightResults;
-import frc.robot.util.LimelightHelpers.PoseEstimate;
-import java.io.IOException;
-import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.util.Map;
-import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * LimelightHelpers provides static methods and classes for interfacing with Limelight vision
@@ -1646,10 +1646,9 @@ public class LimelightHelpers {
 
   /** Asynchronously take snapshot. */
   public static CompletableFuture<Boolean> takeSnapshot(String tableName, String snapshotName) {
-    return CompletableFuture.supplyAsync(
-        () -> {
-          return SYNCH_TAKESNAPSHOT(tableName, snapshotName);
-        });
+    return CompletableFuture.supplyAsync(() -> {
+      return SYNCH_TAKESNAPSHOT(tableName, snapshotName);
+    });
   }
 
   private static boolean SYNCH_TAKESNAPSHOT(String tableName, String snapshotName) {

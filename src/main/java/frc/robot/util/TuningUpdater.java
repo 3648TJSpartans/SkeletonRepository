@@ -12,12 +12,11 @@
 
 package frc.robot.util;
 
-import org.wpilib.wpilibj.smartdashboard.SmartDashboard;
-import org.wpilib.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import java.util.HashSet;
 import java.util.Set;
 import org.littletonrobotics.junction.Logger;
+import org.wpilib.command2.SubsystemBase;
 
 public class TuningUpdater extends SubsystemBase {
   /** If true, TunableNumbers are on, else, they can't be changed. */
@@ -31,7 +30,7 @@ public class TuningUpdater extends SubsystemBase {
   private final String key = TABLE_KEY + "/" + dashBoardKey;
 
   public TuningUpdater() {
-    SmartDashboard.putBoolean(key, SmartDashboard.getBoolean(key, Constants.DEFAULT_TUNING_MODE));
+    DashboardUtil.putBoolean(key, DashboardUtil.getBoolean(key, Constants.DEFAULT_TUNING_MODE));
   }
 
   public static void addAutoUpdater(Tunable<?> tunable) {
@@ -44,7 +43,7 @@ public class TuningUpdater extends SubsystemBase {
 
   @Override
   public void periodic() {
-    TUNING_MODE = SmartDashboard.getBoolean(key, Constants.DEFAULT_TUNING_MODE);
+    TUNING_MODE = DashboardUtil.getBoolean(key, Constants.DEFAULT_TUNING_MODE);
     Logger.recordOutput(key, TUNING_MODE);
     if (TUNING_MODE) {
       for (Tunable<?> tunable : autoUpdaters) {

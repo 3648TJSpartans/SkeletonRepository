@@ -17,31 +17,35 @@
 package frc.robot.subsystems.drive;
 
 import static frc.robot.subsystems.drive.DriveConstants.*;
+import static org.wpilib.units.Units.Degrees;
+import static org.wpilib.units.Units.RadiansPerSecond;
 
-import com.studica.frc.AHRS;
-import org.wpilib.math.geometry.Rotation2d;
-import org.wpilib.math.util.Units;
+import com.studica.frc.Navx;
 import java.util.Queue;
+import org.wpilib.math.geometry.Rotation2d;
 
 /** IO implementation for NavX. */
 public class GyroIONavX implements GyroIO {
 
-  private final AHRS navX =
-      new AHRS(DriveConstants.navXComType, (byte) odometryFrequency); // kMXP_SPI
+  private final Navx navX = Navx.usb(DriveConstants.navXComType, (int) odometryFrequency);
 
   private final Queue<Double> yawPositionQueue;
   private final Queue<Double> yawTimestampQueue;
 
   public GyroIONavX() {
     yawTimestampQueue = SparkOdometryThread.getInstance().makeTimestampQueue();
-    yawPositionQueue = SparkOdometryThread.getInstance().registerSignal(navX::getAngle);
+    yawPositionQueue =
+        SparkOdometryThread.getInstance()
+            .registerSignal(() -> navX.getAngle().map(a -> a.in(Degrees)).orElse(0.0));
   }
 
   @Override
   public void updateInputs(GyroIOInputs inputs) {
     inputs.connected = navX.isConnected();
-    inputs.yawPosition = Rotation2d.fromDegrees(-navX.getAngle());
-    inputs.yawVelocityRadPerSec = Units.degreesToRadians(-navX.getRawGyroZ());
+    inputs.yawPosition =
+        Rotation2d.fromDegrees(-navX.getAngle().map(a -> a.in(Degrees)).orElse(0.0));
+    inputs.yawVelocityRadPerSec =
+        -navX.getAngularVelocity().map(v -> v.z().in(RadiansPerSecond)).orElse(0.0);
     inputs.odometryYawTimestamps =
         yawTimestampQueue.stream().mapToDouble((Double value) -> value).toArray();
     inputs.odometryYawPositions =

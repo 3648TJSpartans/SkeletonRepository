@@ -12,10 +12,10 @@
 
 package frc.robot.util.solenoids;
 
-import org.wpilib.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.Status;
 import frc.robot.util.statusableUtils.Statusable;
 import org.littletonrobotics.junction.Logger;
+import org.wpilib.command2.SubsystemBase;
 
 public abstract class SolenoidIO extends SubsystemBase implements Statusable {
   private final String m_name;

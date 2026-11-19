@@ -12,8 +12,8 @@
 
 package frc.robot.subsystems.simpleMotor;
 
-import org.wpilib.wpilibj2.command.SubsystemBase;
 import org.littletonrobotics.junction.Logger;
+import org.wpilib.command2.SubsystemBase;
 
 /*
  * This subsystem controls a single motor with commands to spin

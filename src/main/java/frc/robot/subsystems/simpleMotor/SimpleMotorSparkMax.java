@@ -14,6 +14,7 @@ package frc.robot.subsystems.simpleMotor;
 
 import com.revrobotics.spark.SparkLowLevel.MotorType;
 import com.revrobotics.spark.SparkMax;
+import org.wpilib.hardware.bus.CANPort;
 
 /*
  * This is the file where most of the logic is applied. It
@@ -28,18 +29,18 @@ public class SimpleMotorSparkMax implements SimpleMotorIO {
   /* The constructor defines the motor and any necessary variables. */
   public SimpleMotorSparkMax() {
     /* All of our motors are brushless. */
-    motor = new SparkMax(SimpleMotorConstants.simpleMotorCan, MotorType.kBrushless);
+    motor = new SparkMax(CANPort.CAN_S0, SimpleMotorConstants.simpleMotorCan, MotorType.kBrushless);
   }
 
   public void stop() {
-    motor.set(0);
+    motor.setThrottle(0);
   }
 
   public void setSpeed(double speed) {
-    motor.set(speed);
+    motor.setThrottle(speed);
   }
 
   public double getSpeed() {
-    return motor.get();
+    return motor.getThrottle();
   }
 }

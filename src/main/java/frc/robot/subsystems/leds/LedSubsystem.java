@@ -12,11 +12,11 @@
 
 package frc.robot.subsystems.leds;
 
-import org.wpilib.wpilibj.AddressableLED;
-import org.wpilib.wpilibj.AddressableLEDBuffer;
-import org.wpilib.wpilibj.AddressableLEDBufferView;
-import org.wpilib.wpilibj.LEDPattern;
-import org.wpilib.wpilibj2.command.SubsystemBase;
+import org.wpilib.command2.SubsystemBase;
+import org.wpilib.hardware.led.AddressableLED;
+import org.wpilib.hardware.led.AddressableLEDBuffer;
+import org.wpilib.hardware.led.AddressableLEDBufferView;
+import org.wpilib.hardware.led.LEDPattern;
 
 public class LedSubsystem extends SubsystemBase {
 
@@ -56,7 +56,6 @@ public class LedSubsystem extends SubsystemBase {
 
     led.setLength(ledBuffer.getLength());
     led.setData(ledBuffer);
-    led.start();
   }
 
   // Writes a specified LED pattern to the buffer. A bunch of patterns can be

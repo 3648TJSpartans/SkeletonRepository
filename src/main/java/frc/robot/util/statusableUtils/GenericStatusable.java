@@ -12,9 +12,9 @@
 
 package frc.robot.util.statusableUtils;
 
-import org.wpilib.wpilibj.Timer;
 import frc.robot.Constants.Status;
 import java.util.function.Supplier;
+import org.wpilib.system.Timer;
 
 public class GenericStatusable implements Statusable {
   private final Supplier<Status> m_statusSupplier;

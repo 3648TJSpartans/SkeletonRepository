@@ -18,8 +18,8 @@
 
 package frc.robot.commands.ledCommands;
 
-import org.wpilib.wpilibj2.command.Command;
 import frc.robot.subsystems.leds.*;
+import org.wpilib.command2.Command;
 
 public class TeleopLEDCommand extends Command {
   private final LedSubsystem m_leds;

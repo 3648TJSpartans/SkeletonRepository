@@ -12,16 +12,16 @@
 
 package frc.robot.commands;
 
-import org.wpilib.wpilibj.Timer;
-import org.wpilib.wpilibj2.command.Command;
-import org.wpilib.wpilibj2.command.Commands;
-import org.wpilib.wpilibj2.command.Subsystem;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
+import org.wpilib.command2.Command;
+import org.wpilib.command2.Commands;
+import org.wpilib.command2.Subsystem;
+import org.wpilib.system.Timer;
 
 public class FFCharacterizationCmd extends Command {
   private static final double FF_START_DELAY = 2.0; // Secs
@@ -37,11 +37,10 @@ public class FFCharacterizationCmd extends Command {
 
     return Commands.sequence(
         // Reset data
-        Commands.runOnce(
-            () -> {
-              velocitySamples.clear();
-              voltageSamples.clear();
-            }),
+        Commands.runOnce(() -> {
+          velocitySamples.clear();
+          voltageSamples.clear();
+        }),
 
         // Set speed to 0
         Commands.run(
@@ -65,26 +64,25 @@ public class FFCharacterizationCmd extends Command {
                 system)
 
             // When cancelled, calculate and print results
-            .finallyDo(
-                () -> {
-                  int n = velocitySamples.size();
-                  double sumX = 0.0;
-                  double sumY = 0.0;
-                  double sumXY = 0.0;
-                  double sumX2 = 0.0;
-                  for (int i = 0; i < n; i++) {
-                    sumX += velocitySamples.get(i);
-                    sumY += voltageSamples.get(i);
-                    sumXY += velocitySamples.get(i) * voltageSamples.get(i);
-                    sumX2 += velocitySamples.get(i) * velocitySamples.get(i);
-                  }
-                  double kS = (sumY * sumX2 - sumX * sumXY) / (n * sumX2 - sumX * sumX);
-                  double kV = (n * sumXY - sumX * sumY) / (n * sumX2 - sumX * sumX);
+            .finallyDo(() -> {
+              int n = velocitySamples.size();
+              double sumX = 0.0;
+              double sumY = 0.0;
+              double sumXY = 0.0;
+              double sumX2 = 0.0;
+              for (int i = 0; i < n; i++) {
+                sumX += velocitySamples.get(i);
+                sumY += voltageSamples.get(i);
+                sumXY += velocitySamples.get(i) * voltageSamples.get(i);
+                sumX2 += velocitySamples.get(i) * velocitySamples.get(i);
+              }
+              double kS = (sumY * sumX2 - sumX * sumXY) / (n * sumX2 - sumX * sumX);
+              double kV = (n * sumXY - sumX * sumY) / (n * sumX2 - sumX * sumX);
 
-                  NumberFormat formatter = new DecimalFormat("#0.00000");
-                  System.out.println("********** FF Characterization Results **********");
-                  System.out.println("\tkS: " + formatter.format(kS));
-                  System.out.println("\tkV: " + formatter.format(kV));
-                }));
+              NumberFormat formatter = new DecimalFormat("#0.00000");
+              System.out.println("********** FF Characterization Results **********");
+              System.out.println("\tkS: " + formatter.format(kS));
+              System.out.println("\tkV: " + formatter.format(kV));
+            }));
   }
 }

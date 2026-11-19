@@ -12,11 +12,12 @@
 
 package frc.robot.util.solenoids;
 
-import org.wpilib.wpilibj.DoubleSolenoid;
-import org.wpilib.wpilibj.DoubleSolenoid.Value;
-import org.wpilib.wpilibj.PneumaticsModuleType;
 import frc.robot.Constants.Status;
 import org.littletonrobotics.junction.Logger;
+import org.wpilib.hardware.bus.CANPort;
+import org.wpilib.hardware.pneumatic.DoubleSolenoid;
+import org.wpilib.hardware.pneumatic.DoubleSolenoid.Value;
+import org.wpilib.hardware.pneumatic.PneumaticsModuleType;
 
 public class DoubleSolenoidIO extends SolenoidIO {
 
@@ -24,7 +25,9 @@ public class DoubleSolenoidIO extends SolenoidIO {
 
   public DoubleSolenoidIO(int solenoidChannel1, int solenoidChannel2, String name) {
     super(name);
-    m_solenoid = new DoubleSolenoid(PneumaticsModuleType.REV_PH, solenoidChannel1, solenoidChannel2);
+    m_solenoid =
+        new DoubleSolenoid(
+            CANPort.CAN_S0, PneumaticsModuleType.REV_PH, solenoidChannel1, solenoidChannel2);
   }
 
   public void setSolenoidForward() {
@@ -44,11 +47,11 @@ public class DoubleSolenoidIO extends SolenoidIO {
   }
 
   public boolean getForwardSolenoidOn() {
-    return m_solenoid.get() == Value.kForward;
+    return m_solenoid.get() == Value.FORWARD;
   }
 
   public boolean getReverseSolenoidOn() {
-    return m_solenoid.get() == Value.kReverse;
+    return m_solenoid.get() == Value.REVERSE;
   }
 
   public boolean getForwardSolenoidEnabled() {

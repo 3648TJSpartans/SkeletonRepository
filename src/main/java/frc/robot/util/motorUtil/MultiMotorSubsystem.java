@@ -12,7 +12,7 @@
 
 package frc.robot.util.motorUtil;
 
-import org.wpilib.wpilibj2.command.SubsystemBase;
+import org.wpilib.command2.SubsystemBase;
 
 public class MultiMotorSubsystem extends SubsystemBase {
   private final MotorIO[] m_motors;

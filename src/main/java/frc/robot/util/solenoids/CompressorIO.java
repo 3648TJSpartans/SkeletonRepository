@@ -12,12 +12,13 @@
 
 package frc.robot.util.solenoids;
 
-import org.wpilib.wpilibj.Compressor;
-import org.wpilib.wpilibj.PneumaticsModuleType;
-import org.wpilib.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.Status;
 import frc.robot.util.statusableUtils.Statusable;
 import org.littletonrobotics.junction.Logger;
+import org.wpilib.command2.SubsystemBase;
+import org.wpilib.hardware.bus.CANPort;
+import org.wpilib.hardware.pneumatic.Compressor;
+import org.wpilib.hardware.pneumatic.PneumaticsModuleType;
 
 public class CompressorIO extends SubsystemBase implements Statusable {
 
@@ -25,7 +26,7 @@ public class CompressorIO extends SubsystemBase implements Statusable {
   private String name;
 
   public CompressorIO(String name) {
-    m_compressor = new Compressor(PneumaticsModuleType.REV_PH);
+    m_compressor = new Compressor(CANPort.CAN_S0, PneumaticsModuleType.REV_PH);
     this.name = name;
   }
 
