@@ -19,6 +19,7 @@ package frc.robot.subsystems.drive;
 import com.pathplanner.lib.config.ModuleConfig;
 import com.pathplanner.lib.config.RobotConfig;
 import com.studica.frc.UsbPort;
+import frc.robot.util.TunableNumber;
 import frc.robot.util.miscTunables.TunableInteger;
 import org.wpilib.math.geometry.Rotation2d;
 import org.wpilib.math.geometry.Translation2d;
@@ -28,13 +29,17 @@ import org.wpilib.math.util.Units;
 public class DriveConstants {
   public static final UsbPort navXComType = UsbPort.USB1;
 
-  public static final double fieldRelativeMaxInputPercent = 1; // value between 0+ and 1,
-  // allowing control maximum
-  // input for field relative
-  public static final double robotRelativeMaxInputPercent = .5; // value between 0+ and 1,
-  // allowing control
-  // maximum input for robot
-  // relative
+  /** Maximum percentage of max speed to use for translation and rotation. */
+  public static final TunableNumber fieldRelativeMaxInputPercent =
+      new TunableNumber("Drive/FieldRelativeMaxTranslationPercent", 1.0); // value between 0+ and 1,
+
+  /** Maximum percentage of max speed to use for translation in robot-relative drive. */
+  public static final TunableNumber robotRelativeMaxTranslationPercent =
+      new TunableNumber("Drive/RobotRelativeMaxTranslationPercent", .6); // value between 0+ and 1,
+
+  /** Maximum percentage of max speed to use for rotation in robot-relative drive. */
+  public static TunableNumber robotRelativeMaxRotationPercent =
+      new TunableNumber("Drive/RobotRelativeMaxRotationPercent", 0.6); // value between 0+ and 1,
 
   public static final double maxSpeedMetersPerSec = 4; // 4.46 is max on rev product page, 2
   // is what it was before
