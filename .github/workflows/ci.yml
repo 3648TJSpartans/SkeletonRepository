@@ -2,6 +2,8 @@ name: CI Pipeline
 
 # This controls github action checks
 on:
+  push:
+    branches: [ "main" ]
   pull_request:
     branches: [ "main" ]
 
