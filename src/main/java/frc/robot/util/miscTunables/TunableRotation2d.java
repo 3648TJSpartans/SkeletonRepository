@@ -14,10 +14,10 @@ package frc.robot.util.miscTunables;
 
 import static frc.robot.util.TuningUpdater.*;
 
-import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import frc.robot.util.DashboardUtil;
 import frc.robot.util.Tunable;
 import org.littletonrobotics.junction.Logger;
+import org.wpilib.math.geometry.Rotation2d;
 
 /**
  * Class for a tunable number. Gets value from dashboard in tuning mode, returns default if not or
@@ -50,14 +50,14 @@ public class TunableRotation2d extends Tunable<Rotation2d> {
 
   @Override
   protected void putDashboardValue(String key, Rotation2d defaultValue) {
-    SmartDashboard.putNumber(
-        key + "/radians", SmartDashboard.getNumber(key + "/radians", defaultValue.getRadians()));
+    DashboardUtil.putNumber(
+        key + "/radians", DashboardUtil.getNumber(key + "/radians", defaultValue.getRadians()));
   }
 
   @Override
   protected Rotation2d getDashboardValue(String key, Rotation2d defaultValue) {
     return TUNING_MODE
-        ? new Rotation2d(SmartDashboard.getNumber(key + "/radians", defaultValue.getRadians()))
+        ? new Rotation2d(DashboardUtil.getNumber(key + "/radians", defaultValue.getRadians()))
         : defaultValue;
   }
 

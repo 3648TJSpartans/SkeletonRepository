@@ -18,16 +18,16 @@ package frc.robot.subsystems.drive;
 
 import com.pathplanner.lib.config.ModuleConfig;
 import com.pathplanner.lib.config.RobotConfig;
-import com.studica.frc.AHRS.NavXComType;
-import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.math.geometry.Translation2d;
-import edu.wpi.first.math.system.plant.DCMotor;
-import edu.wpi.first.math.util.Units;
+import com.studica.frc.UsbPort;
 import frc.robot.util.TunableNumber;
 import frc.robot.util.miscTunables.TunableInteger;
+import org.wpilib.math.geometry.Rotation2d;
+import org.wpilib.math.geometry.Translation2d;
+import org.wpilib.math.system.DCMotor;
+import org.wpilib.math.util.Units;
 
 public class DriveConstants {
-  public static final NavXComType navXComType = NavXComType.kUSB1;
+  public static final UsbPort navXComType = UsbPort.USB1;
 
   /** Maximum percentage of max speed to use for translation and rotation. */
   public static final TunableNumber fieldRelativeMaxInputPercent =

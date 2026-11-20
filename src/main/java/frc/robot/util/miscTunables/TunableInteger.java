@@ -14,7 +14,7 @@ package frc.robot.util.miscTunables;
 
 import static frc.robot.util.TuningUpdater.*;
 
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import frc.robot.util.DashboardUtil;
 import frc.robot.util.Tunable;
 import java.util.function.IntSupplier;
 import org.littletonrobotics.junction.Logger;
@@ -50,18 +50,18 @@ public class TunableInteger extends Tunable<Integer> implements IntSupplier {
 
   @Override
   protected void putDashboardValue(String key, Integer defaultValue) {
-    SmartDashboard.putNumber(key, SmartDashboard.getNumber(key, defaultValue));
+    DashboardUtil.putNumber(key, DashboardUtil.getNumber(key, defaultValue));
   }
 
   @Override
   protected Integer getDashboardValue(String key, Integer defaultValue) {
-    return TUNING_MODE ? (int) SmartDashboard.getNumber(key, defaultValue) : defaultValue;
+    return TUNING_MODE ? (int) DashboardUtil.getNumber(key, defaultValue) : defaultValue;
   }
 
   @Override
   protected void logValue(String key, boolean TUNING_MODE, Integer value, Integer defaultValue) {
     Logger.recordOutput(
-        key, TUNING_MODE ? SmartDashboard.getNumber(key, defaultValue) : defaultValue);
+        key, TUNING_MODE ? DashboardUtil.getNumber(key, defaultValue) : defaultValue);
   }
 
   @Override

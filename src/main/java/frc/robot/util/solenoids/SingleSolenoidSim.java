@@ -12,9 +12,9 @@
 
 package frc.robot.util.solenoids;
 
-import edu.wpi.first.wpilibj.PneumaticsModuleType;
-import edu.wpi.first.wpilibj.simulation.SolenoidSim;
 import frc.robot.Constants.Status;
+import org.wpilib.hardware.pneumatic.PneumaticsModuleType;
+import org.wpilib.simulation.SolenoidSim;
 
 public class SingleSolenoidSim extends SolenoidIO {
 
@@ -23,7 +23,7 @@ public class SingleSolenoidSim extends SolenoidIO {
 
   public SingleSolenoidSim(int channel, String name) {
     super(name);
-    m_solenoid = new SolenoidSim(PneumaticsModuleType.REVPH, channel);
+    m_solenoid = new SolenoidSim(PneumaticsModuleType.REV_PH, channel);
     on = false;
   }
 

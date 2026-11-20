@@ -12,11 +12,11 @@
 
 package frc.robot.util.miscTunables;
 
-import edu.wpi.first.math.geometry.Translation2d;
 import frc.robot.util.Tunable;
 import frc.robot.util.TuningUpdater;
 import frc.robot.util.zoneCalc.Polygon;
 import java.util.ArrayList;
+import org.wpilib.math.geometry.Translation2d;
 
 public class TunablePolygon extends Tunable<Polygon> {
   private ArrayList<TunableTranslation2d> translation2ds;
@@ -68,7 +68,6 @@ public class TunablePolygon extends Tunable<Polygon> {
     } else {
       for (int i = translation2ds.size() - 1; i >= corners.get(); i--) {
         translation2ds.remove(i).kill();
-        ;
       }
     }
   }

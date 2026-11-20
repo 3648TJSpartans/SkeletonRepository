@@ -14,10 +14,10 @@ package frc.robot.util.miscTunables;
 
 import static frc.robot.util.TuningUpdater.*;
 
-import edu.wpi.first.math.geometry.Translation2d;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import frc.robot.util.DashboardUtil;
 import frc.robot.util.Tunable;
 import org.littletonrobotics.junction.Logger;
+import org.wpilib.math.geometry.Translation2d;
 
 /**
  * Class for a tunable number. Gets value from dashboard in tuning mode, returns default if not or
@@ -50,16 +50,16 @@ public class TunableTranslation2d extends Tunable<Translation2d> {
 
   @Override
   protected void putDashboardValue(String key, Translation2d defaultValue) {
-    SmartDashboard.putNumber(key + "/x", SmartDashboard.getNumber(key + "/x", defaultValue.getX()));
-    SmartDashboard.putNumber(key + "/y", SmartDashboard.getNumber(key + "/y", defaultValue.getY()));
+    DashboardUtil.putNumber(key + "/x", DashboardUtil.getNumber(key + "/x", defaultValue.getX()));
+    DashboardUtil.putNumber(key + "/y", DashboardUtil.getNumber(key + "/y", defaultValue.getY()));
   }
 
   @Override
   protected Translation2d getDashboardValue(String key, Translation2d defaultValue) {
     return TUNING_MODE
         ? new Translation2d(
-            SmartDashboard.getNumber(key + "/x", defaultValue.getX()),
-            SmartDashboard.getNumber(key + "/y", defaultValue.getY()))
+            DashboardUtil.getNumber(key + "/x", defaultValue.getX()),
+            DashboardUtil.getNumber(key + "/y", defaultValue.getY()))
         : defaultValue;
   }
 

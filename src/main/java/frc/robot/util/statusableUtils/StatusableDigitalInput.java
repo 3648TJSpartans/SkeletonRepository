@@ -12,9 +12,9 @@
 
 package frc.robot.util.statusableUtils;
 
-import edu.wpi.first.wpilibj.DigitalInput;
 import frc.robot.Constants.Status;
 import org.littletonrobotics.junction.Logger;
+import org.wpilib.hardware.discrete.DigitalInput;
 
 public class StatusableDigitalInput extends DigitalInput implements Statusable {
   private String name;

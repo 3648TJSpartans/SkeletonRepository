@@ -12,10 +12,10 @@
 
 package frc.robot.util.motorUtil;
 
-import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import java.util.ArrayList;
 import java.util.List;
 import org.littletonrobotics.junction.Logger;
+import org.wpilib.command2.SubsystemBase;
 
 public abstract class MotorIO extends SubsystemBase {
 
@@ -54,7 +54,6 @@ public abstract class MotorIO extends SubsystemBase {
   public void setPower(double power) {
     m_powerSetpoint = power;
   }
-  ;
 
   public final void updateValues() {
     Logger.recordOutput(name + "/getPosition", getPosition());

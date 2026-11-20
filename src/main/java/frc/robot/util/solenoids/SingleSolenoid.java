@@ -12,10 +12,11 @@
 
 package frc.robot.util.solenoids;
 
-import edu.wpi.first.wpilibj.PneumaticsModuleType;
-import edu.wpi.first.wpilibj.Solenoid;
 import frc.robot.Constants.Status;
 import org.littletonrobotics.junction.Logger;
+import org.wpilib.hardware.bus.CANPort;
+import org.wpilib.hardware.pneumatic.PneumaticsModuleType;
+import org.wpilib.hardware.pneumatic.Solenoid;
 
 public class SingleSolenoid extends SolenoidIO {
 
@@ -23,7 +24,7 @@ public class SingleSolenoid extends SolenoidIO {
 
   public SingleSolenoid(int channel, String name) {
     super(name);
-    m_solenoid = new Solenoid(PneumaticsModuleType.REVPH, channel);
+    m_solenoid = new Solenoid(CANPort.CAN_S0, PneumaticsModuleType.REV_PH, channel);
   }
 
   public void setSolenoid(boolean on) {

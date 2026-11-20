@@ -17,11 +17,12 @@ import com.revrobotics.PersistMode;
 import com.revrobotics.ResetMode;
 import com.revrobotics.spark.ClosedLoopSlot;
 import com.revrobotics.spark.FeedbackSensor;
-import com.revrobotics.spark.SparkBase.ControlType;
 import com.revrobotics.spark.SparkClosedLoopController;
+import com.revrobotics.spark.SparkLowLevel.ControlType;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
 import com.revrobotics.spark.SparkMax;
 import com.revrobotics.spark.config.SparkMaxConfig;
+import org.wpilib.hardware.bus.CANPort;
 
 public class AbsEncoderSparkMax extends MotorIO {
 
@@ -37,7 +38,7 @@ public class AbsEncoderSparkMax extends MotorIO {
     super(motorConfig.name());
 
     m_motorConfig = motorConfig;
-    motor = new SparkMax(motorConfig.motorCan(), MotorType.kBrushless);
+    motor = new SparkMax(CANPort.CAN_S0, motorConfig.motorCan(), MotorType.kBrushless);
     motorController = motor.getClosedLoopController();
     encoder = motor.getAbsoluteEncoder();
     name = getName();
@@ -59,17 +60,17 @@ public class AbsEncoderSparkMax extends MotorIO {
   @Override
   public void setPower(double power) {
     super.setPower(power);
-    motor.set(power);
+    motor.setThrottle(power);
   }
 
   @Override
   public double getPosition() {
-    return encoder.getPosition();
+    return encoder.getPosition().get();
   }
 
   @Override
   public double getSpeed() {
-    return encoder.getVelocity();
+    return encoder.getVelocity().get();
   }
 
   // Absolute Encoders cannot reset

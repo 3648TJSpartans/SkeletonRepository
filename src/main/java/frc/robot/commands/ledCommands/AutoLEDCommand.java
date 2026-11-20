@@ -18,8 +18,8 @@
 
 package frc.robot.commands.ledCommands;
 
-import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.leds.*;
+import org.wpilib.command2.Command;
 
 public class AutoLEDCommand extends Command {
   private final LedSubsystem m_leds;

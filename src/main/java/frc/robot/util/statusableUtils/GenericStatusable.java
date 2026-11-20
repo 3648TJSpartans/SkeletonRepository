@@ -12,9 +12,9 @@
 
 package frc.robot.util.statusableUtils;
 
-import edu.wpi.first.wpilibj.Timer;
 import frc.robot.Constants.Status;
 import java.util.function.Supplier;
+import org.wpilib.system.Timer;
 
 public class GenericStatusable implements Statusable {
   private final Supplier<Status> m_statusSupplier;
@@ -38,9 +38,9 @@ public class GenericStatusable implements Statusable {
   }
 
   public Status getStatus() {
-    if (Timer.getFPGATimestamp() > m_lastUpdateTime + m_fetchDelay) {
+    if (Timer.getTimestamp() > m_lastUpdateTime + m_fetchDelay) {
       m_cachedStatus = m_statusSupplier.get();
-      m_lastUpdateTime = Timer.getFPGATimestamp();
+      m_lastUpdateTime = Timer.getTimestamp();
       return m_cachedStatus;
     }
     return m_cachedStatus;

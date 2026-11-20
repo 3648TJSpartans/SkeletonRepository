@@ -12,12 +12,12 @@
 
 package frc.robot.commands.ledCommands;
 
-import edu.wpi.first.wpilibj.DriverStation;
-import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.leds.LedConstants;
 import frc.robot.subsystems.leds.LedSubsystem;
 import frc.robot.util.statusableUtils.Statusable;
 import org.littletonrobotics.junction.Logger;
+import org.wpilib.command2.Command;
+import org.wpilib.driverstation.RobotState;
 
 public class StatusableLEDCommands extends Command {
   private final Statusable[] m_statuses;
@@ -42,7 +42,7 @@ public class StatusableLEDCommands extends Command {
 
   @Override
   public void execute() {
-    if (DriverStation.isEnabled()) {
+    if (RobotState.isEnabled()) {
 
       return;
     } else {

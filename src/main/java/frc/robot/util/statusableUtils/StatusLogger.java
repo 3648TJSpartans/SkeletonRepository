@@ -12,9 +12,9 @@
 
 package frc.robot.util.statusableUtils;
 
-import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.Status;
 import org.littletonrobotics.junction.Logger;
+import org.wpilib.command2.SubsystemBase;
 
 public class StatusLogger extends SubsystemBase {
 

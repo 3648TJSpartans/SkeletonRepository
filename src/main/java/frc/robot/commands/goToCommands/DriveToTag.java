@@ -12,15 +12,15 @@
 
 package frc.robot.commands.goToCommands;
 
-import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.math.geometry.Translation2d;
-import edu.wpi.first.math.kinematics.ChassisSpeeds;
-import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.drive.Drive;
 import java.util.function.Supplier;
 import org.littletonrobotics.junction.AutoLogOutput;
 import org.littletonrobotics.junction.Logger;
+import org.wpilib.command2.Command;
+import org.wpilib.math.geometry.Pose2d;
+import org.wpilib.math.geometry.Rotation2d;
+import org.wpilib.math.geometry.Translation2d;
+import org.wpilib.math.kinematics.ChassisVelocities;
 
 public class DriveToTag extends Command {
   private final Supplier<Pose2d> robotPoseSupplier;
@@ -65,15 +65,15 @@ public class DriveToTag extends Command {
     // runs velocities
     if (!robotPose.equals(new Pose2d())) {
       Logger.recordOutput("DriveTo2/SeeingTag", true);
-      // drive.runVelocity(ChassisSpeeds.fromFieldRelativeSpeeds(setVelocity.getX(),
+      // drive.runVelocity(ChassisVelocities.fromFieldRelativeSpeeds(setVelocity.getX(),
       // setVelocity.getY(), thetaVelocity, robotPose.getRotation()));
       drive.runVelocity(
-          new ChassisSpeeds(-setVelocity.getX(), -setVelocity.getY(), -thetaVelocity));
+          new ChassisVelocities(-setVelocity.getX(), -setVelocity.getY(), -thetaVelocity));
     } else {
       Logger.recordOutput("DriveTo2/SeeingTag", false);
-      drive.runVelocity(ChassisSpeeds.fromRobotRelativeSpeeds(0, 0, 0, robotPose.getRotation()));
+      drive.runVelocity(new ChassisVelocities());
     }
-    // drive.runVelocity(ChassisSpeeds.fromFieldRelativeSpeeds(setVelocity.getX(),
+    // drive.runVelocity(ChassisVelocities.fromFieldRelativeSpeeds(setVelocity.getX(),
     // setVelocity.getY(), thetaVelocity, robotPose.getRotation()));
 
     // Lets Log stuff

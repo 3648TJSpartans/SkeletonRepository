@@ -12,12 +12,12 @@
 
 package frc.robot.util.miscTunables;
 
-import edu.wpi.first.math.controller.ProfiledPIDController;
-import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import frc.robot.util.Tunable;
 import frc.robot.util.TunableNumber;
 import frc.robot.util.TuningUpdater;
 import java.util.function.Consumer;
+import org.wpilib.math.controller.ProfiledPIDController;
+import org.wpilib.math.trajectory.TrapezoidProfile;
 
 public class TunableProfiledPIDController extends Tunable<ProfiledPIDController> {
 
@@ -69,7 +69,7 @@ public class TunableProfiledPIDController extends Tunable<ProfiledPIDController>
             key + "/constraints/maxVelocity",
             defaultValue.getConstraints().maxVelocity,
             this::forceUpdate,
-            (maxV) ->
+            maxV ->
                 defaultValue.setConstraints(
                     new TrapezoidProfile.Constraints(
                         maxV, defaultValue.getConstraints().maxAcceleration)));
@@ -78,7 +78,7 @@ public class TunableProfiledPIDController extends Tunable<ProfiledPIDController>
             key + "/constraints/maxAcceleration",
             defaultValue.getConstraints().maxAcceleration,
             this::forceUpdate,
-            (maxA) ->
+            maxA ->
                 defaultValue.setConstraints(
                     new TrapezoidProfile.Constraints(
                         defaultValue.getConstraints().maxVelocity, maxA)));

@@ -12,10 +12,10 @@
 
 package frc.robot.subsystems.leds;
 
-import static edu.wpi.first.units.Units.*;
+import static org.wpilib.units.Units.*;
 
-import edu.wpi.first.wpilibj.LEDPattern;
-import edu.wpi.first.wpilibj.util.Color;
+import org.wpilib.hardware.led.LEDPattern;
+import org.wpilib.util.Color;
 
 public final class LedConstants {
 
@@ -44,25 +44,25 @@ public final class LedConstants {
   // Colors & Patterns //
 
   // Solid Colors
-  public static LEDPattern green = LEDPattern.solid(Color.kGreen);
-  public static LEDPattern red = LEDPattern.solid(Color.kRed);
-  public static LEDPattern blue = LEDPattern.solid(Color.kBlue);
-  public static LEDPattern teal = LEDPattern.solid(Color.kTeal);
-  public static LEDPattern yellow = LEDPattern.solid(Color.kYellow);
-  public static LEDPattern purple = LEDPattern.solid(Color.kPurple);
-  public static LEDPattern white = LEDPattern.solid(Color.kWhite);
-  public static LEDPattern noColor = LEDPattern.solid(Color.kBlack);
+  public static LEDPattern green = LEDPattern.solid(Color.GREEN);
+  public static LEDPattern red = LEDPattern.solid(Color.RED);
+  public static LEDPattern blue = LEDPattern.solid(Color.BLUE);
+  public static LEDPattern teal = LEDPattern.solid(Color.TEAL);
+  public static LEDPattern yellow = LEDPattern.solid(Color.YELLOW);
+  public static LEDPattern purple = LEDPattern.solid(Color.PURPLE);
+  public static LEDPattern white = LEDPattern.solid(Color.WHITE);
+  public static LEDPattern noColor = LEDPattern.solid(Color.BLACK);
   // Gradients
   public static LEDPattern rainbow = LEDPattern.rainbow(255, 128);
   public static LEDPattern purpleGradient =
-      LEDPattern.gradient(LEDPattern.GradientType.kDiscontinuous, Color.kRed, Color.kBlue);
+      LEDPattern.gradient(LEDPattern.GradientType.DISCONTINUOUS, Color.RED, Color.BLUE);
   public static LEDPattern elevatorGradient =
       LEDPattern.gradient(
-          LEDPattern.GradientType.kDiscontinuous,
-          Color.kRed,
-          Color.kYellow,
-          Color.kGreen,
-          Color.kTeal); // Stoplight-esque gradient to use on the elevator
+          LEDPattern.GradientType.DISCONTINUOUS,
+          Color.RED,
+          Color.YELLOW,
+          Color.GREEN,
+          Color.TEAL); // Stoplight-esque gradient to use on the elevator
 
   // Animated Patterns
   public static LEDPattern breathingGreen = green.breathe(Seconds.of(2));
