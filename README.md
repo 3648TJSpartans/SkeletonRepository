@@ -13,4 +13,4 @@ All you need to do is run ./gradlew build, if this fails <u>*double check*</u>  
 3. Watch the magic happen
 
 ## Style guide
-Unless otherwise specified, this repository should follow [Google's Java style guide](https://google.github.io/styleguide/javaguide.html). Formatting will be autmoatically enforced by Spotless, but you are expected to use correct naming conventions and the like.
+Unless otherwise specified, this repository should follow [Google's Java style guide](https://google.github.io/styleguide/javaguide.html). Formatting will be automatically enforced by Spotless, but you are expected to use correct naming conventions and the like.
